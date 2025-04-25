@@ -28,7 +28,7 @@ namespace CSE443_Project
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Client}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
