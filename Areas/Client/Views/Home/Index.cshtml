@@ -1,0 +1,439 @@
+﻿@{
+    ViewData["Title"] = "Trang Chủ";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+<!-- UI cho người chưa đăng nhập - Giữ nguyên trang chủ hiện tại -->
+<div id="guest-content">
+    <section class="hero-section text-center text-white" style="background: linear-gradient(to right, #6a11cb, #2575fc); padding: 100px 20px;">
+        <div class="container">
+            <h1 class="display-4 font-weight-bold mb-4">Tìm Kiếm Việc Làm</h1>
+        </div>
+    </section>
+
+    <section class="features-section py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title font-weight-bold">Tiện Lợi</h5>
+                            <p class="card-text">Các trang web tiện lợi, dễ dùng và hiệu quả trong quá trình tìm việc.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title font-weight-bold">Nhanh Chóng</h5>
+                            <p class="card-text">Tốc độ xử lý và cập nhật việc làm nhanh chóng, giúp ứng viên không bỏ lỡ cơ hội.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title font-weight-bold">Uy Tín</h5>
+                            <p class="card-text">Hệ thống xác thực nhà tuyển dụng uy tín, đáng tin cậy.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow">
+                        <div class="card-body">
+                            <h5 class="card-title font-weight-bold">Đa Dạng</h5>
+                            <p class="card-text">Đa dạng lĩnh vực ngành nghề, phù hợp với mọi ứng viên.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- UI Homepage cho ứng viên đã đăng nhập -->
+<div id="candidate-dashboard" style="display: none;">
+    <!-- Banner Section -->
+    <section class="banner-section text-white" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 font-weight-bold mb-3">Chào mừng, <span class="candidate-name">Ứng Viên</span>!</h1>
+                    <p class="lead mb-4">Khám phá hàng ngàn cơ hội việc làm phù hợp với kỹ năng của bạn</p>
+                    <div class="search-box mb-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-lg" placeholder="Chức danh, vị trí, kỹ năng...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary btn-lg px-4" type="button">
+                                    <i class="fas fa-search mr-2"></i> Tìm Kiếm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="popular-keywords">
+                        <span class="text-white-50 mr-2">Từ khóa phổ biến:</span>
+                        <a href="#" class="badge badge-light mr-2 mb-2">Lập trình viên</a>
+                        <a href="#" class="badge badge-light mr-2 mb-2">Marketing</a>
+                        <a href="#" class="badge badge-light mr-2 mb-2">Kế toán</a>
+                        <a href="#" class="badge badge-light mr-2 mb-2">UI/UX</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <img src="https://via.placeholder.com/600x400" alt="Banner Image" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Categories Section -->
+    <section class="job-categories py-5 bg-light">
+        <div class="container">
+            <div class="section-header mb-4">
+                <h2 class="section-title">Khám Phá Theo Ngành Nghề</h2>
+                <p class="text-muted">Tìm kiếm cơ hội việc làm phù hợp theo lĩnh vực</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3 text-primary">
+                            <i class="fas fa-laptop-code fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">CNTT</h5>
+                        <p class="small text-muted mb-0">432 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3 text-success">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Marketing</h5>
+                        <p class="small text-muted mb-0">287 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3 text-info">
+                            <i class="fas fa-paint-brush fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Thiết Kế</h5>
+                        <p class="small text-muted mb-0">156 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3 text-warning">
+                            <i class="fas fa-coins fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Tài Chính</h5>
+                        <p class="small text-muted mb-0">189 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3 text-danger">
+                            <i class="fas fa-user-tie fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Quản Lý</h5>
+                        <p class="small text-muted mb-0">143 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3 text-secondary">
+                            <i class="fas fa-users-cog fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Nhân Sự</h5>
+                        <p class="small text-muted mb-0">109 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3" style="color: #6c63ff;">
+                            <i class="fas fa-language fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Ngoại Ngữ</h5>
+                        <p class="small text-muted mb-0">97 việc làm</p>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="#" class="category-card d-block text-center py-4 px-3 h-100 rounded bg-white shadow-sm text-decoration-none">
+                        <div class="category-icon mb-3" style="color: #6610f2;">
+                            <i class="fas fa-ellipsis-h fa-2x"></i>
+                        </div>
+                        <h5 class="category-title">Khác</h5>
+                        <p class="small text-muted mb-0">215 việc làm</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommended Jobs Section -->
+    <section class="recommended-jobs py-5">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="section-title">Việc Làm Đề Xuất Cho Bạn</h2>
+                    <p class="text-muted mb-0">Dựa trên hồ sơ và hoạt động tìm kiếm của bạn</p>
+                </div>
+                <a href="#" class="btn btn-outline-primary">Xem tất cả</a>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="job-card h-100 bg-white rounded shadow-sm p-4 position-relative">
+                        <span class="badge badge-success position-absolute" style="top: 15px; right: 15px;">Mới</span>
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://via.placeholder.com/60" class="company-logo mr-3 rounded" alt="Company Logo">
+                            <div>
+                                <h5 class="job-title mb-0 font-weight-bold">Lập trình viên Frontend</h5>
+                                <a href="#" class="company-name text-muted">Tech Solutions</a>
+                            </div>
+                        </div>
+                        <div class="job-details mb-3">
+                            <div class="d-flex flex-wrap">
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Hà Nội</span>
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-dollar-sign mr-1"></i> 15-20 triệu</span>
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-briefcase mr-1"></i> 1-3 năm</span>
+                            </div>
+                        </div>
+                        <p class="job-summary mb-3">Phát triển giao diện người dùng hiện đại sử dụng React, Redux và TypeScript cho các ứng dụng web quy mô lớn...</p>
+                        <div class="job-actions">
+                            <a href="#" class="btn btn-primary btn-sm mr-2">Ứng tuyển ngay</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="far fa-bookmark"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="job-card h-100 bg-white rounded shadow-sm p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://via.placeholder.com/60" class="company-logo mr-3 rounded" alt="Company Logo">
+                            <div>
+                                <h5 class="job-title mb-0 font-weight-bold">UX/UI Designer</h5>
+                                <a href="#" class="company-name text-muted">Design Studio</a>
+                            </div>
+                        </div>
+                        <div class="job-details mb-3">
+                            <div class="d-flex flex-wrap">
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Hồ Chí Minh</span>
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-dollar-sign mr-1"></i> 18-25 triệu</span>
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-briefcase mr-1"></i> 2-5 năm</span>
+                            </div>
+                        </div>
+                        <p class="job-summary mb-3">Thiết kế trải nghiệm người dùng và giao diện cho các ứng dụng mobile và web. Làm việc với Figma, Sketch...</p>
+                        <div class="job-actions">
+                            <a href="#" class="btn btn-primary btn-sm mr-2">Ứng tuyển ngay</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="far fa-bookmark"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="job-card h-100 bg-white rounded shadow-sm p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://via.placeholder.com/60" class="company-logo mr-3 rounded" alt="Company Logo">
+                            <div>
+                                <h5 class="job-title mb-0 font-weight-bold">Fullstack Developer</h5>
+                                <a href="#" class="company-name text-muted">Innovative Solutions</a>
+                            </div>
+                        </div>
+                        <div class="job-details mb-3">
+                            <div class="d-flex flex-wrap">
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-map-marker-alt mr-1"></i> Đà Nẵng</span>
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-dollar-sign mr-1"></i> 20-30 triệu</span>
+                                <span class="badge badge-light mr-2 mb-2"><i class="fas fa-briefcase mr-1"></i> 3-5 năm</span>
+                            </div>
+                        </div>
+                        <p class="job-summary mb-3">Phát triển ứng dụng web từ backend đến frontend với Node.js, React, MongoDB và các công nghệ hiện đại...</p>
+                        <div class="job-actions">
+                            <a href="#" class="btn btn-primary btn-sm mr-2">Ứng tuyển ngay</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm"><i class="far fa-bookmark"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Companies Section -->
+    <section class="top-companies py-5 bg-light">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">Công Ty Hàng Đầu</h2>
+                <p class="text-muted">Khám phá các công ty tuyển dụng tốt nhất</p>
+            </div>
+            <div class="company-slider">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-6 mb-4">
+                        <div class="company-card bg-white rounded shadow-sm p-4 text-center">
+                            <img src="https://via.placeholder.com/120" class="company-logo mb-3" alt="Company Logo">
+                            <h5 class="company-name">Tech Solutions</h5>
+                            <p class="text-muted small mb-2">Công nghệ thông tin</p>
+                            <span class="badge badge-light">12 việc làm</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6 mb-4">
+                        <div class="company-card bg-white rounded shadow-sm p-4 text-center">
+                            <img src="https://via.placeholder.com/120" class="company-logo mb-3" alt="Company Logo">
+                            <h5 class="company-name">Design Studio</h5>
+                            <p class="text-muted small mb-2">UI/UX & Thiết kế</p>
+                            <span class="badge badge-light">8 việc làm</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6 mb-4">
+                        <div class="company-card bg-white rounded shadow-sm p-4 text-center">
+                            <img src="https://via.placeholder.com/120" class="company-logo mb-3" alt="Company Logo">
+                            <h5 class="company-name">Financial Group</h5>
+                            <p class="text-muted small mb-2">Tài chính & Ngân hàng</p>
+                            <span class="badge badge-light">15 việc làm</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6 mb-4">
+                        <div class="company-card bg-white rounded shadow-sm p-4 text-center">
+                            <img src="https://via.placeholder.com/120" class="company-logo mb-3" alt="Company Logo">
+                            <h5 class="company-name">Marketing Pro</h5>
+                            <p class="text-muted small mb-2">Marketing & Truyền thông</p>
+                            <span class="badge badge-light">10 việc làm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Activities Section (Condensed) -->
+    <section class="recent-activities py-5">
+        <div class="container">
+            <div class="section-header mb-4">
+                <h2 class="section-title">Hoạt Động Gần Đây</h2>
+                <p class="text-muted">Tổng quan về hoạt động của bạn</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card bg-white rounded shadow-sm p-4 text-center">
+                        <div class="icon-circle bg-primary text-white mb-3 mx-auto">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h2 class="stats-number">2</h2>
+                        <p class="text-muted mb-0">CV Đã Tạo</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card bg-white rounded shadow-sm p-4 text-center">
+                        <div class="icon-circle bg-success text-white mb-3 mx-auto">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <h2 class="stats-number">5</h2>
+                        <p class="text-muted mb-0">Việc Đã Ứng Tuyển</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card bg-white rounded shadow-sm p-4 text-center">
+                        <div class="icon-circle bg-info text-white mb-3 mx-auto">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <h2 class="stats-number">12</h2>
+                        <p class="text-muted mb-0">Việc Đã Lưu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    /* Styles for Candidate Homepage */
+    #candidate-dashboard .search-box {
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+    
+    #candidate-dashboard .search-box .form-control {
+        border: none;
+        padding: 15px 25px;
+        font-size: 16px;
+    }
+    
+    #candidate-dashboard .search-box .btn {
+        border-radius: 0 50px 50px 0;
+        padding: 15px 30px;
+    }
+    
+    #candidate-dashboard .company-logo {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+    
+    #candidate-dashboard .top-companies .company-logo {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        margin: 0 auto;
+    }
+    
+    #candidate-dashboard .icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        font-size: 24px;
+    }
+    
+    #candidate-dashboard .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+    
+    #candidate-dashboard .section-title {
+        font-weight: 700;
+        position: relative;
+        margin-bottom: 15px;
+    }
+    
+    #candidate-dashboard .job-card,
+    #candidate-dashboard .category-card,
+    #candidate-dashboard .company-card,
+    #candidate-dashboard .stats-card {
+        transition: all 0.3s ease;
+    }
+    
+    #candidate-dashboard .job-card:hover,
+    #candidate-dashboard .category-card:hover,
+    #candidate-dashboard .company-card:hover,
+    #candidate-dashboard .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    
+    #candidate-dashboard .job-card {
+        border-left: 4px solid #6C63FF;
+    }
+    
+    #candidate-dashboard .popular-keywords .badge {
+        padding: 8px 15px;
+        font-weight: 500;
+        font-size: 12px;
+        transition: all 0.2s ease;
+    }
+    
+    #candidate-dashboard .popular-keywords .badge:hover {
+        background-color: #6C63FF;
+        color: white;
+    }
+</style>
+
+@section Scripts {
+<script>
+    $(document).ready(function() {
+        // Kiểm tra nếu người dùng đã đăng nhập (ở đây là giả lập)
+        // displayCandidateHomepage nếu cần
+    });
+</script>
+}
