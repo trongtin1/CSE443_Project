@@ -96,9 +96,9 @@ D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\staticwebassets\msbuild.buil
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.CSE443_Project.props
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.CSE443_Project.props
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\staticwebassets.pack.json
-D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\CSE443_Project.dll
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\refint\CSE443_Project.dll
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\CSE443_Project.pdb
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\CSE443_Project.genruntimeconfig.cache
 D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\ref\CSE443_Project.dll
+D:\CSE443\Project\a\CSE443_Project\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
