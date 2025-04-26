@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CSE443_Project")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+024355d9db513bcff06aba598c99da8c24b6b0cf")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+275ace065a1fccf430052c7e7c325ce82a3eca0c")]
+>>>>>>> features/addUIClient
 [assembly: System.Reflection.AssemblyProductAttribute("CSE443_Project")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CSE443_Project")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

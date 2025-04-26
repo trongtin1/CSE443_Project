@@ -3,6 +3,10 @@
     Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
 }
 
+<!-- Thêm link CSS -->
+<link rel="stylesheet" href="~/css/auth.css" />
+<link rel="stylesheet" href="~/css/home.css" />
+
 <!-- UI cho người chưa đăng nhập - Giữ nguyên trang chủ hiện tại -->
 <div id="guest-content">
     <section class="hero-section text-center text-white" style="background: linear-gradient(to right, #6a11cb, #2575fc); padding: 100px 20px;">
@@ -343,97 +347,66 @@
     </section>
 </div>
 
-<style>
-    /* Styles for Candidate Homepage */
-    #candidate-dashboard .search-box {
-        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        border-radius: 50px;
-        overflow: hidden;
-    }
-    
-    #candidate-dashboard .search-box .form-control {
-        border: none;
-        padding: 15px 25px;
-        font-size: 16px;
-    }
-    
-    #candidate-dashboard .search-box .btn {
-        border-radius: 0 50px 50px 0;
-        padding: 15px 30px;
-    }
-    
-    #candidate-dashboard .company-logo {
-        width: 60px;
-        height: 60px;
-        object-fit: contain;
-    }
-    
-    #candidate-dashboard .top-companies .company-logo {
-        width: 100px;
-        height: 100px;
-        object-fit: contain;
-        margin: 0 auto;
-    }
-    
-    #candidate-dashboard .icon-circle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        font-size: 24px;
-    }
-    
-    #candidate-dashboard .stats-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-    }
-    
-    #candidate-dashboard .section-title {
-        font-weight: 700;
-        position: relative;
-        margin-bottom: 15px;
-    }
-    
-    #candidate-dashboard .job-card,
-    #candidate-dashboard .category-card,
-    #candidate-dashboard .company-card,
-    #candidate-dashboard .stats-card {
-        transition: all 0.3s ease;
-    }
-    
-    #candidate-dashboard .job-card:hover,
-    #candidate-dashboard .category-card:hover,
-    #candidate-dashboard .company-card:hover,
-    #candidate-dashboard .stats-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
-    
-    #candidate-dashboard .job-card {
-        border-left: 4px solid #6C63FF;
-    }
-    
-    #candidate-dashboard .popular-keywords .badge {
-        padding: 8px 15px;
-        font-weight: 500;
-        font-size: 12px;
-        transition: all 0.2s ease;
-    }
-    
-    #candidate-dashboard .popular-keywords .badge:hover {
-        background-color: #6C63FF;
-        color: white;
-    }
-</style>
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+}
 
 @section Scripts {
 <script>
     $(document).ready(function() {
-        // Kiểm tra nếu người dùng đã đăng nhập (ở đây là giả lập)
-        // displayCandidateHomepage nếu cần
+        // For testing: Change to true to see the candidate dashboard
+        var isLoggedIn = false; 
+        
+        // You can also toggle by adding ?dashboard=true to the URL
+        if (window.location.search.includes('dashboard=true')) {
+            isLoggedIn = true;
+        }
+        
+        // Check if the user is authenticated
+        // Phương thức này sẽ cần thay thế bằng phương thức xác thực thực tế của bạn
+        function checkUserAuthStatus() {
+            // Kiểm tra cookie hoặc localStorage để xác định trạng thái đăng nhập
+            // Đây chỉ là ví dụ, thay thế bằng cách kiểm tra thực tế của bạn
+            var authCookie = getCookie("auth_token");
+            return authCookie !== null && authCookie !== "";
+        }
+        
+        // Helper để lấy cookie
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+        
+        // Kiểm tra trạng thái đăng nhập từ cookie/localstorage nếu không phải là chế độ test
+        if (!window.location.search.includes('dashboard=')) {
+            isLoggedIn = checkUserAuthStatus();
+        }
+        
+        // Display appropriate interface based on login status
+        if (isLoggedIn) {
+            $("#candidate-dashboard").show();
+            $("#guest-content").hide();
+            
+            // Set candidate name (replace with actual name from your system)
+            var userName = "Ứng viên"; // Mặc định
+            
+            // Try to get the actual username from localStorage or cookie if available
+            var storedUserName = localStorage.getItem("user_name") || getCookie("user_name");
+            if (storedUserName) {
+                userName = storedUserName;
+            }
+            
+            $(".candidate-name").text(userName); 
+        } else {
+            $("#guest-content").show();
+            $("#candidate-dashboard").hide();
+        }
     });
 </script>
 }
