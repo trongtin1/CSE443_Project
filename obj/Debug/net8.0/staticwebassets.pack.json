@@ -1,299 +1,255 @@
 {
   "Files": [
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\CSE443_Project.bundle.scp.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\CSE443_Project.bundle.scp.css",
       "PackagePath": "staticwebassets\\CSE443_Project.paej6fe7vl.bundle.scp.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\ActivityBook.png",
-      "PackagePath": "staticwebassets\\Images\\ActivityBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\ArtBook.png",
-      "PackagePath": "staticwebassets\\Images\\ArtBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\EnglishBook.png",
-      "PackagePath": "staticwebassets\\Images\\EnglishBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\GDCDBook.png",
-      "PackagePath": "staticwebassets\\Images\\GDCDBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\GDTCBook.png",
-      "PackagePath": "staticwebassets\\Images\\GDTCBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\HistoryBook.png",
-      "PackagePath": "staticwebassets\\Images\\HistoryBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\MusicBook.png",
-      "PackagePath": "staticwebassets\\Images\\MusicBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\ScienceBook.png",
-      "PackagePath": "staticwebassets\\Images\\ScienceBook.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\TechnologyBooks.png",
-      "PackagePath": "staticwebassets\\Images\\TechnologyBooks.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\banner.png",
-      "PackagePath": "staticwebassets\\Images\\banner.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\Images\\logo.png",
-      "PackagePath": "staticwebassets\\Images\\logo.png"
-    },
-    {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\css\\auth.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\css\\auth.css",
       "PackagePath": "staticwebassets\\css\\auth.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\css\\home.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\css\\home.css",
       "PackagePath": "staticwebassets\\css\\home.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\css\\site.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\favicon.ico",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\js\\site.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\LICENSE",
       "PackagePath": "staticwebassets\\lib\\bootstrap"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery\\LICENSE.txt",
       "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery\\dist\\jquery.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
     },
     {
-      "Id": "D:\\CSE443\\Project\\a\\CSE443_Project\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "Id": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {

@@ -2,17 +2,6 @@ wwwroot\css\auth.css
 wwwroot\css\home.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
-wwwroot\Images\ActivityBook.png
-wwwroot\Images\ArtBook.png
-wwwroot\Images\banner.png
-wwwroot\Images\EnglishBook.png
-wwwroot\Images\GDCDBook.png
-wwwroot\Images\GDTCBook.png
-wwwroot\Images\HistoryBook.png
-wwwroot\Images\logo.png
-wwwroot\Images\MusicBook.png
-wwwroot\Images\ScienceBook.png
-wwwroot\Images\TechnologyBooks.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
