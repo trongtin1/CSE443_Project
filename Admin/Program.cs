@@ -9,15 +9,17 @@ namespace Admin
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Register services here
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
+
+            var app = builder.Build();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
