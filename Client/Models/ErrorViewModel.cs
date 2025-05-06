@@ -1,4 +1,4 @@
-namespace Client.Models
+namespace CSE443_Project.Models
 {
     public class ErrorViewModel
     {

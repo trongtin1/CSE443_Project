@@ -1,7 +1,4 @@
-using Client.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace Client
+namespace CSE443_Project
 {
     public class Program
     {
@@ -9,14 +6,8 @@ namespace Client
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Register services here
+            // Add services to the container.
             builder.Services.AddControllersWithViews();
-
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
-            });
 
             var app = builder.Build();
 
@@ -37,7 +28,7 @@ namespace Client
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area=Client}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

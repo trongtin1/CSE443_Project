@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Job Connect</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/client-site.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fc;
+        }
+        
+        .sidebar {
+            min-height: 100vh;
+            background-color: #4e73df;
+            background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+            color: white;
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-brand img {
+            max-height: 40px;
+            margin-right: 10px;
+        }
+        
+        .sidebar-brand-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-item {
+            padding: 0 15px;
+            margin: 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: rgba(255,255,255,0.8) !important;
+            border-radius: 5px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-link i {
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+        
+        .navbar-divider {
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin: 15px;
+        }
+        
+        .content-wrapper {
+            margin-left: 220px;
+            min-height: 100vh;
+            background-color: #fff;
+        }
+        
+        .topbar {
+            background-color: #F5E7E4;
+            height: 70px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .topbar-search {
+            width: 300px;
+            position: relative;
+        }
+        
+        .topbar-search input {
+            border-radius: 20px;
+            padding-left: 40px;
+        }
+        
+        .topbar-search i {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #aaa;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .content-container {
+            padding: 30px;
+        }
+        
+        .footer {
+            background-color: #F5E7E4;
+            padding: 20px 30px;
+            margin-left: 220px;
+            border-top: 1px solid #eee;
+        }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 100px;
+            }
+            
+            .sidebar-brand-text {
+                display: none;
+            }
+            
+            .nav-link span {
+                display: none;
+            }
+            
+            .nav-link i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .content-wrapper, .footer {
+                margin-left: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <img src="/Images/logo.jpg" alt="Logo">
+            <span class="sidebar-brand-text">Job Connect</span>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" 
+                   href="@Url.Action("Dashboard", "Candidate", new { area = "Client" })">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Bảng Điều Khiển</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "CreateCV" ? "active" : "")" 
+                   href="@Url.Action("CreateCV", "Candidate", new { area = "Client" })">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Tạo CV</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "ApplyJobs" ? "active" : "")" 
+                   href="@Url.Action("ApplyJobs", "Candidate", new { area = "Client" })">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Tìm Việc Làm</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "SavedJobs" ? "active" : "")" 
+                   href="@Url.Action("SavedJobs", "Candidate", new { area = "Client" })">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Việc Đã Lưu</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "MyApplications" ? "active" : "")" 
+                   href="@Url.Action("MyApplications", "Candidate", new { area = "Client" })">
+                    <i class="fas fa-file-upload"></i>
+                    <span>Việc Đã Nộp</span>
+                </a>
+            </li>
+            
+            <div class="navbar-divider"></div>
+            
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Profile" ? "active" : "")" 
+                   href="@Url.Action("Profile", "Candidate", new { area = "Client" })">
+                    <i class="fas fa-user"></i>
+                    <span>Tài Khoản</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng Xuất</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="content-wrapper">
+        <div class="topbar">
+            <div class="topbar-search">
+                <i class="fas fa-search"></i>
+                <input type="text" class="form-control" placeholder="Tìm kiếm...">
+            </div>
+            <div class="user-profile">
+                <img src="https://via.placeholder.com/40" alt="User">
+                <div>
+                    <h6 class="m-0">Nguyễn Văn A</h6>
+                    <small class="text-muted">Ứng viên</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-container">
+            @RenderBody()
+        </div>
+        
+        <div class="footer">
+            <div class="container-fluid">
+                <div class="text-center">
+                    <p class="mb-0">&copy; 2024 Job Connect. Đã đăng ký bản quyền.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> 
