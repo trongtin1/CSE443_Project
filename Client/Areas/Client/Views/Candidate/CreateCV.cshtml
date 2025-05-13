@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "Tạo CV";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .cv-container { max-width: 700px; margin: 40px auto; background: #fffaf8; border-radius: 16px; box-shadow: 0 4px 16px #eee; padding: 40px 32px; }
+    .cv-container h2 { color: #6C63FF; font-weight: bold; margin-bottom: 32px; text-align: center; }
+    .cv-container .form-group label { font-weight: 500; color: #333; }
+    .cv-container .form-control, .cv-container textarea { border-radius: 8px; border: 1px solid #ddd; margin-bottom: 18px; }
+    .cv-container textarea { min-height: 80px; }
+    .cv-container .btn-primary { background: #6C63FF; border: none; border-radius: 8px; padding: 10px 32px; font-weight: 500; }
+    .cv-container .btn-primary:hover { background: #5a52e0; }
+    .cv-avatar { display: flex; align-items: center; margin-bottom: 18px; }
+    .cv-avatar img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-right: 18px; border: 2px solid #6C63FF; }
+    .cv-avatar input[type="file"] { display: none; }
+    .cv-avatar label { cursor: pointer; color: #6C63FF; font-weight: 500; }
+    
+</style>
+<div class="cv-container">
+    <h2>Tạo CV Chuyên Nghiệp</h2>
+    <form>
+        <div class="cv-avatar">
+            <img id="avatarPreview" src="https://via.placeholder.com/80" alt="Avatar">
+            <label for="avatarUpload">Chọn ảnh đại diện</label>
+            <input type="file" id="avatarUpload" accept="image/*" onchange="previewAvatar(event)">
+        </div>
+        <div class="form-group">
+            <label for="fullName">Họ và tên</label>
+            <input type="text" class="form-control" id="fullName" placeholder="Nhập họ và tên">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Nhập email">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="phone">Số điện thoại</label>
+                <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="dob">Ngày sinh</label>
+                <input type="date" class="form-control" id="dob">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="address">Địa chỉ</label>
+                <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="position">Vị trí ứng tuyển</label>
+            <input type="text" class="form-control" id="position" placeholder="Nhập vị trí mong muốn">
+        </div>
+        <div class="form-group">
+            <label for="objective">Mục tiêu nghề nghiệp</label>
+            <textarea class="form-control" id="objective" placeholder="Mục tiêu nghề nghiệp của bạn"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="experience">Kinh nghiệm làm việc</label>
+            <textarea class="form-control" id="experience" placeholder="Mô tả kinh nghiệm làm việc (công ty, vị trí, thời gian, mô tả)"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="education">Học vấn</label>
+            <textarea class="form-control" id="education" placeholder="Trường, chuyên ngành, thời gian, thành tích"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="skills">Kỹ năng</label>
+            <input type="text" class="form-control" id="skills" placeholder="VD: Java, C#, Giao tiếp, Làm việc nhóm...">
+        </div>
+        <button type="submit" class="btn btn-primary mt-2 w-100">Lưu CV</button>
+    </form>
+</div>
+<script>
+    function previewAvatar(event) {
+        const [file] = event.target.files;
+        if (file) {
+            document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+        }
+    }
+</script> 

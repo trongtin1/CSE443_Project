@@ -1,0 +1,271 @@
+@{
+    ViewData["Title"] = "Company Profile";
+    Layout = "~/Areas/Client/Views/Shared/_RecruiterLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Company Profile</h1>
+        <button type="button" class="btn btn-primary" id="saveChanges">
+            <i class="fas fa-save fa-sm text-white-50 mr-1"></i> Save Changes
+        </button>
+    </div>
+
+    <div class="row">
+        <!-- Company Information -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Company Information</h6>
+                </div>
+                <div class="card-body">
+                    <form id="companyForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="companyName">Company Name</label>
+                                    <input type="text" class="form-control" id="companyName" value="Tech Solutions Inc.">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="industry">Industry</label>
+                                    <select class="form-control" id="industry">
+                                        <option value="technology">Technology</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="healthcare">Healthcare</option>
+                                        <option value="education">Education</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="website">Website</label>
+                                    <input type="url" class="form-control" id="website" value="https://www.techsolutions.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="size">Company Size</label>
+                                    <select class="form-control" id="size">
+                                        <option value="1-10">1-10 employees</option>
+                                        <option value="11-50">11-50 employees</option>
+                                        <option value="51-200">51-200 employees</option>
+                                        <option value="201-500">201-500 employees</option>
+                                        <option value="501+">501+ employees</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Company Description</label>
+                            <textarea class="form-control" id="description" rows="4">Tech Solutions Inc. is a leading technology company specializing in innovative software solutions. We are committed to delivering high-quality products and services to our clients while fostering a collaborative and inclusive work environment.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="benefits">Benefits & Perks</label>
+                            <textarea class="form-control" id="benefits" rows="3">• Competitive salary and benefits package
+• Flexible work arrangements
+• Professional development opportunities
+• Health and wellness programs
+• Team building activities</textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Location Information -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Location Information</h6>
+                    <button type="button" class="btn btn-sm btn-primary" id="addLocation">
+                        <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add Location
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="location-list">
+                        <div class="location-item mb-3 p-3 border rounded">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control" value="123 Tech Street, Silicon Valley, CA 94043">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select class="form-control">
+                                            <option value="headquarters">Headquarters</option>
+                                            <option value="branch">Branch Office</option>
+                                            <option value="remote">Remote</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <button type="button" class="btn btn-danger btn-block">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Media -->
+        <div class="col-xl-4 col-lg-5">
+            <!-- Logo Upload -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Company Logo</h6>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://via.placeholder.com/200" class="img-fluid rounded" alt="Company Logo">
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="logoUpload">
+                        <label class="btn btn-primary" for="logoUpload">
+                            <i class="fas fa-upload fa-sm text-white-50 mr-1"></i> Upload New Logo
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Social Media</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                            </div>
+                            <input type="url" class="form-control" id="linkedin" value="https://linkedin.com/company/techsolutions">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="twitter">Twitter</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                            </div>
+                            <input type="url" class="form-control" id="twitter" value="https://twitter.com/techsolutions">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="facebook">Facebook</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fab fa-facebook"></i></span>
+                            </div>
+                            <input type="url" class="form-control" id="facebook" value="https://facebook.com/techsolutions">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Photos -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Company Photos</h6>
+                    <button type="button" class="btn btn-sm btn-primary" id="addPhoto">
+                        <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add Photo
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="position-relative">
+                                <img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="Office">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="position-relative">
+                                <img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="Team">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Save Changes
+            $('#saveChanges').click(function() {
+                // Add save logic here
+                console.log('Saving changes...');
+            });
+
+            // Add Location
+            $('#addLocation').click(function() {
+                var newLocation = `
+                    <div class="location-item mb-3 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" class="form-control" placeholder="Enter address">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Type</label>
+                                    <select class="form-control">
+                                        <option value="headquarters">Headquarters</option>
+                                        <option value="branch">Branch Office</option>
+                                        <option value="remote">Remote</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn btn-danger btn-block">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('.location-list').append(newLocation);
+            });
+
+            // Add Photo
+            $('#addPhoto').click(function() {
+                // Add photo upload logic here
+                console.log('Adding new photo...');
+            });
+
+            // Logo Upload
+            $('#logoUpload').change(function() {
+                // Add logo upload logic here
+                console.log('Uploading new logo...');
+            });
+        });
+    </script>
+} 

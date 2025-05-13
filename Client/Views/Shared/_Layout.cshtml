@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,6 +7,72 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CSE443_Project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        .btn-auth {
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+            margin-left: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #333;
+            border: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        .btn-auth:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-auth.active {
+            background-color: #6C63FF;
+            color: white;
+        }
+        
+        .btn-auth.active:hover {
+            background-color: #5a52e0;
+            color: white;
+            box-shadow: 0 2px 10px rgba(108, 99, 255, 0.3);
+        }
+
+        .modal-content {
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: none;
+            padding: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #6C63FF;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a52e0;
+        }
+    </style>
 </head>
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>
 
@@ -28,10 +94,221 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <!-- Menu khi chưa đăng nhập -->
+                    <ul class="navbar-nav" id="guest-menu">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">TRANG CHỦ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">VIỆC LÀM</a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Menu cho ứng viên đã đăng nhập -->
+                    <ul class="navbar-nav" id="candidate-nav" style="display: none;">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">TẠO CV</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">TÌM VIỆC LÀM</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">VIỆC ĐÃ LƯU</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">VIỆC ĐÃ NỘP</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://via.placeholder.com/30" alt="Avatar" class="rounded-circle mr-1" style="width: 30px; height: 30px;">
+                                <span class="candidate-name">TÀI KHOẢN</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="#">Hồ sơ cá nhân</a></li>
+                                <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn">Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <!-- Nút đăng ký / đăng nhập (chỉ hiển thị khi chưa đăng nhập) -->
+                    <div class="d-flex ml-auto" id="auth-buttons">
+                        <button type="button" class="btn btn-auth" data-bs-toggle="modal" data-bs-target="#registerModal">ĐĂNG KÝ</button>
+                        <button type="button" class="btn btn-auth active" data-bs-toggle="modal" data-bs-target="#loginModal">ĐĂNG NHẬP</button>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Đăng Ký Tài Khoản</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs mb-4" id="registerTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="candidate-tab" data-bs-toggle="tab" href="#candidate" role="tab">Ứng Viên</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="recruiter-tab" data-bs-toggle="tab" href="#recruiter" role="tab">Nhà Tuyển Dụng</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="registerTabContent">
+                        <div class="tab-pane fade show active" id="candidate" role="tabpanel">
+                            <form id="candidateRegisterForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="candidateName" class="form-label">Họ và Tên</label>
+                                            <input type="text" class="form-control" id="candidateName" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="candidateEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="candidateEmail" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="candidatePassword" class="form-label">Mật Khẩu</label>
+                                            <input type="password" class="form-control" id="candidatePassword" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="candidateConfirmPassword" class="form-label">Xác Nhận Mật Khẩu</label>
+                                            <input type="password" class="form-control" id="candidateConfirmPassword" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="candidatePhone" class="form-label">Số Điện Thoại</label>
+                                    <input type="tel" class="form-control" id="candidatePhone" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="candidateAddress" class="form-label">Địa Chỉ</label>
+                                    <input type="text" class="form-control" id="candidateAddress" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="candidateTerms" required>
+                                    <label class="form-check-label" for="candidateTerms">Tôi đồng ý với điều khoản sử dụng</label>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary px-5">Đăng Ký</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="recruiter" role="tabpanel">
+                            <form id="recruiterRegisterForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="companyName" class="form-label">Tên Công Ty</label>
+                                            <input type="text" class="form-control" id="companyName" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="recruiterEmail" class="form-label">Email Công Ty</label>
+                                            <input type="email" class="form-control" id="recruiterEmail" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="recruiterPassword" class="form-label">Mật Khẩu</label>
+                                            <input type="password" class="form-control" id="recruiterPassword" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="recruiterConfirmPassword" class="form-label">Xác Nhận Mật Khẩu</label>
+                                            <input type="password" class="form-control" id="recruiterConfirmPassword" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="recruiterPhone" class="form-label">Số Điện Thoại</label>
+                                    <input type="tel" class="form-control" id="recruiterPhone" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="companyAddress" class="form-label">Địa Chỉ Công Ty</label>
+                                    <input type="text" class="form-control" id="companyAddress" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="recruiterTerms" required>
+                                    <label class="form-check-label" for="recruiterTerms">Tôi đồng ý với điều khoản sử dụng</label>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary px-5">Đăng Ký</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Đăng Nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Mật Khẩu</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Nhớ đăng nhập</label>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="userType" id="candidateType" value="candidate" checked>
+                                    <label class="form-check-label" for="candidateType">Ứng Viên</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="userType" id="recruiterType" value="recruiter">
+                                    <label class="form-check-label" for="recruiterType">Nhà Tuyển Dụng</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
+                        </div>
+                        <div class="text-center">
+                            <a href="#" class="text-muted small">Quên mật khẩu?</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p class="text-muted small mb-0">Bạn chưa có tài khoản? <a href="#" onclick="document.getElementById('loginModal').querySelector('.btn-close').click(); document.getElementById('registerModal').querySelector('.btn').click();">Đăng ký ngay</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -43,9 +320,85 @@
             &copy; 2025 - CSE443_Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            // Handle candidate registration form submission
+            $('#candidateRegisterForm').on('submit', function(e) {
+                e.preventDefault();
+                // Validate form
+                if ($('#candidatePassword').val() !== $('#candidateConfirmPassword').val()) {
+                    alert('Mật khẩu không khớp!');
+                    return;
+                }
+                // For demonstration, show success message and close modal
+                alert('Đăng ký tài khoản ứng viên thành công!');
+                $('#registerModal').modal('hide');
+                
+                // Hide guest menu and auth buttons, show candidate menu
+                $('#guest-menu').hide();
+                $('#candidate-nav').show();
+                $('#auth-buttons').hide();
+                
+                // Update username display
+                var username = $('#candidateName').val() || 'Ứng Viên';
+                $('.candidate-name').text(username);
+            });
+            
+            // Handle recruiter registration form submission
+            $('#recruiterRegisterForm').on('submit', function(e) {
+                e.preventDefault();
+                // Validate form
+                if ($('#recruiterPassword').val() !== $('#recruiterConfirmPassword').val()) {
+                    alert('Mật khẩu không khớp!');
+                    return;
+                }
+                // For demonstration, show success message and close modal
+                alert('Đăng ký tài khoản nhà tuyển dụng thành công! Chúng tôi sẽ xác minh thông tin và liên hệ lại.');
+                $('#registerModal').modal('hide');
+                
+                // Redirect to recruiter dashboard
+                window.location.href = '/Client/Recruiter/Dashboard';
+            });
+            
+            // Handle login form submission
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                var userType = $('input[name="userType"]:checked').val();
+                $('#loginModal').modal('hide');
+                if (userType === 'recruiter') {
+                    window.location.href = '/Client/Recruiter/Dashboard';
+                } else {
+                    // Ẩn nút đăng ký/đăng nhập
+                    $('#auth-buttons').hide();
+                    $('#candidate-nav').show();
+                    $('#guest-menu').hide();
+                    // Cập nhật tên tài khoản
+                    var username = $('#loginEmail').val().split('@@')[0] || 'Ứng Viên';
+                    $('.candidate-name').text(username);
+                    alert('Đăng nhập ứng viên thành công!');
+                    console.log('Đã ẩn auth-buttons sau đăng nhập');
+                }
+            });
+            
+            // Handle logout
+            $('#logoutBtn').on('click', function(e) {
+                e.preventDefault();
+                
+                // Update navigation
+                $('#guest-menu').show();
+                $('#candidate-nav').hide();
+                $('#auth-buttons').show();
+                
+                alert('Đăng xuất thành công!');
+            });
+
+            console.log($('#auth-buttons').length); // Kết quả phải là 1
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
+</html> -->

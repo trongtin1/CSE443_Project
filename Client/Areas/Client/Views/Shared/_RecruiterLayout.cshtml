@@ -162,7 +162,7 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-brand">
-            <img src="/Images/logo.jpg" alt="Logo">
+            <img src="/images/logo.jpg" alt="Logo">
             <span class="sidebar-brand-text">Job Connect</span>
         </div>
         
@@ -171,35 +171,35 @@
                 <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" 
                    href="@Url.Action("Dashboard", "Recruiter", new { area = "Client" })">
                     <i class="fas fa-tachometer-alt"></i>
-                    <span>Bảng Điều Khiển</span>
+                    <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "CreateJob" ? "active" : "")" 
                    href="@Url.Action("CreateJob", "Recruiter", new { area = "Client" })">
                     <i class="fas fa-plus-circle"></i>
-                    <span>Đăng Tin Tuyển Dụng</span>
+                    <span>Post Job</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "ManageJobs" ? "active" : "")" 
                    href="@Url.Action("ManageJobs", "Recruiter", new { area = "Client" })">
                     <i class="fas fa-briefcase"></i>
-                    <span>Quản Lý Tin</span>
+                    <span>Manage Jobs</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Applications" ? "active" : "")" 
                    href="@Url.Action("Applications", "Recruiter", new { area = "Client" })">
                     <i class="fas fa-file-alt"></i>
-                    <span>Hồ Sơ Ứng Tuyển</span>
+                    <span>Applications</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Reports" ? "active" : "")" 
                    href="@Url.Action("Reports", "Recruiter", new { area = "Client" })">
                     <i class="fas fa-chart-bar"></i>
-                    <span>Báo Cáo & Thống Kê</span>
+                    <span>Reports and Statistics</span>
                 </a>
             </li>
             
@@ -209,13 +209,13 @@
                 <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "CompanyProfile" ? "active" : "")" 
                    href="@Url.Action("CompanyProfile", "Recruiter", new { area = "Client" })">
                     <i class="fas fa-building"></i>
-                    <span>Hồ Sơ Công Ty</span>
+                    <span>Company Profile</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>Đăng Xuất</span>
+                    <span>Log out</span>
                 </a>
             </li>
         </ul>
@@ -225,13 +225,13 @@
         <div class="topbar">
             <div class="topbar-search">
                 <i class="fas fa-search"></i>
-                <input type="text" class="form-control" placeholder="Tìm kiếm...">
+                <input type="text" class="form-control" placeholder="Search...">
             </div>
             <div class="user-profile">
                 <img src="https://via.placeholder.com/40" alt="User">
                 <div>
                     <h6 class="m-0">Tech Solutions</h6>
-                    <small class="text-muted">Nhà tuyển dụng</small>
+                    <small class="text-muted">Recruiter</small>
                 </div>
             </div>
         </div>
@@ -243,7 +243,7 @@
         <div class="footer">
             <div class="container-fluid">
                 <div class="text-center">
-                    <p class="mb-0">&copy; 2024 Job Connect. Đã đăng ký bản quyền.</p>
+                    <p class="mb-0">&copy; 2024 Job Connect. All rights reserved.</p>
                 </div>
             </div>
         </div>

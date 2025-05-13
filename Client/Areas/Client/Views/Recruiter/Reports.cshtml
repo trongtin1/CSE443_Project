@@ -1,0 +1,310 @@
+@{
+    ViewData["Title"] = "Reports & Statistics";
+    Layout = "~/Areas/Client/Views/Shared/_RecruiterLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Reports & Statistics</h1>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="exportExcel">
+                <i class="fas fa-file-excel fa-sm text-white-50 mr-1"></i> Export to Excel
+            </button>
+            <button type="button" class="btn btn-success" id="exportPDF">
+                <i class="fas fa-file-pdf fa-sm text-white-50 mr-1"></i> Export to PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Date Range</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" class="form-control" id="startDate">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" class="form-control" id="endDate">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="quickSelect">Quick Select</label>
+                        <select class="form-control" id="quickSelect">
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 90 Days</option>
+                            <option value="365">Last Year</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Applications</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">215</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Active Jobs</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Interview Rate</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">45%</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Hired Candidates</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <!-- Applications Over Time -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Applications Over Time</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="applicationsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Status Distribution -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Application Status Distribution</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics -->
+    <div class="row">
+        <!-- Top Job Positions -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top Job Positions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Applications</th>
+                                    <th>Interview Rate</th>
+                                    <th>Hire Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Senior Frontend Developer</td>
+                                    <td>45</td>
+                                    <td>55%</td>
+                                    <td>15%</td>
+                                </tr>
+                                <tr>
+                                    <td>UX/UI Designer</td>
+                                    <td>38</td>
+                                    <td>48%</td>
+                                    <td>12%</td>
+                                </tr>
+                                <tr>
+                                    <td>Backend Developer</td>
+                                    <td>32</td>
+                                    <td>52%</td>
+                                    <td>18%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Candidate Sources -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Candidate Sources</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="sourcesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Applications Over Time Chart
+            var ctx = document.getElementById('applicationsChart').getContext('2d');
+            var applicationsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Applications',
+                        data: [65, 59, 80, 81, 56, 55],
+                        borderColor: '#4e73df',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Status Distribution Chart
+            var ctx2 = document.getElementById('statusChart').getContext('2d');
+            var statusChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['New', 'Reviewing', 'Shortlisted', 'Interviewed', 'Offered', 'Rejected'],
+                    datasets: [{
+                        data: [30, 20, 15, 15, 10, 10],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796']
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Sources Chart
+            var ctx3 = document.getElementById('sourcesChart').getContext('2d');
+            var sourcesChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['Job Board', 'LinkedIn', 'Referral', 'Company Website', 'Other'],
+                    datasets: [{
+                        label: 'Candidates',
+                        data: [45, 30, 15, 8, 2],
+                        backgroundColor: '#4e73df'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Quick Select Date Range
+            $('#quickSelect').change(function() {
+                var days = parseInt($(this).val());
+                var endDate = new Date();
+                var startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+                
+                $('#startDate').val(startDate.toISOString().split('T')[0]);
+                $('#endDate').val(endDate.toISOString().split('T')[0]);
+            });
+
+            // Export to Excel
+            $('#exportExcel').click(function() {
+                // Add export to Excel logic here
+                console.log('Exporting to Excel');
+            });
+
+            // Export to PDF
+            $('#exportPDF').click(function() {
+                // Add export to PDF logic here
+                console.log('Exporting to PDF');
+            });
+        });
+    </script>
+} 

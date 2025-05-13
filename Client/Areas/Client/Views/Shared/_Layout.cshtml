@@ -278,7 +278,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="/Images/logo.jpg" alt="Logo" /> 
+                    <img src="" alt="Logo" /> 
                     @* <div> *@
                     @*     JOB CONNECT  *@
                     @*     <small>EST. 2024</small> *@
@@ -292,45 +292,45 @@
                     <!-- Menu khi chưa đăng nhập -->
                     <ul class="navbar-nav" id="guest-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">TRANG CHỦ</a>
+                            <a class="nav-link" href="/Client/Home/Index">HOME</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">VIỆC LÀM</a>
+                            <a class="nav-link" href="/Client/Job/Index">JOBS</a>
                         </li>
                     </ul>
                     
                     <!-- Menu cho ứng viên đã đăng nhập -->
                     <ul class="navbar-nav" id="candidate-nav" style="display: none;">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">TẠO CV</a>
+                            <a class="nav-link" href="/Client/Candidate/CreateCV">CREATE CV</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">TÌM VIỆC LÀM</a>
+                            <a class="nav-link" href="/Client/Candidate/ApplyJobs">FIND JOBS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">VIỆC ĐÃ LƯU</a>
+                            <a class="nav-link" href="/Client/Candidate/SavedJobs">SAVED JOBS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">VIỆC ĐÃ NỘP</a>
+                            <a class="nav-link" href="/Client/Candidate/MyApplications">MY APPLICATIONS</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="https://via.placeholder.com/30" alt="Avatar" class="rounded-circle mr-1" style="width: 30px; height: 30px;">
-                                <span class="candidate-name">TÀI KHOẢN</span>
+                                <!-- <img src="https://via.placeholder.com/30" alt="Avatar" class="rounded-circle mr-1" style="width: 30px; height: 30px;"> -->
+                                <span class="candidate-name">Account</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">Hồ sơ cá nhân</a>
-                                <a class="dropdown-item" href="#">Cài đặt</a>
+                                <a class="dropdown-item" href="#">My Profile</a>
+                                <a class="dropdown-item" href="#">Settings</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" id="logoutBtn">Đăng xuất</a>
+                                <a class="dropdown-item" href="#" id="logoutBtn">LOGOUT</a>
                             </div>
                         </li>
                     </ul>
                     
                     <!-- Nút đăng ký / đăng nhập (chỉ hiển thị khi chưa đăng nhập) -->
                     <div class="d-flex ml-auto" id="auth-buttons">
-                        <button type="button" class="btn btn-auth" data-toggle="modal" data-target="#registerModal">ĐĂNG KÝ</button>
-                        <button type="button" class="btn btn-auth active" data-toggle="modal" data-target="#loginModal">ĐĂNG NHẬP</button>
+                        <button type="button" class="btn btn-auth" data-toggle="modal" data-target="#registerModal">REGISTER</button>
+                        <button type="button" class="btn btn-auth active" data-toggle="modal" data-target="#loginModal">LOGIN</button>
                     </div>
                 </div>
             </div>
@@ -345,16 +345,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>Về Chúng Tôi</h5>
+                    <h5>About Us</h5>
                     <p class="text-muted">Kết nối ứng viên với nhà tuyển dụng hiệu quả.</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Liên Hệ</h5>
                     <p class="text-muted">Email: contact@jobconnect.com</p>
-                    <p class="text-muted">Điện thoại: 123-456-7890</p>
+                    <p class="text-muted">Phone: 123-456-7890</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>Theo Dõi</h5>
+                    <h5>Follow</h5>
                     <div>
                         <a href="#" class="text-muted mr-3"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="text-muted mr-3"><i class="fab fa-twitter"></i></a>
@@ -394,37 +394,37 @@
                             <form id="candidateRegisterForm">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="candidateName">Họ và Tên</label>
-                                        <input type="text" class="form-control" id="candidateName" placeholder="Nhập họ và tên">
+                                        <label for="candidateName">Full Name</label>
+                                        <input type="text" class="form-control" id="candidateName" placeholder="Enter your full name">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="candidateEmail">Email</label>
-                                        <input type="email" class="form-control" id="candidateEmail" placeholder="Nhập email">
+                                        <input type="email" class="form-control" id="candidateEmail" placeholder="Enter your email">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="candidatePhone">Số Điện Thoại</label>
-                                        <input type="tel" class="form-control" id="candidatePhone" placeholder="Nhập số điện thoại">
+                                        <label for="candidatePhone">Phone Number</label>
+                                        <input type="tel" class="form-control" id="candidatePhone" placeholder="Enter your phone number">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="candidateDOB">Ngày Sinh</label>
+                                        <label for="candidateDOB">Date of Birth</label>
                                         <input type="date" class="form-control" id="candidateDOB">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="candidatePassword">Mật Khẩu</label>
-                                        <input type="password" class="form-control" id="candidatePassword" placeholder="Nhập mật khẩu">
+                                        <label for="candidatePassword">Password</label>
+                                        <input type="password" class="form-control" id="candidatePassword" placeholder="Enter your password">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="candidateConfirmPassword">Xác Nhận Mật Khẩu</label>
-                                        <input type="password" class="form-control" id="candidateConfirmPassword" placeholder="Xác nhận mật khẩu">
+                                        <label for="candidateConfirmPassword">Confirm Password</label>
+                                        <input type="password" class="form-control" id="candidateConfirmPassword" placeholder="Enter your password again">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="candidateAddress">Địa Chỉ</label>
-                                    <input type="text" class="form-control" id="candidateAddress" placeholder="Nhập địa chỉ">
+                                    <label for="candidateAddress">Address</label>
+                                    <input type="text" class="form-control" id="candidateAddress" placeholder="Enter your address">
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
@@ -433,7 +433,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary px-5">Đăng Ký</button>
+                                    <button type="submit" class="btn btn-primary px-5">REGISTER</button>
                                 </div>
                             </form>
                         </div>
@@ -441,57 +441,57 @@
                             <form id="recruiterRegisterForm">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="companyName">Tên Công Ty</label>
-                                        <input type="text" class="form-control" id="companyName" placeholder="Nhập tên công ty">
+                                        <label for="companyName">Company Name</label>
+                                        <input type="text" class="form-control" id="companyName" placeholder="Enter your company name">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="businessType">Loại Hình Doanh Nghiệp</label>
+                                        <label for="businessType">Business Type</label>
                                         <select class="form-control" id="businessType">
-                                            <option value="" selected disabled>Chọn loại hình</option>
-                                            <option value="corporation">Công ty cổ phần</option>
-                                            <option value="limited">Công ty TNHH</option>
-                                            <option value="private">Doanh nghiệp tư nhân</option>
-                                            <option value="foreign">Doanh nghiệp có vốn đầu tư nước ngoài</option>
-                                            <option value="other">Khác</option>
+                                            <option value="" selected disabled>Select business type</option>
+                                            <option value="corporation">Corporation</option>
+                                            <option value="limited">Limited Liability Company</option>
+                                            <option value="private">Private enterprise</option>
+                                            <option value="foreign">Foreign-invested enterprises</option>
+                                            <option value="other">Other</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="recruiterEmail">Email Công Ty</label>
-                                        <input type="email" class="form-control" id="recruiterEmail" placeholder="Nhập email công ty">
+                                        <label for="recruiterEmail">Company Email</label>
+                                        <input type="email" class="form-control" id="recruiterEmail" placeholder="Enter your company email">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="recruiterPhone">Số Điện Thoại Liên Hệ</label>
-                                        <input type="tel" class="form-control" id="recruiterPhone" placeholder="Nhập số điện thoại">
+                                        <label for="recruiterPhone">Phone Number</label>
+                                        <input type="tel" class="form-control" id="recruiterPhone" placeholder="Enter your phone number">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="recruiterPassword">Mật Khẩu</label>
-                                        <input type="password" class="form-control" id="recruiterPassword" placeholder="Nhập mật khẩu">
+                                        <label for="recruiterPassword">Password</label>
+                                        <input type="password" class="form-control" id="recruiterPassword" placeholder="Enter your password">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="recruiterConfirmPassword">Xác Nhận Mật Khẩu</label>
-                                        <input type="password" class="form-control" id="recruiterConfirmPassword" placeholder="Xác nhận mật khẩu">
+                                        <label for="recruiterConfirmPassword">Confirm Password</label>
+                                        <input type="password" class="form-control" id="recruiterConfirmPassword" placeholder="Enter your password again">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="companyAddress">Địa Chỉ Công Ty</label>
-                                    <input type="text" class="form-control" id="companyAddress" placeholder="Nhập địa chỉ công ty">
+                                    <label for="companyAddress">Company Address</label>
+                                    <input type="text" class="form-control" id="companyAddress" placeholder="Enter your company address">
                                 </div>
                                 <div class="form-group">
-                                    <label for="companyWebsite">Website Công Ty</label>
-                                    <input type="url" class="form-control" id="companyWebsite" placeholder="Nhập website công ty (nếu có)">
+                                    <label for="companyWebsite">Company Website</label>
+                                    <input type="url" class="form-control" id="companyWebsite" placeholder="Enter your company website">
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="recruiterTerms">
-                                        <label class="custom-control-label" for="recruiterTerms">Tôi đồng ý với <a href="#">điều khoản sử dụng</a> và <a href="#">chính sách bảo mật</a></label>
+                                        <label class="custom-control-label" for="recruiterTerms">I agree with<a href="#">terms of use</a> and <a href="#">privacy policy</a></label>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary px-5">Đăng Ký</button>
+                                    <button type="submit" class="btn btn-primary px-5">Register</button>
                                 </div>
                             </form>
                         </div>
@@ -506,7 +506,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Đăng Nhập</h5>
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
                     <button type="button" class="close" onclick="$('#loginModal').modal('hide');">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -515,38 +515,38 @@
                     <form id="loginForm">
                         <div class="form-group">
                             <label for="loginEmail">Email</label>
-                            <input type="email" class="form-control" id="loginEmail" placeholder="Nhập email">
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email">
                         </div>
                         <div class="form-group">
-                            <label for="loginPassword">Mật Khẩu</label>
-                            <input type="password" class="form-control" id="loginPassword" placeholder="Nhập mật khẩu">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
                         </div>
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" id="rememberMe">
-                            <label class="form-check-label" for="rememberMe">Nhớ đăng nhập</label>
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
                         </div>
                         <div class="form-group">
                             <div class="d-flex justify-content-between">
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="candidateType" name="userType" class="custom-control-input" value="candidate" checked>
-                                    <label class="custom-control-label" for="candidateType">Ứng Viên</label>
+                                    <label class="custom-control-label" for="candidateType">Candidate</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="recruiterType" name="userType" class="custom-control-input" value="recruiter">
-                                    <label class="custom-control-label" for="recruiterType">Nhà Tuyển Dụng</label>
+                                    <label class="custom-control-label" for="recruiterType">Recruiter</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block py-2">Đăng Nhập</button>
+                            <button type="submit" class="btn btn-primary btn-block py-2">Login</button>
                         </div>
                         <div class="text-center mt-3">
-                            <a href="#" class="text-muted small">Quên mật khẩu?</a>
+                            <a href="#" class="text-muted small">Forgot password?</a>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <p class="text-muted small mb-0">Bạn chưa có tài khoản? <a href="javascript:void(0);" onclick="$('#loginModal').modal('hide'); $('#registerModal').modal('show');">Đăng ký ngay</a></p>
+                    <p class="text-muted small mb-0">You don't have an account yet? <a href="javascript:void(0);" onclick="$('#loginModal').modal('hide'); $('#registerModal').modal('show');">Register now</a></p>
                 </div>
             </div>
         </div>
@@ -641,26 +641,15 @@
             // Handle login form submission
             $('#loginForm').on('submit', function(e) {
                 e.preventDefault();
-                
-                // Get user type (candidate or recruiter)
                 var userType = $('input[name="userType"]:checked').val();
-                
-                // Simulate login success and redirect based on user type
                 $('#loginModal').modal('hide');
-                
                 if (userType === 'recruiter') {
-                    // Redirect to recruiter dashboard
                     window.location.href = '/Client/Recruiter/Dashboard';
                 } else {
-                    // For candidate - display the candidate homepage
                     switchToCandidateUI();
-                    
-                    // Show success message
                     alert('Đăng nhập ứng viên thành công!');
+                    console.log('Đã ẩn auth-buttons sau đăng nhập');
                 }
-                
-                // In a real implementation, would authenticate with server
-                // $.ajax({ ... })
             });
             
             // Handle logout
@@ -676,17 +665,12 @@
             
             // Functions to switch between UI states
             function switchToCandidateUI() {
-                // Update navigation
                 $('#guest-menu').hide();
                 $('#candidate-nav').show();
                 $('#auth-buttons').hide();
-                
-                // Update homepage content
-                displayCandidateHomepage();
-                
-                // Update username display
-                var username = $('#loginEmail').val().split('@@')[0] || 'Ứng Viên';
-                $('.candidate-name').text(username);
+                // Cập nhật tên tài khoản đúng chuẩn, tránh lỗi Razor
+                var email = $('#loginEmail').val();
+                $('.candidate-name').text(email || 'Candidate');
             }
             
             function switchToGuestUI() {
