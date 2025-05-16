@@ -9,5 +9,25 @@ namespace CSE443_Project.Areas.Client.Controllers
         {
             return View();
         }
+        
+        public IActionResult CreateCV()
+        {
+            return View();
+        }
+        
+        public IActionResult ApplyJobs()
+        {
+            return View();
+        }
+        
+        public IActionResult SavedJobs()
+        {
+            return View();
+        }
+        
+        public IActionResult MyApplications()
+        {
+            return View();
+        }
     }
 }

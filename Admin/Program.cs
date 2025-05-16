@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Admin.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Admin
 {
@@ -18,6 +19,19 @@ namespace Admin
                 options.UseSqlServer(connectionString);
             });
 
+            // Add cookie authentication
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/Login";
+                    options.LogoutPath = "/Auth/Logout";
+                    options.AccessDeniedPath = "/Auth/AccessDenied";
+                    options.Cookie.Name = "AdminAuth";
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                    options.SlidingExpiration = true;
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,11 +47,12 @@ namespace Admin
 
             app.UseRouting();
 
+            app.UseAuthentication(); // Add authentication middleware
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=HomePage}/{id?}");
 
             app.Run();
         }

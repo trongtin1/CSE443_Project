@@ -1,0 +1,304 @@
+@{
+    ViewData["Title"] = "Find Jobs";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">Find Jobs</h6>
+            </div>
+            <div class="card-body">
+                <!-- Search Form -->
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="job-search-form">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-2">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white">
+                                                        <i class="fas fa-search text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" placeholder="Keywords (position, company...)">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white">
+                                                        <i class="fas fa-map-marker-alt text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <select class="form-control">
+                                                    <option value="">Location</option>
+                                                    <option>Hanoi</option>
+                                                    <option>Ho Chi Minh City</option>
+                                                    <option>Da Nang</option>
+                                                    <option>Can Tho</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-white">
+                                                        <i class="fas fa-briefcase text-primary"></i>
+                                                    </span>
+                                                </div>
+                                                <select class="form-control">
+                                                    <option value="">Industry</option>
+                                                    <option>IT - Software</option>
+                                                    <option>Accounting - Auditing</option>
+                                                    <option>Marketing - PR</option>
+                                                    <option>Education - Training</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 mb-2">
+                                            <button type="submit" class="btn btn-primary btn-block">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <div class="d-flex flex-wrap">
+                                                <span class="badge badge-light p-2 mr-2 mb-2">Salary</span>
+                                                <span class="badge badge-light p-2 mr-2 mb-2">Experience</span>
+                                                <span class="badge badge-light p-2 mr-2 mb-2">Level</span>
+                                                <span class="badge badge-light p-2 mr-2 mb-2">Job Type</span>
+                                                <span class="badge badge-light p-2 mr-2 mb-2">Other Filters</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Listings -->
+                <div class="job-listings">
+                    <!-- Job 1 -->
+                    <div class="card mb-3 job-card border-left-primary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex">
+                                        <div class="company-logo-wrapper mr-3">
+                                            <img src="https://via.placeholder.com/60" class="company-logo rounded" alt="Company Logo">
+                                        </div>
+                                        <div class="job-details">
+                                            <h5 class="job-title font-weight-bold mb-1">Sales Representative - Unlimited Income</h5>
+                                            <p class="company-name mb-2 text-muted">TECHNICAL TECHNOLOGY JOINT STOCK COMPANY</p>
+                                            <div class="job-meta mb-2">
+                                                <span class="badge badge-light mr-2"><i class="fas fa-money-bill-wave text-success mr-1"></i>15 - 45 million</span>
+                                                <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt text-danger mr-1"></i>Hanoi</span>
+                                                <span class="badge badge-light"><i class="fas fa-calendar-alt text-primary mr-1"></i>15 days left to apply</span>
+                                            </div>
+                                            <p class="job-description small text-muted mb-0">
+                                                Find potential customers, develop market, negotiate and sign contracts with customers, achieve sales targets...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-outline-success rounded-pill mr-2">
+                                        <i class="far fa-heart mr-1"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary rounded-pill">
+                                        <i class="fas fa-paper-plane mr-1"></i> Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job 2 -->
+                    <div class="card mb-3 job-card border-left-primary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex">
+                                        <div class="company-logo-wrapper mr-3">
+                                            <img src="https://via.placeholder.com/60" class="company-logo rounded" alt="Company Logo">
+                                        </div>
+                                        <div class="job-details">
+                                            <h5 class="job-title font-weight-bold mb-1">Tax Accountant (Salary 13 - 15 Million + Allowances)</h5>
+                                            <p class="company-name mb-2 text-muted">Thuong Dinh Yen Joint Stock Company</p>
+                                            <div class="job-meta mb-2">
+                                                <span class="badge badge-light mr-2"><i class="fas fa-money-bill-wave text-success mr-1"></i>13 - 15 million</span>
+                                                <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt text-danger mr-1"></i>Hanoi</span>
+                                                <span class="badge badge-light"><i class="fas fa-calendar-alt text-primary mr-1"></i>10 days left to apply</span>
+                                            </div>
+                                            <p class="job-description small text-muted mb-0">
+                                                Responsible for tax accounting, preparing financial reports, handling tax issues, optimizing tax costs...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-outline-success rounded-pill mr-2">
+                                        <i class="far fa-heart mr-1"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary rounded-pill">
+                                        <i class="fas fa-paper-plane mr-1"></i> Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job 3 -->
+                    <div class="card mb-3 job-card border-left-primary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex">
+                                        <div class="company-logo-wrapper mr-3">
+                                            <img src="https://via.placeholder.com/60" class="company-logo rounded" alt="Company Logo">
+                                        </div>
+                                        <div class="job-details">
+                                            <h5 class="job-title font-weight-bold mb-1">Digital Marketing Specialist (8-12 million)</h5>
+                                            <p class="company-name mb-2 text-muted">ABC Solutions Company Limited</p>
+                                            <div class="job-meta mb-2">
+                                                <span class="badge badge-light mr-2"><i class="fas fa-money-bill-wave text-success mr-1"></i>8 - 12 million</span>
+                                                <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt text-danger mr-1"></i>Ho Chi Minh City</span>
+                                                <span class="badge badge-light"><i class="fas fa-calendar-alt text-primary mr-1"></i>20 days left to apply</span>
+                                            </div>
+                                            <p class="job-description small text-muted mb-0">
+                                                Plan online marketing, implement advertising campaigns, optimize SEO/SEM, analyze data and reporting...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-outline-success rounded-pill mr-2">
+                                        <i class="far fa-heart mr-1"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary rounded-pill">
+                                        <i class="fas fa-paper-plane mr-1"></i> Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job 4 -->
+                    <div class="card mb-3 job-card border-left-primary">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex">
+                                        <div class="company-logo-wrapper mr-3">
+                                            <img src="https://via.placeholder.com/60" class="company-logo rounded" alt="Company Logo">
+                                        </div>
+                                        <div class="job-details">
+                                            <h5 class="job-title font-weight-bold mb-1">Front-end Developer (ReactJS)</h5>
+                                            <p class="company-name mb-2 text-muted">XYZ Software Company</p>
+                                            <div class="job-meta mb-2">
+                                                <span class="badge badge-light mr-2"><i class="fas fa-money-bill-wave text-success mr-1"></i>20 - 30 million</span>
+                                                <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt text-danger mr-1"></i>Da Nang</span>
+                                                <span class="badge badge-light"><i class="fas fa-calendar-alt text-primary mr-1"></i>5 days left to apply</span>
+                                            </div>
+                                            <p class="job-description small text-muted mb-0">
+                                                Develop user interfaces with ReactJS, optimize performance, work with RESTful APIs, fix bugs and improve applications...
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-outline-success rounded-pill mr-2">
+                                        <i class="far fa-heart mr-1"></i> Save
+                                    </button>
+                                    <button class="btn btn-primary rounded-pill">
+                                        <i class="fas fa-paper-plane mr-1"></i> Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav aria-label="Job Pagination">
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-chevron-left"></i></a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .company-logo {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+    
+    .job-card {
+        transition: all 0.2s ease;
+    }
+    
+    .job-card:hover {
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+    
+    .rounded-pill {
+        border-radius: 50rem!important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Check login
+            var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            var userType = localStorage.getItem('userType');
+            
+            if (isLoggedIn && userType === 'candidate') {
+                // Switch UI for candidate
+                switchToCandidateUI();
+            } else {
+                // Redirect to login page
+                window.location.href = '/Client/Home/Index';
+            }
+            
+            // Job search form submission
+            $('#job-search-form').submit(function(e) {
+                e.preventDefault();
+                // Here you would normally filter jobs based on search criteria
+                alert('Searching for jobs...');
+            });
+            
+            // Save job button
+            $('.job-card .btn-outline-success').click(function() {
+                var jobTitle = $(this).closest('.job-card').find('.job-title').text();
+                alert('Job saved: ' + jobTitle);
+            });
+            
+            // Apply job button
+            $('.job-card .btn-primary').click(function() {
+                var jobTitle = $(this).closest('.job-card').find('.job-title').text();
+                alert('Applied for job: ' + jobTitle);
+            });
+        });
+    </script>
+} 
