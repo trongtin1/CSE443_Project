@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CSE443_Project.Data;
 using CSE443_Project.Models;
+using System.Linq;
 
 namespace CSE443_Project.Areas.Admin.Controllers
 {
@@ -34,6 +35,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.created_at = DateTime.UtcNow;
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -42,10 +44,13 @@ namespace CSE443_Project.Areas.Admin.Controllers
         }
 
         // GET: Admin/Users/Edit/5
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
-            var user = _context.Users.Find(id);
+            if (id == null) return NotFound();
+
+            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
             if (user == null) return NotFound();
+
             return View(user);
         }
 
@@ -56,7 +61,15 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Users.Update(user);
+                var existingUser = _context.Users.FirstOrDefault(u => u.user_id == user.user_id);
+                if (existingUser == null) return NotFound();
+
+                // Cập nhật các trường
+                existingUser.name = user.name;
+                existingUser.email = user.email;
+                existingUser.password = user.password;
+                existingUser.phone = user.phone;
+
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -64,10 +77,13 @@ namespace CSE443_Project.Areas.Admin.Controllers
         }
 
         // GET: Admin/Users/Delete/5
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int? id)
         {
-            var user = _context.Users.Find(id);
+            if (id == null) return NotFound();
+
+            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
             if (user == null) return NotFound();
+
             return View(user);
         }
 
@@ -76,7 +92,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
             if (user == null) return NotFound();
 
             _context.Users.Remove(user);
@@ -85,10 +101,13 @@ namespace CSE443_Project.Areas.Admin.Controllers
         }
 
         // GET: Admin/Users/Details/5
-        public IActionResult Details(int id)
+        public IActionResult Details(int? id)
         {
-            var user = _context.Users.Find(id);
+            if (id == null) return NotFound();
+
+            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
             if (user == null) return NotFound();
+
             return View(user);
         }
     }

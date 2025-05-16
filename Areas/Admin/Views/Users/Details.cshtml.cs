@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CSE443_Project.Areas.Admin.Views.Users
 {
-    public class DeltailModel : PageModel
+    public class DetailModel : PageModel
     {
         public void OnGet()
         {

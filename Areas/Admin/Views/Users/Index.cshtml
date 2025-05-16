@@ -7,7 +7,7 @@
 <table class="table table-bordered mt-3">
     <thead>
         <tr>
-            <th>Username</th>
+            <th>Họ tên</th>
             <th>Email</th>
             <th>Role</th>
             <th>Thao tác</th>
@@ -17,13 +17,13 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.Username</td>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
+                <td>@user.name</td>
+                <td>@user.email</td>
+                <td>@user.role</td>
                 <td>
-                    <a class="btn btn-info" href="/Admin/Users/Details/@user.Id">Chi tiết</a>
-                    <a class="btn btn-warning" href="/Admin/Users/Edit/@user.Id">Sửa</a>
-                    <a class="btn btn-danger" href="/Admin/Users/Delete/@user.Id">Xóa</a>
+                    <a class="btn btn-info" href="/Admin/Users/Details/@user.user_id">Chi tiết</a>
+                    <a class="btn btn-warning" href="/Admin/Users/Edit/@user.user_id">Sửa</a>
+                    <a class="btn btn-danger" href="/Admin/Users/Delete/@user.user_id">Xóa</a>
                 </td>
             </tr>
         }
