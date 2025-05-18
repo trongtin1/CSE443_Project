@@ -1,0 +1,32 @@
+@model IEnumerable<CSE443_Project.Models.Application>
+
+<h2>Danh sách đơn ứng tuyển</h2>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Job ID</th>
+            <th>CV ID</th>
+            <th>Trạng thái</th>
+            <th>Ngày ứng tuyển</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in Model)
+        {
+            <tr>
+                <td>@app.user_id</td>
+                <td>@app.job_id</td>
+                <td>@app.cv_id</td>
+                <td>@app.status</td>
+                <td>@app.applied_at.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <a class="btn btn-info" href="/Admin/Applications/Details/@app.id">Chi tiết</a>
+                    <a class="btn btn-danger" href="/Admin/Applications/Delete/@app.id">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

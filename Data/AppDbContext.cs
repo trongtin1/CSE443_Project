@@ -14,5 +14,10 @@ namespace CSE443_Project.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Setting> Settings { get; set; }
+
+        public DbSet<Application> Applications { get; set; }
+
+        public DbSet<CV> CVs { get; set; }
+
     }
 }

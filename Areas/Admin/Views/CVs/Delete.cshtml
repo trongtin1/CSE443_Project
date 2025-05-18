@@ -1,0 +1,11 @@
+@model CSE443_Project.Models.CV
+
+<h2>Xác nhận xoá CV</h2>
+
+<p>Bạn có chắc chắn muốn xoá CV của <strong>@Model.User?.name</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xoá</button>
+    <a class="btn btn-secondary" href="/Admin/CVs">Hủy</a>
+</form>

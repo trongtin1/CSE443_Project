@@ -1,0 +1,14 @@
+@model CSE443_Project.Models.Application
+
+<h2>Xác nhận xóa đơn ứng tuyển</h2>
+
+<div>
+    <h4>Ứng viên ID: @Model.user_id, Job ID: @Model.job_id</h4>
+    <p>Bạn có chắc chắn muốn xóa đơn ứng tuyển này không?</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="id" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a class="btn btn-secondary" href="/Admin/Applications">Hủy</a>
+    </form>
+</div>

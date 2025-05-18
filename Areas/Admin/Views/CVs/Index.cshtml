@@ -1,0 +1,26 @@
+@model IEnumerable<CSE443_Project.Models.CV>
+
+<h2>Danh sách CVs</h2>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Ứng viên</th>
+            <th>Ngày tạo</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cv in Model)
+        {
+            <tr>
+                <td>@cv.User?.name</td>
+                <td>@cv.CreatedAt.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a class="btn btn-info" href="/Admin/CVs/Details/@cv.Id">Chi tiết</a>
+                    <a class="btn btn-danger" href="/Admin/CVs/Delete/@cv.Id">Xoá</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

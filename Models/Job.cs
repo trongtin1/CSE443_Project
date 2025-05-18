@@ -2,9 +2,12 @@
 {
     public class Job
     {
-        public int Id { get; set; }
-        public required string Title { get; set; }
-        public required string Company { get; set; }
-        public DateTime PostedDate { get; set; }
+        public int job_id { get; set; }
+        public string title { get; set; }
+        public string description { get; set; }
+        public string location { get; set; }
+        public decimal salary { get; set; }
+        public string job_type { get; set; }
     }
+
 }

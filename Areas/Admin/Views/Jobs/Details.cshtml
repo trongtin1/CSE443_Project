@@ -1,0 +1,28 @@
+@model CSE443_Project.Models.Job
+
+<h2>Chi tiết công việc</h2>
+
+<table class="table">
+    <tr>
+        <th>Tiêu đề</th>
+        <td>@Model.title</td>
+    </tr>
+    <tr>
+        <th>Mô tả</th>
+        <td>@Model.description</td>
+    </tr>
+    <tr>
+        <th>Vị trí</th>
+        <td>@Model.location</td>
+    </tr>
+    <tr>
+        <th>Mức lương</th>
+        <td>@string.Format("{0:N0} VND", Model.salary)</td>
+    </tr>
+    <tr>
+        <th>Loại công việc</th>
+        <td>@Model.job_type</td>
+    </tr>
+</table>
+
+<a class="btn btn-secondary" href="/Admin/Jobs">Quay lại</a>
