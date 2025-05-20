@@ -7,8 +7,8 @@ namespace CSE443_Project.Areas.Client.Controllers
     {
         public IActionResult Dashboard()
         {
-            // In a real application, you would check if the user is authenticated
-            // and retrieve the candidate's information from the database
+            // All candidate views now have protection in the _CandidateLayout.cshtml
+            // which checks localStorage and redirects if not authenticated
             return View();
         }
         

@@ -1,0 +1,135 @@
+@model Admin.Models.Authentication.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Admin Register";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        background-color: var(--dark-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    .auth-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 1rem;
+    }
+    .register-card {
+        background-color: var(--dark-sidebar);
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    }
+    .register-header {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .register-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    .register-body {
+        padding: 2rem;
+    }
+    .register-footer {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem;
+        text-align: center;
+    }
+    .form-floating > label {
+        color: #718096;
+    }
+    .form-floating > .form-control {
+        background-color: #1a2332;
+        border-color: var(--border-color);
+        color: white;
+    }
+    .form-floating > .form-control:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.25rem rgba(62, 130, 229, 0.25);
+    }
+    .register-brand {
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        color: white;
+    }
+    .register-brand i {
+        color: var(--accent-color);
+        margin-right: 0.5rem;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="register-brand">
+        <i class="bi bi-briefcase"></i> Job Admin
+    </div>
+
+    <div class="register-card">
+        <div class="register-header">
+            <h1>Create Admin Account</h1>
+        </div>
+        <div class="register-body">
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Username" class="form-control" placeholder="Username" autocomplete="username" />
+                    <label asp-for="Username">Username</label>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="FullName" class="form-control" placeholder="Full Name" />
+                    <label asp-for="FullName">Full Name</label>
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" autocomplete="email" />
+                    <label asp-for="Email">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" class="form-control" placeholder="Password" autocomplete="new-password" />
+                    <label asp-for="Password">Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                
+                <div class="form-floating mb-4">
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" autocomplete="new-password" />
+                    <label asp-for="ConfirmPassword">Confirm Password</label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                </div>
+            </form>
+        </div>
+        <div class="register-footer">
+            <p class="mb-0">
+                Already have an account? <a asp-action="Login">Login</a>
+            </p>
+        </div>
+    </div>
+    
+    <div class="text-center mt-3 text-muted">
+        <small>&copy; @DateTime.Now.Year - Job Admin Dashboard</small>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

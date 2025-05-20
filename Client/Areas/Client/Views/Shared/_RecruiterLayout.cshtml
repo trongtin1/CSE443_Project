@@ -8,249 +8,504 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="~/css/client-site.css" />
     <style>
+        /* Dashboard styles */
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        .wrapper {
+            display: flex;
+        }
+        
+        /* Sidebar */
         .sidebar {
+            min-width: 250px;
+            max-width: 250px;
             min-height: 100vh;
-            background-color: #1cc88a;
-            background-image: linear-gradient(180deg, #1cc88a 10%, #13855c 100%);
+            background: #4e73df;
+            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+            transition: all 0.3s;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            z-index: 100;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem;
             color: white;
-            width: 220px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         .sidebar-brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .sidebar-brand img {
-            max-height: 40px;
-            margin-right: 10px;
-        }
-        
-        .sidebar-brand-text {
-            font-weight: bold;
-            font-size: 1.2rem;
             color: white;
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-brand:hover {
+            color: #fff;
             text-decoration: none;
         }
         
+        .sidebar-brand-icon {
+            margin-right: 0.5rem;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 1rem 0;
+        }
+        
+        .sidebar-heading {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 0 1rem 0.5rem;
+        }
+        
+        /* Sidebar Nav */
+        .nav-sidebar {
+            padding-left: 0;
+            list-style: none;
+        }
+        
         .nav-item {
-            padding: 0 15px;
-            margin: 0;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            color: rgba(255,255,255,0.8) !important;
-            border-radius: 5px;
-            margin: 5px 0;
-            transition: all 0.3s;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            color: white !important;
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .nav-link i {
-            margin-right: 10px;
-            opacity: 0.8;
-        }
-        
-        .navbar-divider {
-            border-top: 1px solid rgba(255,255,255,0.15);
-            margin: 15px;
-        }
-        
-        .content-wrapper {
-            margin-left: 220px;
-            min-height: 100vh;
-            background-color: #fff;
-        }
-        
-        .topbar {
-            background-color: #F5E7E4;
-            height: 70px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            padding: 0 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .topbar-search {
-            width: 300px;
             position: relative;
         }
         
-        .topbar-search input {
-            border-radius: 20px;
-            padding-left: 40px;
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: all 0.3s;
         }
         
-        .topbar-search i {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            color: #aaa;
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
         }
         
-        .user-profile {
+        .nav-link.active {
+            color: #fff;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link i {
+            margin-right: 0.5rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.85rem;
+        }
+        
+        .nav-link.active i {
+            color: #fff;
+        }
+        
+        /* Content */
+        .content-wrapper {
+            flex: 1;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Topbar */
+        .topbar {
+            height: 4.375rem;
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 10;
         }
         
-        .user-profile img {
-            width: 40px;
-            height: 40px;
+        .topbar-divider {
+            width: 0;
+            border-right: 1px solid #e3e6f0;
+            height: calc(4.375rem - 2rem);
+            margin: auto 1rem;
+        }
+        
+        .dropdown-toggle {
+            white-space: nowrap;
+        }
+        
+        .dropdown-toggle::after {
+            display: none;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            left: auto;
+            margin-top: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+            border: 1px solid #e3e6f0;
+        }
+        
+        .dropdown-item:active {
+            background-color: #4e73df;
+        }
+        
+        /* Content */
+        .container-fluid {
+            padding: 1.5rem;
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 0.75rem 1.25rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        /* Border Left Colors */
+        .border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+        
+        .border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+        
+        .border-left-info {
+            border-left: 0.25rem solid #36b9cc !important;
+        }
+        
+        .border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+        
+        /* User Info */
+        .img-profile {
+            height: 2rem;
+            width: 2rem;
+        }
+        
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+        
+        .text-gray-600 {
+            color: #858796 !important;
+        }
+        
+        /* Notification Icon */
+        .notification-icon {
+            position: relative;
+        }
+        
+        .notification-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74a3b;
+            color: white;
             border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
+            width: 1rem;
+            height: 1rem;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .content-container {
-            padding: 30px;
+        /* Footer */
+        .sticky-footer {
+            padding: 2rem 0;
+            flex-shrink: 0;
+            background-color: white;
         }
         
-        .footer {
-            background-color: #F5E7E4;
-            padding: 20px 30px;
-            margin-left: 220px;
-            border-top: 1px solid #eee;
+        /* Badge */
+        .badge-success {
+            background-color: #1cc88a;
         }
-
-        @@media (max-width: 768px) {
-            .sidebar {
-                width: 100px;
+        
+        .badge-warning {
+            background-color: #f6c23e;
+        }
+        
+        .badge-danger {
+            background-color: #e74a3b;
+        }
+        
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .table .thead-light th {
+            background-color: #f8f9fc;
+            color: #6e707e;
+            font-weight: 600;
+        }
+        
+        .btn-circle {
+            border-radius: 100%;
+            height: 2.5rem;
+            width: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-circle.btn-sm {
+            height: 1.8rem;
+            width: 1.8rem;
+            font-size: 0.75rem;
+        }
+        
+        /* Dropdown Menu Animation */
+        .animated--grow-in {
+            animation-name: growIn;
+            animation-duration: 200ms;
+            animation-timing-function: transform cubic-bezier(0.18, 1.25, 0.4, 1), opacity cubic-bezier(0, 1, 0.4, 1);
+        }
+        
+        @@keyframes growIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
             }
-            
-            .sidebar-brand-text {
-                display: none;
-            }
-            
-            .nav-link span {
-                display: none;
-            }
-            
-            .nav-link i {
-                margin-right: 0;
-                font-size: 1.2rem;
-            }
-            
-            .content-wrapper, .footer {
-                margin-left: 100px;
+            100% {
+                transform: scale(1);
+                opacity: 1;
             }
         }
     </style>
+    @RenderSection("Styles", required: false)
 </head>
 <body>
-    <div class="sidebar">
-        <div class="sidebar-brand">
-            <img src="/Images/logo.jpg" alt="Logo">
-            <span class="sidebar-brand-text">Job Connect</span>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a href="/Client/Recruiter/Dashboard" class="sidebar-brand">
+                    <img src="~/images/logo1.png" alt="Job Connect Logo" style="height: 40px; margin-right: 10px;" />
+                    <span>JOB CONNECT</span>
+                </a>
+                <div class="text-center text-white-50 small">Recruiter Portal</div>
+            </div>
+            
+            <hr class="sidebar-divider">
+            
+            <div class="sidebar-heading">Management</div>
+            
+            <ul class="nav-sidebar">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")" href="/Client/Recruiter/Dashboard">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CreateJob" ? "active" : "")" href="/Client/Recruiter/CreateJob">
+                        <i class="fas fa-fw fa-plus-circle"></i>
+                        <span>Post Job</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "ManageJobs" ? "active" : "")" href="/Client/Recruiter/ManageJobs">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Manage Jobs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Applications" ? "active" : "")" href="/Client/Recruiter/Applications">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Applications</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <hr class="sidebar-divider">
+            
+            <div class="sidebar-heading">Company</div>
+            
+            <ul class="nav-sidebar">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "CompanyProfile" ? "active" : "")" href="/Client/Recruiter/CompanyProfile">
+                        <i class="fas fa-fw fa-building"></i>
+                        <span>Company Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reports" ? "active" : "")" href="/Client/Recruiter/Reports">
+                        <i class="fas fa-fw fa-chart-bar"></i>
+                        <span>Reports & Statistics</span>
+                    </a>
+                </li>
+            </ul>
         </div>
         
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Dashboard" ? "active" : "")" 
-                   href="@Url.Action("Dashboard", "Recruiter", new { area = "Client" })">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Bảng Điều Khiển</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "CreateJob" ? "active" : "")" 
-                   href="@Url.Action("CreateJob", "Recruiter", new { area = "Client" })">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Đăng Tin Tuyển Dụng</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "ManageJobs" ? "active" : "")" 
-                   href="@Url.Action("ManageJobs", "Recruiter", new { area = "Client" })">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Quản Lý Tin</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Applications" ? "active" : "")" 
-                   href="@Url.Action("Applications", "Recruiter", new { area = "Client" })">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Hồ Sơ Ứng Tuyển</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Reports" ? "active" : "")" 
-                   href="@Url.Action("Reports", "Recruiter", new { area = "Client" })">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Báo Cáo & Thống Kê</span>
-                </a>
-            </li>
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Top Bar -->
+            <nav class="topbar mb-4">
+                <!-- Sidebar Toggle -->
+                <button id="sidebarToggle" class="btn btn-link rounded-circle mr-3">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <!-- Topbar Search -->
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Nav Item - Alerts -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <!-- Counter - Alerts -->
+                            <span class="notification-counter">3</span>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                            <h6 class="dropdown-header bg-primary text-white">
+                                Notifications
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500">15/05/2024</div>
+                                    <span class="font-weight-bold">5 new applications received!</span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item text-center small text-gray-500" href="#">View all notifications</a>
+                        </div>
+                    </li>
+                    
+                    <div class="topbar-divider"></div>
+                    
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small recruiter-name">Company Name</span>
+                            <i class="fas fa-user-circle fa-2x text-gray-300"></i>
+                        </a>
+                        <!-- Dropdown - User Information -->
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="/Client/Recruiter/CompanyProfile">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Company Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
             
-            <div class="navbar-divider"></div>
+            <!-- Main Content -->
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
             
-            <li class="nav-item">
-                <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "CompanyProfile" ? "active" : "")" 
-                   href="@Url.Action("CompanyProfile", "Recruiter", new { area = "Client" })">
-                    <i class="fas fa-building"></i>
-                    <span>Hồ Sơ Công Ty</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Đăng Xuất</span>
-                </a>
-            </li>
-        </ul>
+            <!-- Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>&copy; 2024 Job Connect. All rights reserved.</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
     
-    <div class="content-wrapper">
-        <div class="topbar">
-            <div class="topbar-search">
-                <i class="fas fa-search"></i>
-                <input type="text" class="form-control" placeholder="Tìm kiếm...">
-            </div>
-            <div class="user-profile">
-                <img src="https://via.placeholder.com/40" alt="User">
-                <div>
-                    <h6 class="m-0">Tech Solutions</h6>
-                    <small class="text-muted">Nhà tuyển dụng</small>
-                </div>
-            </div>
-        </div>
-        
-        <div class="content-container">
-            @RenderBody()
-        </div>
-        
-        <div class="footer">
-            <div class="container-fluid">
-                <div class="text-center">
-                    <p class="mb-0">&copy; 2024 Job Connect. Đã đăng ký bản quyền.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Check if user is logged in
+            var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            var userType = localStorage.getItem('userType');
+            var userEmail = localStorage.getItem('userEmail');
+            
+            // If not logged in or not a recruiter, redirect to home page
+            if (!isLoggedIn || userType !== 'recruiter') {
+                window.location.href = '/Client/Home/Index';
+                return;
+            }
+            
+            // Display company name/email
+            $('.recruiter-name').text(userEmail || 'Company Name');
+            
+            // Handle sidebar toggle
+            $('#sidebarToggle').on('click', function() {
+                $('.sidebar').toggleClass('toggled');
+                if ($('.sidebar').hasClass('toggled')) {
+                    $('.sidebar').css('min-width', '100px');
+                    $('.sidebar').css('max-width', '100px');
+                    $('.sidebar-brand span').hide();
+                    $('.nav-link span').hide();
+                    $('.sidebar-heading').hide();
+                } else {
+                    $('.sidebar').css('min-width', '250px');
+                    $('.sidebar').css('max-width', '250px');
+                    $('.sidebar-brand span').show();
+                    $('.nav-link span').show();
+                    $('.sidebar-heading').show();
+                }
+            });
+            
+            // Handle logout
+            $('#logoutBtn').on('click', function(e) {
+                e.preventDefault();
+                
+                // Clear login information
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userType');
+                localStorage.removeItem('userEmail');
+                
+                alert('Logged out successfully!');
+                window.location.href = '/Client/Home/Index';
+            });
+        });
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html> 

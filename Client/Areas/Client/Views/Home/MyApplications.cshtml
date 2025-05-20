@@ -1,0 +1,382 @@
+@{
+    ViewData["Title"] = "My Applications";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">My Applications</h6>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="statusFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter by status
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="statusFilterDropdown">
+                        <a class="dropdown-item active" href="#">All</a>
+                        <a class="dropdown-item" href="#">Submitted</a>
+                        <a class="dropdown-item" href="#">Under Review</a>
+                        <a class="dropdown-item" href="#">Interviewed</a>
+                        <a class="dropdown-item" href="#">Accepted</a>
+                        <a class="dropdown-item" href="#">Rejected</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Applications Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Job</th>
+                                <th scope="col">Company</th>
+                                <th scope="col">Applied Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Application 1 -->
+                            <tr>
+                                <td>
+                                    <div class="font-weight-bold">Front-end Developer (ReactJS)</div>
+                                    <div class="small text-muted">Salary: 20 - 30 million</div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/40" class="company-logo-small rounded mr-2" alt="Company Logo">
+                                        <span>XYZ Software Company</span>
+                                    </div>
+                                </td>
+                                <td>15/07/2023</td>
+                                <td><span class="badge badge-info">Under Review</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary view-application" data-toggle="tooltip" title="View details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger withdraw-application" data-toggle="tooltip" title="Withdraw application">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Application 2 -->
+                            <tr>
+                                <td>
+                                    <div class="font-weight-bold">Digital Marketing Specialist</div>
+                                    <div class="small text-muted">Salary: 8 - 12 million</div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/40" class="company-logo-small rounded mr-2" alt="Company Logo">
+                                        <span>ABC Solutions Company Limited</span>
+                                    </div>
+                                </td>
+                                <td>10/07/2023</td>
+                                <td><span class="badge badge-primary">Interviewed</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary view-application" data-toggle="tooltip" title="View details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger withdraw-application" data-toggle="tooltip" title="Withdraw application">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Application 3 -->
+                            <tr>
+                                <td>
+                                    <div class="font-weight-bold">Sales Representative</div>
+                                    <div class="small text-muted">Salary: 15 - 45 million</div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/40" class="company-logo-small rounded mr-2" alt="Company Logo">
+                                        <span>TECHNICAL TECHNOLOGY JOINT STOCK COMPANY</span>
+                                    </div>
+                                </td>
+                                <td>05/07/2023</td>
+                                <td><span class="badge badge-success">Accepted</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary view-application" data-toggle="tooltip" title="View details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger withdraw-application" data-toggle="tooltip" title="Withdraw application">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Application 4 -->
+                            <tr>
+                                <td>
+                                    <div class="font-weight-bold">Tax Accountant</div>
+                                    <div class="small text-muted">Salary: 13 - 15 million</div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="https://via.placeholder.com/40" class="company-logo-small rounded mr-2" alt="Company Logo">
+                                        <span>Thuong Dinh Yen Joint Stock Company</span>
+                                    </div>
+                                </td>
+                                <td>01/07/2023</td>
+                                <td><span class="badge badge-danger">Rejected</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary view-application" data-toggle="tooltip" title="View details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger disabled" data-toggle="tooltip" title="Rejected">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Empty state (hidden by default) -->
+                <div class="empty-state text-center py-5 d-none" id="emptyState">
+                    <div class="mb-3">
+                        <i class="fas fa-file-alt fa-4x text-muted"></i>
+                    </div>
+                    <h5 class="mb-3">You haven't applied for any jobs yet</h5>
+                    <p class="text-muted mb-4">When you apply for a job, your application will appear here for you to track.</p>
+                    <a href="@Url.Action("ApplyJobs", "Home", new { area = "Client" })" class="btn btn-primary">
+                        <i class="fas fa-search mr-1"></i> Find jobs now
+                    </a>
+                </div>
+                
+                <!-- Application Details Modal -->
+                <div class="modal fade" id="applicationDetailsModal" tabindex="-1" role="dialog" aria-labelledby="applicationDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="applicationDetailsModalLabel">Application Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="application-details">
+                                    <div class="row mb-4">
+                                        <div class="col-md-8">
+                                            <h5 class="job-title font-weight-bold" id="modalJobTitle">Front-end Developer (ReactJS)</h5>
+                                            <p class="company-name mb-2" id="modalCompanyName">XYZ Software Company</p>
+                                            <div class="job-meta mb-2">
+                                                <span class="badge badge-light mr-2"><i class="fas fa-money-bill-wave text-success mr-1"></i><span id="modalSalary">20 - 30 million</span></span>
+                                                <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt text-danger mr-1"></i><span id="modalLocation">Da Nang</span></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-right">
+                                            <div class="status-badge mb-2">
+                                                <span class="badge badge-info" id="modalStatus">Under Review</span>
+                                            </div>
+                                            <div class="application-date small text-muted">
+                                                Applied Date: <span id="modalApplicationDate">15/07/2023</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mb-3">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Application Information</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-3 font-weight-bold">Submitted CV:</div>
+                                                <div class="col-md-9">
+                                                    <a href="#" class="text-primary">
+                                                        <i class="far fa-file-pdf mr-1"></i> CV_NguyenVanA_Frontend.pdf
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-3 font-weight-bold">Cover Letter:</div>
+                                                <div class="col-md-9">
+                                                    <p>Dear Hiring Manager,</p>
+                                                    <p>I am writing to express my interest in the Front-end Developer position at your company. With over 3 years of experience working with ReactJS and modern web technologies, I believe I can make a significant contribution to your development team.</p>
+                                                    <p>Best regards,<br>Nguyen Van A</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mb-3">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">Application History</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="timeline">
+                                                <li class="timeline-item">
+                                                    <div class="timeline-marker bg-success"></div>
+                                                    <div class="timeline-content">
+                                                        <h6 class="timeline-title">Application Submitted</h6>
+                                                        <p class="timeline-date small text-muted">15/07/2023, 10:30</p>
+                                                    </div>
+                                                </li>
+                                                <li class="timeline-item">
+                                                    <div class="timeline-marker bg-primary"></div>
+                                                    <div class="timeline-content">
+                                                        <h6 class="timeline-title">Profile Viewed by Recruiter</h6>
+                                                        <p class="timeline-date small text-muted">16/07/2023, 14:15</p>
+                                                    </div>
+                                                </li>
+                                                <li class="timeline-item">
+                                                    <div class="timeline-marker bg-info"></div>
+                                                    <div class="timeline-content">
+                                                        <h6 class="timeline-title">Under Review</h6>
+                                                        <p class="timeline-date small text-muted">17/07/2023, 09:00</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger" id="modalWithdrawBtn">Withdraw Application</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .company-logo-small {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+        list-style: none;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: -30px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
+    
+    .timeline-item:not(:last-child):before {
+        content: '';
+        position: absolute;
+        left: -23px;
+        top: 15px;
+        height: calc(100% - 15px);
+        width: 1px;
+        background-color: #e3e6f0;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Check login
+            var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            var userType = localStorage.getItem('userType');
+            
+            if (isLoggedIn && userType === 'candidate') {
+                // Switch UI for candidate
+                switchToCandidateUI();
+            } else {
+                // Redirect to login page
+                window.location.href = '/Client/Home/Index';
+            }
+            
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // View application details
+            $('.view-application').click(function() {
+                $('#applicationDetailsModal').modal('show');
+            });
+            
+            // Withdraw application
+            $('.withdraw-application').click(function() {
+                var jobTitle = $(this).closest('tr').find('.font-weight-bold').text();
+                
+                if (confirm('Are you sure you want to withdraw your application for: ' + jobTitle + '?')) {
+                    // Here you would normally make an API call to withdraw the application
+                    alert('Application withdrawn successfully!');
+                    // Then remove the row from the table
+                    $(this).closest('tr').fadeOut(300, function() {
+                        $(this).remove();
+                        
+                        // Check if no applications remain, then show empty state
+                        if($('tbody tr').length === 0) {
+                            $('#emptyState').removeClass('d-none');
+                        }
+                    });
+                }
+            });
+            
+            // Modal withdraw button
+            $('#modalWithdrawBtn').click(function() {
+                var jobTitle = $('#modalJobTitle').text();
+                
+                if (confirm('Are you sure you want to withdraw your application for: ' + jobTitle + '?')) {
+                    // Here you would normally make an API call to withdraw the application
+                    alert('Application withdrawn successfully!');
+                    // Close the modal
+                    $('#applicationDetailsModal').modal('hide');
+                    // Then remove the row from the table
+                    $('tbody tr').each(function() {
+                        if ($(this).find('.font-weight-bold').text() === jobTitle) {
+                            $(this).fadeOut(300, function() {
+                                $(this).remove();
+                                
+                                // Check if no applications remain, then show empty state
+                                if($('tbody tr').length === 0) {
+                                    $('#emptyState').removeClass('d-none');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // Status filter
+            $('.dropdown-item').click(function(e) {
+                e.preventDefault();
+                
+                // Update active state
+                $('.dropdown-item').removeClass('active');
+                $(this).addClass('active');
+                
+                // Update dropdown button text
+                var statusText = $(this).text();
+                $('#statusFilterDropdown').text('Filter by status: ' + statusText);
+                
+                // Here you would normally filter the applications based on the selected status
+                alert('Filtering applications by status: ' + statusText);
+            });
+        });
+    </script>
+} 
