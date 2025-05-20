@@ -1,0 +1,32 @@
+@model IEnumerable<Admin.Models.Application>
+
+<h2>Application List</h2>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Job ID</th>
+            <th>CV ID</th>
+            <th>Status</th>
+            <th>Applied At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in Model)
+        {
+            <tr>
+                <td>@app.UserId</td>
+                <td>@app.JobId</td>
+                <td>@app.CVId</td>
+                <td>@app.Status</td>
+                <td>@app.AppliedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <a class="btn btn-info" href="/Admin/Applications/Details/@app.Id">Details</a>
+                    <a class="btn btn-danger" href="/Admin/Applications/Delete/@app.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

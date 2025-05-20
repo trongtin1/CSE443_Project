@@ -1,0 +1,20 @@
+@model Admin.Models.CV
+
+<h2>Chi tiết CV</h2>
+
+<table class="table">
+    <tr>
+        <th>Người dùng</th>
+        <td>@Model.User?.name (@Model.User?.email)</td>
+    </tr>
+    <tr>
+        <th>Ngày tạo</th>
+        <td>@Model.CreatedAt.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <th>Nội dung CV</th>
+        <td><pre>@Model.Content</pre></td>
+    </tr>
+</table>
+
+<a class="btn btn-secondary" href="/Admin/CVs">Quay lại</a>

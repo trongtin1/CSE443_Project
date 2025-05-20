@@ -1,0 +1,46 @@
+@model Admin.Models.Job
+
+<h2>Sửa công việc</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label>Tiêu đề</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Mô tả</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Công ty</label>
+        <input asp-for="Company" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Vị trí</label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Ngành nghề</label>
+        <input asp-for="Industry" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Mức lương tối thiểu</label>
+        <input asp-for="SalaryMin" class="form-control" type="number" step="0.01" />
+    </div>
+    <div class="form-group">
+        <label>Mức lương tối đa</label>
+        <input asp-for="SalaryMax" class="form-control" type="number" step="0.01" />
+    </div>
+    <div class="form-group">
+        <label>Loại công việc</label>
+        <input asp-for="EmploymentType" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Trạng thái</label>
+        <input asp-for="IsActive" type="checkbox" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Cập nhật</button>
+</form>

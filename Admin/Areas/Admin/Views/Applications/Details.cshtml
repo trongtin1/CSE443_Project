@@ -1,0 +1,13 @@
+@model Admin.Models.Application
+
+<h2>Application Details</h2>
+
+<table class="table">
+    <tr><th>User ID</th><td>@Model.UserId</td></tr>
+    <tr><th>Job ID</th><td>@Model.JobId</td></tr>
+    <tr><th>CV ID</th><td>@Model.CVId</td></tr>
+    <tr><th>Status</th><td>@Model.Status</td></tr>
+    <tr><th>Applied At</th><td>@Model.AppliedAt.ToString("dd/MM/yyyy HH:mm")</td></tr>
+</table>
+
+<a class="btn btn-secondary" href="/Admin/Applications">Back</a>

@@ -1,0 +1,40 @@
+@model Admin.Models.Job
+
+<h2>Job Details</h2>
+
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <td>@Model.Title</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>@Model.Description</td>
+    </tr>
+    <tr>
+        <th>Location</th>
+        <td>@Model.Location</td>
+    </tr>
+    <tr>
+        <th>Company</th>
+        <td>@Model.Company</td>
+    </tr>
+    <tr>
+        <th>Industry</th>
+        <td>@Model.Industry</td>
+    </tr>
+    <tr>
+        <th>Employment Type</th>
+        <td>@Model.EmploymentType</td>
+    </tr>
+    <tr>
+        <th>Salary Min</th>
+        <td>@Model.SalaryMin</td>
+    </tr>
+    <tr>
+        <th>Salary Max</th>
+        <td>@Model.SalaryMax</td>
+    </tr>
+</table>
+
+<a class="btn btn-secondary" href="/Admin/Jobs">Back</a>
