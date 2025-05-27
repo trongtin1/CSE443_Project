@@ -1,0 +1,13 @@
+@model CSE443_Project.Models.Application
+
+<h2>Chi tiết đơn ứng tuyển</h2>
+
+<table class="table">
+    <tr><th>User ID</th><td>@Model.user_id</td></tr>
+    <tr><th>Job ID</th><td>@Model.job_id</td></tr>
+    <tr><th>CV ID</th><td>@Model.cv_id</td></tr>
+    <tr><th>Trạng thái</th><td>@Model.status</td></tr>
+    <tr><th>Ngày ứng tuyển</th><td>@Model.applied_at.ToString("dd/MM/yyyy HH:mm")</td></tr>
+</table>
+
+<a class="btn btn-secondary" href="/Admin/Applications">Quay lại</a>

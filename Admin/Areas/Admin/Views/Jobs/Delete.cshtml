@@ -1,0 +1,14 @@
+@model CSE443_Project.Models.Job
+
+<h2>Xác nhận xóa công việc</h2>
+
+<div>
+    <h4>@Model.title</h4>
+    <p>Bạn có chắc chắn muốn xóa công việc này?</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="job_id" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a class="btn btn-secondary" href="/Admin/Jobs">Hủy</a>
+    </form>
+</div>

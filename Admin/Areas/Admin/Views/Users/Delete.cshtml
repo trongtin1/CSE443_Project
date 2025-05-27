@@ -1,0 +1,14 @@
+﻿@model CSE443_Project.Models.User
+
+<h2>Xác nhận xóa người dùng</h2>
+
+<div>
+    <h4>@Model.name (@Model.email)</h4>
+    <p>Bạn chắc chắn muốn xóa người dùng này?</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="user_id" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a class="btn btn-secondary" href="/Admin/Users">Hủy</a>
+    </form>
+</div>

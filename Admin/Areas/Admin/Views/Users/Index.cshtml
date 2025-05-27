@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CSE443_Project.Models.User>
+
+<div class="container-fluid">
+    <div class="d-flex align-items-center mb-4">
+        <a href="/Admin/Home" class="btn btn-outline-primary me-3">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+        <h2 class="mb-0">Manager Users</h2>
+    </div>
+
+    <a class="btn btn-primary" href="/Admin/Users/Create">Thêm mới</a>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.name</td>
+                    <td>@user.email</td>
+                    <td>@user.role</td>
+                    <td>
+                        <a class="btn btn-info" href="/Admin/Users/Details/@user.user_id">Chi tiết</a>
+                        <a class="btn btn-warning" href="/Admin/Users/Edit/@user.user_id">Sửa</a>
+                        <a class="btn btn-danger" href="/Admin/Users/Delete/@user.user_id">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

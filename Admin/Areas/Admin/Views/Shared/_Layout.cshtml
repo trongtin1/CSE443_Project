@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --admin-sidebar-width: 250px;
+            --admin-sidebar-bg: #2c3e50;
+            --admin-main-bg: #f8f9fa;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+            background: var(--admin-main-bg);
+        }
+
+        .admin-sidebar {
+            width: var(--admin-sidebar-width);
+            background: var(--admin-sidebar-bg);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-sidebar .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-sidebar .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            text-decoration: none;
+        }
+
+        .admin-sidebar .nav-link i {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .admin-main {
+            flex: 1;
+            margin-left: var(--admin-sidebar-width);
+            min-height: 100vh;
+            background: var(--admin-main-bg);
+        }
+
+        .admin-topbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .admin-topbar .search-bar input {
+            border-radius: 20px;
+            padding-left: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .admin-topbar .search-bar input:focus {
+            box-shadow: 0 0 0 2px #3498db33;
+            border-color: #3498db;
+        }
+
+        .admin-content {
+            padding: 2rem;
+        }
+
+        .admin-content .stat-card {
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.07);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .admin-content .stat-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 6px 24px rgba(52,152,219,0.13);
+        }
+
+        .admin-content .stat-card-info h3 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .admin-content .stat-card-label {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        .admin-content .stat-card-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+
+        .admin-content .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            background: white;
+        }
+
+        .admin-content .activity-list {
+            padding: 1rem;
+        }
+
+        .admin-content .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .admin-content .activity-item:hover {
+            background: #f1f7ff;
+        }
+
+        .admin-content .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .admin-content .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+
+        .admin-content .activity-content {
+            flex: 1;
+        }
+
+        .admin-content .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .admin-content .activity-text {
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+        }
+
+        .admin-content .activity-time {
+            font-size: 0.875rem;
+            color: #adb5bd;
+        }
+
+        .admin-content .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .admin-content .quick-action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s;
+        }
+
+        .admin-content .quick-action-item:hover {
+            background: #e9ecef;
+            color: #2c3e50;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px rgba(52,152,219,0.09);
+            text-decoration: none;
+        }
+
+        .admin-content .quick-action-item i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-content .calendar-widget input[type="date"] {
+            border-radius: 20px;
+            padding-left: 1rem;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 0.5rem;
+        }
+
+        @@media (max-width: 992px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @RenderBody()
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

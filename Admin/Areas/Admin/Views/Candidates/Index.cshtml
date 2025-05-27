@@ -1,0 +1,218 @@
+@{
+    ViewData["Title"] = "Manager Candidates";
+}
+
+<div class="container-fluid">
+    <div class="d-flex align-items-center mb-4">
+        <a href="/Admin/Home" class="btn btn-outline-primary me-3">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+        <h2 class="mb-0">Manager Candidates</h2>
+    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">Candidates Management</h5>
+                        <p class="text-muted mb-0">Manage all candidate applications and profiles</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="input-group" style="width: 250px;">
+                            <input type="text" class="form-control form-control-sm" placeholder="Search candidates...">
+                            <button class="btn btn-outline-secondary btn-sm" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCandidateModal">
+                            <i class="fas fa-plus"></i> Add New
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Applied Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://ui-avatars.com/api/?name=John+Doe" class="rounded-circle me-2" width="32" height="32" alt="John Doe">
+                                            <div>
+                                                <div class="fw-semibold">John Doe</div>
+                                                <div class="small text-muted">Frontend Developer</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>john@example.com</td>
+                                    <td>+1234567890</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>2024-03-15</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Add more sample rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="text-muted">
+                            Showing 1 to 1 of 1 entries
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Candidate Modal -->
+<div class="modal fade" id="addCandidateModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Candidate</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Position Applied</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Experience (Years)</label>
+                            <input type="number" class="form-control" min="0" max="50">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Skills</label>
+                        <input type="text" class="form-control" placeholder="Enter skills separated by commas">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save Candidate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+}
+
+<style>
+    .pagination {
+        margin: 0;
+    }
+    
+    .pagination .page-link {
+        color: #0d6efd;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        padding: 0.375rem 0.75rem;
+        transition: all 0.2s ease-in-out;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .pagination .page-link:hover {
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+    }
+</style> 

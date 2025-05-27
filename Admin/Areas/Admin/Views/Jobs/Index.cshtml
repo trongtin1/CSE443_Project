@@ -1,0 +1,33 @@
+@model IEnumerable<CSE443_Project.Models.Job>
+
+<h2>Danh sách công việc</h2>
+
+<a class="btn btn-primary" href="/Admin/Jobs/Create">Thêm mới công việc</a>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Tiêu đề</th>
+            <th>Vị trí</th>
+            <th>Mức lương</th>
+            <th>Loại công việc</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model)
+        {
+            <tr>
+                <td>@job.title</td>
+                <td>@job.location</td>
+                <td>@string.Format("{0:N0} VND", job.salary)</td>
+                <td>@job.job_type</td>
+                <td>
+                    <a class="btn btn-info" href="/Admin/Jobs/Details/@job.job_id">Chi tiết</a>
+                    <a class="btn btn-warning" href="/Admin/Jobs/Edit/@job.job_id">Sửa</a>
+                    <a class="btn btn-danger" href="/Admin/Jobs/Delete/@job.job_id">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
