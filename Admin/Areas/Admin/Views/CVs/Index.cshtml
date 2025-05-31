@@ -11,15 +11,14 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex gap-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm CV..." id="searchInput">
-                        <button class="btn btn-outline-secondary" type="button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadCVModal">
-                        <i class="fas fa-upload me-2"></i>Upload CV
-                    </button>
+                    <form method="get" action="/Admin/CVs" class="d-flex">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm CV..." id="searchInput" name="searchTerm">
+                            <button class="btn btn-outline-secondary" type="submit" id="searchButton">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -35,14 +34,13 @@
                                 <tr>
                                     <th style="width: 50px">#</th>
                                     <th>Ứng viên</th>
-                                    <th>Vị trí</th>
                                     <th>Ngày tạo</th>
                                     <th>Trạng thái</th>
                                     <th>Lượt xem</th>
                                     <th style="width: 200px">Thao tác</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="cvTableBody">
                                 @foreach (var cv in Model)
                                 {
                                     <tr>
@@ -84,45 +82,21 @@
                                         </td>
                                     </tr>
                                 }
+                                @if (!Model.Any())
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">
+                                            <div class="text-muted">
+                                                <i class="fas fa-search me-2"></i>
+                                                Không tìm thấy CV nào
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Upload CV Modal -->
-<div class="modal fade" id="uploadCVModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Upload CV mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="uploadCVForm">
-                    <div class="mb-3">
-                        <label class="form-label">Chọn ứng viên</label>
-                        <select class="form-select" required>
-                            <option value="">-- Chọn ứng viên --</option>
-                            <!-- Add options dynamically -->
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Vị trí ứng tuyển</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">File CV</label>
-                        <input type="file" class="form-control" accept=".pdf,.doc,.docx" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="uploadCVForm" class="btn btn-primary">Upload</button>
             </div>
         </div>
     </div>
@@ -169,18 +143,6 @@
             height: 38px;
             padding: 0 0.75rem;
         }
-
-        .btn-primary[data-bs-toggle="modal"] {
-            height: 38px;
-            padding: 0 1rem;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-primary[data-bs-toggle="modal"] i {
-            font-size: 0.9rem;
-        }
     </style>
 }
 
@@ -192,14 +154,21 @@
             }
         }
 
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            const searchText = this.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr');
+        // Lọc tìm kiếm trên client-side (bổ sung cho server-side)
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
             
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchText) ? '' : 'none';
+            // Tìm kiếm nhanh trên client-side khi gõ
+            searchInput.addEventListener('keyup', function() {
+                const searchText = this.value.toLowerCase();
+                if (searchText.length < 2) return; // Chỉ tìm kiếm khi có ít nhất 2 ký tự
+                
+                const rows = document.querySelectorAll('#cvTableBody tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchText) ? '' : 'none';
+                });
             });
         });
     </script>

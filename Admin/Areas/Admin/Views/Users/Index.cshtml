@@ -57,20 +57,20 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle bg-gradient me-3">
-                                            @user.name.Substring(0, 1).ToUpper()
+                                            @(string.IsNullOrEmpty(user.name) ? "?" : user.name.Substring(0, 1).ToUpper())
                                         </div>
-                                        <span class="fw-medium">@user.name</span>
+                                        <span class="fw-medium">@(string.IsNullOrEmpty(user.name) ? "Unnamed User" : user.name)</span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-envelope text-muted me-2"></i>
-                                        @user.email
+                                        @(string.IsNullOrEmpty(user.email) ? "No Email" : user.email)
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge custom-badge @(user.role.ToLower() == "admin" ? "bg-danger" : "bg-success")">
-                                        @user.role
+                                    <span class="badge custom-badge @(string.IsNullOrEmpty(user.role) ? "bg-secondary" : (user.role.ToLower() == "admin" ? "bg-danger" : "bg-success"))">
+                                        @(string.IsNullOrEmpty(user.role) ? "No Role" : user.role)
                                     </span>
                                 </td>
                                 <td>
@@ -267,8 +267,9 @@
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     var value = $(this).val().toLowerCase();
-                    $("table tbody tr").filter(function() {
-                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    $("table tbody tr").each(function() {
+                        var rowText = $(this).find("td:nth-child(1), td:nth-child(2)").text().toLowerCase();
+                        $(this).toggle(rowText.indexOf(value) > -1);
                     });
                 }, 300);
             });
@@ -279,11 +280,36 @@
                 if (value === "") {
                     $("table tbody tr").show();
                 } else {
-                    $("table tbody tr").filter(function() {
-                        $(this).toggle($(this).find("td:nth-child(3)").text().toLowerCase().indexOf(value) > -1)
+                    $("table tbody tr").each(function() {
+                        var roleText = $(this).find("td:nth-child(3) span").text().trim().toLowerCase();
+                        $(this).toggle(roleText === value);
                     });
                 }
             });
+
+            // Combined search and filter
+            function applyFilters() {
+                var searchValue = $("#searchInput").val().toLowerCase();
+                var roleValue = $("#roleFilter").val().toLowerCase();
+                
+                $("table tbody tr").each(function() {
+                    var rowText = $(this).find("td:nth-child(1), td:nth-child(2)").text().toLowerCase();
+                    var roleText = $(this).find("td:nth-child(3) span").text().trim().toLowerCase();
+                    
+                    var matchesSearch = searchValue === "" || rowText.indexOf(searchValue) > -1;
+                    var matchesRole = roleValue === "" || roleText === roleValue;
+                    
+                    $(this).toggle(matchesSearch && matchesRole);
+                });
+            }
+            
+            // Apply both filters when either changes
+            $("#searchInput").on("keyup", function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(applyFilters, 300);
+            });
+            
+            $("#roleFilter").on("change", applyFilters);
 
             // Add animation to table rows
             $("table tbody tr").each(function(index) {

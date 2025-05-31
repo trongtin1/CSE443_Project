@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CSE443_Project.Models;
 using System.Collections.Generic;
+using Admin.Models;
 
 namespace CSE443_Project.Data
 {
@@ -18,6 +19,8 @@ namespace CSE443_Project.Data
         public DbSet<Application> Applications { get; set; }
 
         public DbSet<CV> CVs { get; set; }
+
+        public DbSet<Candidate> Candidates { get; set; }
 
     }
 }

@@ -40,8 +40,20 @@ namespace CSE443_Project.Areas.Admin.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Ghi log ra màn hình console để biết lỗi gì
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Lỗi ở trường {key}: {error.ErrorMessage}");
+                }
+            }
+
             return View(user);
         }
+
 
         // GET: Admin/Users/Edit/5
         public IActionResult Edit(int? id)
