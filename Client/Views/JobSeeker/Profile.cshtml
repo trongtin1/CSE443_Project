@@ -1,0 +1,197 @@
+@model JobSeeker
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">My Profile</h1>
+            <p class="text-muted">Update your personal information and career details</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-action="Dashboard" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        @if (string.IsNullOrEmpty(Model.ProfilePicture))
+                        {
+                            <div class="avatar-placeholder rounded-circle mx-auto">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="@Model.ProfilePicture" alt="Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                        }
+                    </div>
+                    <h5 class="mb-1">@Model.User.Username</h5>
+                    <p class="text-muted mb-3">@(string.IsNullOrEmpty(Model.Headline) ? "No headline set" : Model.Headline)</p>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">
+                            <i class="fas fa-camera me-1"></i> Change Photo
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Applications</span>
+                        <span class="badge bg-primary rounded-pill">@Model.Applications.Count</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Saved Jobs</span>
+                        <span class="badge bg-primary rounded-pill">@Model.SavedJobs.Count</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>CVs</span>
+                        <span class="badge bg-primary rounded-pill">@Model.CVs.Count</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <form asp-action="UpdateProfile" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="UserId" />
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">Personal Information</h5>
+                    </div>
+                    <div class="card-body p-4">
+                 
+                        
+                        <div class="row mb-3">  
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="@Model.User.Email" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" value="@Model.User.Phone" disabled>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" asp-for="DateOfBirth">
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" asp-for="Gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                    <option value="Prefer not to say">Prefer not to say</option>
+                                </select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Headline</label>
+                            <input type="text" class="form-control" asp-for="Headline" placeholder="e.g. Senior Software Engineer at XYZ Company">
+                            <span asp-validation-for="Headline" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-0">
+                            <label class="form-label">Summary</label>
+                            <textarea class="form-control" asp-for="Summary" rows="3" placeholder="Brief summary about yourself"></textarea>
+                            <span asp-validation-for="Summary" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">Professional Information</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label">Skills</label>
+                            <textarea class="form-control" asp-for="Skills" rows="3" placeholder="List your skills, separated by commas"></textarea>
+                            <span asp-validation-for="Skills" class="text-danger"></span>
+                            <div class="form-text">Add your technical and soft skills, separated by commas</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Education</label>
+                            <textarea class="form-control" asp-for="Education" rows="4" placeholder="Your educational background"></textarea>
+                            <span asp-validation-for="Education" class="text-danger"></span>
+                            <div class="form-text">Include degrees, institutions, graduation years, and relevant achievements</div>
+                        </div>
+                        
+                        <div class="mb-0">
+                            <label class="form-label">Work Experience</label>
+                            <textarea class="form-control" asp-for="WorkExperience" rows="5" placeholder="Your work history"></textarea>
+                            <span asp-validation-for="WorkExperience" class="text-danger"></span>
+                            <div class="form-text">Include job titles, companies, dates, and key responsibilities</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-end mb-4">
+                    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Photo Modal -->
+<div class="modal fade" id="uploadPhotoModal" tabindex="-1" aria-labelledby="uploadPhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadPhotoModalLabel">Upload Profile Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="photoUploadForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="profilePicture" class="form-label">Select Image</label>
+                        <input class="form-control" type="file" id="profilePicture" name="profilePicture" accept="image/*">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="uploadPhotoBtn">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Photo upload functionality would go here
+        // This would typically involve JavaScript to handle the file upload via AJAX
+        
+        document.getElementById('uploadPhotoBtn').addEventListener('click', function() {
+            // This is a placeholder for the actual upload functionality
+            // In a real implementation, you would send the file to the server via AJAX
+            alert('Photo upload functionality would be implemented here');
+            
+            // Close the modal after upload
+            var modal = bootstrap.Modal.getInstance(document.getElementById('uploadPhotoModal'));
+            modal.hide();
+        });
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

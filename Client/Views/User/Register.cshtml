@@ -1,0 +1,262 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-10 col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3">Create an Account</h1>
+                        <p class="text-muted">Join our platform to find jobs or hire talent</p>
+                    </div>
+
+                    <ul class="nav nav-tabs nav-justified mb-4" id="registerTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="job-seeker-tab" data-bs-toggle="tab" data-bs-target="#job-seeker" 
+                                    type="button" role="tab" aria-controls="job-seeker" aria-selected="true">
+                                <i class="fas fa-user me-2"></i>Job Seeker
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="employer-tab" data-bs-toggle="tab" data-bs-target="#employer" 
+                                    type="button" role="tab" aria-controls="employer" aria-selected="false">
+                                <i class="fas fa-building me-2"></i>Employer
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="registerTabContent">
+                        <!-- Job Seeker Registration Form -->
+                        <div class="tab-pane fade show active" id="job-seeker" role="tabpanel" aria-labelledby="job-seeker-tab">
+                            <form asp-action="RegisterJobSeeker" method="post">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <h4 class="h5">Account Information</h4>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="User_Username" class="form-label">Username</label>
+                                        <input type="text" id="User_Username" name="User.Username" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="User_Email" class="form-label">Email</label>
+                                        <input type="email" id="User_Email" name="User.Email" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="User_Password" class="form-label">Password</label>
+                                        <input type="password" id="User_Password" name="User.Password" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-12 mt-3 mb-3">
+                                        <h4 class="h5">Personal Information</h4>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="FirstName" class="form-label">First Name</label>
+                                        <input type="text" id="FirstName" name="FirstName" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="LastName" class="form-label">Last Name</label>
+                                        <input type="text" id="LastName" name="LastName" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="Phone" class="form-label">Phone Number</label>
+                                        <input type="tel" id="Phone" name="Phone" class="form-control">
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="DateOfBirth" class="form-label">Date of Birth</label>
+                                        <input type="date" id="DateOfBirth" name="DateOfBirth" class="form-control">
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label for="Address" class="form-label">Address</label>
+                                        <textarea id="Address" name="Address" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="termsJobSeeker" required>
+                                            <label class="form-check-label" for="termsJobSeeker">
+                                                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Employer Registration Form -->
+                        <div class="tab-pane fade" id="employer" role="tabpanel" aria-labelledby="employer-tab">
+                            <form asp-action="RegisterEmployer" method="post">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <h4 class="h5">Account Information</h4>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="User_Username_Employer" class="form-label">Username</label>
+                                        <input type="text" id="User_Username_Employer" name="User.Username" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="User_Email_Employer" class="form-label">Email</label>
+                                        <input type="email" id="User_Email_Employer" name="User.Email" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="User_Password_Employer" class="form-label">Password</label>
+                                        <input type="password" id="User_Password_Employer" name="User.Password" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="confirmPasswordEmployer" class="form-label">Confirm Password</label>
+                                        <input type="password" id="confirmPasswordEmployer" name="confirmPassword" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-12 mt-3 mb-3">
+                                        <h4 class="h5">Company Information</h4>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="CompanyName" class="form-label">Company Name</label>
+                                        <input type="text" id="CompanyName" name="CompanyName" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="Industry" class="form-label">Industry</label>
+                                        <input type="text" id="Industry" name="Industry" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="CompanySize" class="form-label">Company Size</label>
+                                        <select id="CompanySize" name="CompanySize" class="form-select">
+                                            <option value="">Select size</option>
+                                            <option value="1-10">1-10 employees</option>
+                                            <option value="11-50">11-50 employees</option>
+                                            <option value="51-200">51-200 employees</option>
+                                            <option value="201-500">201-500 employees</option>
+                                            <option value="501-1000">501-1000 employees</option>
+                                            <option value="1000+">1000+ employees</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ContactPhone" class="form-label">Contact Phone</label>
+                                        <input type="tel" id="ContactPhone" name="ContactPhone" class="form-control" required>
+                                    </div>
+                                    
+                                    <div class="col-md-12 mb-3">
+                                        <label for="CompanyWebsite" class="form-label">Company Website</label>
+                                        <input type="url" id="CompanyWebsite" name="Website" class="form-control">
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label for="CompanyAddress" class="form-label">Company Address</label>
+                                        <textarea id="CompanyAddress" name="Address" class="form-control" rows="2" required></textarea>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label for="Description" class="form-label">Company Description</label>
+                                        <textarea id="Description" name="Description" class="form-control" rows="3"></textarea>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="termsEmployer" required>
+                                            <label class="form-check-label" for="termsEmployer">
+                                                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Already have an account? <a asp-action="Login" class="text-decoration-none">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Validate password match
+        document.addEventListener('DOMContentLoaded', function() {
+            const jobSeekerForm = document.querySelector('#job-seeker form');
+            const employerForm = document.querySelector('#employer form');
+            
+            // Initialize bootstrap tabs manually
+            const employerTab = document.getElementById('employer-tab');
+            const jobSeekerTab = document.getElementById('job-seeker-tab');
+            
+            employerTab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('#job-seeker').classList.remove('show', 'active');
+                document.querySelector('#employer').classList.add('show', 'active');
+                jobSeekerTab.classList.remove('active');
+                employerTab.classList.add('active');
+                employerTab.setAttribute('aria-selected', 'true');
+                jobSeekerTab.setAttribute('aria-selected', 'false');
+            });
+            
+            jobSeekerTab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('#employer').classList.remove('show', 'active');
+                document.querySelector('#job-seeker').classList.add('show', 'active');
+                employerTab.classList.remove('active');
+                jobSeekerTab.classList.add('active');
+                jobSeekerTab.setAttribute('aria-selected', 'true');
+                employerTab.setAttribute('aria-selected', 'false');
+            });
+            
+            jobSeekerForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('User_Password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                }
+            });
+            
+            employerForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('User_Password_Employer').value;
+                const confirmPassword = document.getElementById('confirmPasswordEmployer').value;
+                
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                }
+            });
+        });
+    </script>
+} 

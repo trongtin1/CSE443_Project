@@ -1,0 +1,245 @@
+@model Job
+
+@{
+    ViewData["Title"] = Model.JobTitle;
+}
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Main content with job details -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="d-flex">
+                            @if (!string.IsNullOrEmpty(Model.Employer?.Logo))
+                            {
+                                <img src="@Model.Employer.Logo" alt="@Model.Employer.CompanyName" class="me-3" style="width: 70px; height: 70px; object-fit: contain;">
+                            }
+                            else
+                            {
+                                <div class="company-placeholder me-3 bg-light rounded p-3">
+                                    <i class="fas fa-building fa-3x text-muted"></i>
+                                </div>
+                            }
+                            <div>
+                                <h1 class="h3 mb-1">@Model.JobTitle</h1>
+                                <p class="mb-0">
+                                    <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@Model.EmployerId" class="text-decoration-none">
+                                        @Model.Employer.CompanyName
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-none d-md-block">
+                            <span class="badge bg-@(Model.JobType == "Full-time" ? "success" : 
+                                                Model.JobType == "Part-time" ? "info" : 
+                                                Model.JobType == "Contract" ? "warning" : 
+                                                Model.JobType == "Internship" ? "secondary" : "primary") p-2">
+                                @Model.JobType
+                            </span>
+                            @if (Model.IsRemote)
+                            {
+                                <span class="badge bg-light text-dark p-2 ms-1">Remote</span>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <span>@Model.Location</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-money-bill-wave text-primary me-2"></i>
+                                <span>
+                                    @(Model.SalaryMin > 0 && Model.SalaryMax > 0 ? 
+                                      $"${Model.SalaryMin:N0} - ${Model.SalaryMax:N0}" : 
+                                      "Competitive")
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <span>Posted @((DateTime.Now - Model.CreatedAt).Days) days ago</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                <span>Application Deadline: @Model.Deadline.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-folder text-primary me-2"></i>
+                                <span>
+                                    <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@Model.CategoryId" class="text-decoration-none">
+                                        @Model.Category.Name
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-users text-primary me-2"></i>
+                                <span>@ViewBag.ApplicationCount Applications</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="h5 mb-3">Job Description</h4>
+                        <div class="job-description">
+                            @Html.Raw(Model.JobDescription)
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="h5 mb-3">Requirements</h4>
+                        <div class="job-requirements">
+                            @Html.Raw(Model.Requirements)
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="h5 mb-3">Benefits</h4>
+                        <div class="job-benefits">
+                            @Html.Raw(Model.Benefits)
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <div class="mb-3 mb-md-0">
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to Jobs
+                            </a>
+                        </div>
+                        <div class="d-flex gap-2">
+                            @if (TempData.ContainsKey("JobSeekerId"))
+                            {
+                                if (ViewBag.HasSaved)
+                                {
+                                    <form asp-controller="JobSeeker" asp-action="UnsaveJob" asp-route-id="@Model.Id" method="post">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            <i class="fas fa-bookmark me-1"></i> Saved
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-controller="JobSeeker" asp-action="SaveJob" asp-route-id="@Model.Id" method="post">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            <i class="far fa-bookmark me-1"></i> Save Job
+                                        </button>
+                                    </form>
+                                }
+                                
+                                @if (ViewBag.HasApplied)
+                                {
+                                    <button class="btn btn-secondary" disabled>
+                                        <i class="fas fa-check me-1"></i> Applied
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Application" asp-action="Apply" asp-route-id="@Model.Id" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane me-1"></i> Apply Now
+                                    </a>
+                                }
+                            }
+                            else if (TempData.ContainsKey("EmployerId") && Model.EmployerId == (int)TempData["EmployerId"])
+                            {
+                                <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit me-1"></i> Edit Job
+                                </a>
+                                <a asp-controller="Application" asp-action="ByJob" asp-route-id="@Model.Id" class="btn btn-primary">
+                                    <i class="fas fa-users me-1"></i> View Applications
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="User" asp-action="Login" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Login to Apply
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar with company info and similar jobs -->
+        <div class="col-lg-4">
+            <!-- Company info -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="h5 mb-3">About the Company</h4>
+                    
+                    <div class="text-center mb-3">
+                        @if (!string.IsNullOrEmpty(Model.Employer?.Logo))
+                        {
+                            <img src="@Model.Employer.Logo" alt="@Model.Employer.CompanyName" class="img-fluid mb-3" style="max-height: 80px;">
+                        }
+                        else
+                        {
+                            <div class="company-placeholder mb-3 bg-light rounded p-3 d-inline-block">
+                                <i class="fas fa-building fa-3x text-muted"></i>
+                            </div>
+                        }
+                        <h5>@Model.Employer.CompanyName</h5>
+                        <p class="text-muted">@Model.Employer.Industry</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                            <span>@Model.Employer.User.Address</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-globe text-primary me-2"></i>
+                            <a href="@Model.Employer.Website" target="_blank" class="text-decoration-none">Company Website</a>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-users text-primary me-2"></i>
+                            <span>@Model.Employer.CompanySize</span>
+                        </div>
+                    </div>
+                    
+                    <div class="company-description">
+                        <p>@(Model.Employer.CompanyDescription?.Length > 200 ? Model.Employer.CompanyDescription.Substring(0, 200) + "..." : Model.Employer.CompanyDescription)</p>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@Model.EmployerId" class="btn btn-outline-primary">
+                            View All Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Share job -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h4 class="h5 mb-3">Share This Job</h4>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-decoration-none fs-4" title="Share on Facebook">
+                            <i class="fab fa-facebook text-primary"></i>
+                        </a>
+                        <a href="#" class="text-decoration-none fs-4" title="Share on Twitter">
+                            <i class="fab fa-twitter text-info"></i>
+                        </a>
+                        <a href="#" class="text-decoration-none fs-4" title="Share on LinkedIn">
+                            <i class="fab fa-linkedin text-primary"></i>
+                        </a>
+                        <a href="#" class="text-decoration-none fs-4" title="Share via Email">
+                            <i class="fas fa-envelope text-danger"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add any JavaScript needed for the job details page
+    </script>
+} 

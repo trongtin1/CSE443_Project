@@ -1,0 +1,359 @@
+@using System.Linq
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="bg-primary text-white py-5 rounded">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Find Your Dream Job Today</h1>
+                <p class="lead mb-4">Thousands of jobs from top companies are waiting for you. Start your career journey
+                    with us!</p>
+                <div class="d-flex gap-3">
+                    <a asp-controller="Job" asp-action="Index" class="btn btn-light btn-lg">Find Jobs</a>
+                    @if (!TempData.ContainsKey("JobSeekerId") && !TempData.ContainsKey("EmployerId"))
+                    {
+                        <a asp-controller="User" asp-action="Register" class="btn btn-outline-light btn-lg">Join Now</a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="~/images/logo.png" alt="Job Search" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Section -->
+<section class="bg-light p-4 rounded my-4">
+    <div class="container">
+        <form asp-controller="Job" asp-action="Index" method="get">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                        <input type="text" name="searchTerm" class="form-control"
+                            placeholder="Job title, keywords, or company">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fas fa-map-marker-alt"></i></span>
+                        <input type="text" name="location" class="form-control" placeholder="City or region">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Search Jobs</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Latest Jobs Section -->
+<section class="my-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Latest Jobs</h2>
+            <a asp-controller="Job" asp-action="Index" class="btn btn-outline-primary">View All Jobs</a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var job in ViewBag.LatestJobs)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="badge bg-@(job.JobType == "Full-time" ? "success" : 
+                                                                                           job.JobType == "Part-time" ? "info" : 
+                                                                                           job.JobType == "Contract" ? "warning" : 
+                                                                                           job.JobType == "Internship" ? "secondary" : "primary")">
+                                @job.JobType
+                            </span>
+                            <span class="text-muted small">
+                                <i class="fas fa-clock me-1"></i>
+                                @((DateTime.Now - job.CreatedAt).Days) days ago
+                            </span>
+                        </div>
+                        <h5 class="card-title mb-1">
+                            <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id"
+                                class="text-decoration-none text-dark">
+                                @job.JobTitle
+                            </a>
+                        </h5>
+                        <p class="text-muted mb-2">@job.Employer.CompanyName</p>
+                        <div class="mb-3">
+                            <i class="fas fa-map-marker-alt text-muted me-1"></i> @job.Location
+                            @if (job.IsRemote)
+                                {
+                                    <span class="ms-2 badge bg-light text-dark">Remote</span>
+                                }
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-primary">
+                                @(job.SalaryMin > 0 && job.SalaryMax > 0 ?
+                                                                $"${job.SalaryMin:N0} - ${job.SalaryMax:N0}" :
+                                                                "Competitive")
+                            </span>
+                            <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id"
+                                class="btn btn-sm btn-outline-primary">
+                                View Job
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        }
+        </div>
+    </div>
+</section>
+
+<!-- Job Categories Section -->
+<section class="my-5 py-5 bg-light rounded">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Popular Job Categories</h2>
+            <p class="text-muted">Explore jobs by category and find the perfect role for your skills</p>
+        </div>
+
+        <div class="row g-4">
+            @{
+                var categoryList = ViewBag.Categories as System.Collections.IEnumerable;
+                var displayCategories = categoryList != null ? categoryList.Cast<dynamic>().Take(8) : new List<dynamic>();
+            }
+            @foreach (var category in displayCategories)
+            {
+                <div class="col-md-3 col-sm-6">
+                    <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@category.Id"
+                        class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100 text-center hover-card">
+                            <div class="card-body py-4">
+                                <div class="category-icon mb-3">
+                                    <i class="fas @category.Icon fa-2x text-primary"></i>
+                                </div>
+                                <h5 class="card-title">@category.Name</h5>
+                                <p class="text-muted mb-0">
+                                    @ViewData[$"JobCount_{category.Id}"] Jobs Available
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-controller="Category" asp-action="Index" class="btn btn-outline-primary">View All Categories</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Employers Section -->
+<section class="my-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="mb-3">Featured Employers</h2>
+            <p class="text-muted">Top companies that trust our platform for their hiring needs</p>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var employer in ViewBag.FeaturedEmployers)
+            {
+                <div class="col-md-3 col-sm-6">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="employer-logo mb-3">
+                                <img src="@employer.Logo" alt="@employer.CompanyName" class="img-fluid"
+                                    style="max-height: 60px;">
+                            </div>
+                            <h5 class="card-title">@employer.CompanyName</h5>
+                            <p class="text-muted mb-3">@employer.Industry</p>
+                            <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@employer.Id"
+                                class="btn btn-sm btn-outline-primary">
+                                View Jobs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="bg-primary text-white p-5 rounded my-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="mb-3">Are You Looking for Qualified Candidates?</h2>
+                <p class="lead mb-0">Post a job on our platform and reach thousands of job seekers today.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                @if (TempData.ContainsKey("EmployerId"))
+                {
+                    <a asp-controller="Job" asp-action="Create" class="btn btn-light btn-lg">Post a Job</a>
+                }
+                else if (TempData.ContainsKey("JobSeekerId"))
+                {
+                    <a asp-controller="JobSeeker" asp-action="Applications" class="btn btn-light btn-lg">My Applications</a>
+                }
+                else
+                {
+                    <a asp-controller="User" asp-action="Register" class="btn btn-light btn-lg">Register as Employer</a>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="my-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            @if (!TempData.ContainsKey("JobSeekerId") && !TempData.ContainsKey("EmployerId"))
+            {
+                <h2 class="mb-3">How It Works</h2>
+                <p class="text-muted">Simple steps to start your job search or hiring process</p>
+            }
+            else
+            {
+                <h2 class="mb-3">Get the Most Out of JobPortal</h2>
+                <p class="text-muted">Maximize your experience with these helpful features</p>
+            }
+        </div>
+
+        <div class="row g-4">
+            @if (!TempData.ContainsKey("JobSeekerId") && !TempData.ContainsKey("EmployerId"))
+            {
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-user-plus fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">1. Create an Account</h4>
+                            <p class="text-muted">Register as a job seeker or employer to access all features.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-file-alt fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">2. Complete Your Profile</h4>
+                            <p class="text-muted">Create your CV or company profile to stand out.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-handshake fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">3. Apply or Post Jobs</h4>
+                            <p class="text-muted">Apply to jobs or post openings and connect with the right people.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (TempData.ContainsKey("JobSeekerId"))
+            {
+                <!-- Features for Job Seekers -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-search fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Find Jobs</h4>
+                            <p class="text-muted">Search and filter jobs that match your skills and preferences.</p>
+                            <a asp-controller="Job" asp-action="Index" class="btn btn-outline-primary mt-2">Browse Jobs</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-file-alt fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Manage Your CVs</h4>
+                            <p class="text-muted">Create and update your CVs to showcase your skills and experience.</p>
+                            <a asp-controller="JobSeeker" asp-action="CVs" class="btn btn-outline-primary mt-2">My CVs</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-bookmark fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Saved Jobs</h4>
+                            <p class="text-muted">Keep track of jobs you're interested in and apply when ready.</p>
+                            <a asp-controller="JobSeeker" asp-action="SavedJobs" class="btn btn-outline-primary mt-2">View
+                                Saved Jobs</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (TempData.ContainsKey("EmployerId"))
+            {
+                <!-- Features for Employers -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-plus-circle fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Post Jobs</h4>
+                            <p class="text-muted">Create and publish job listings to attract qualified candidates.</p>
+                            <a asp-controller="Job" asp-action="Create" class="btn btn-outline-primary mt-2">Post a Job</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-tasks fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Manage Applications</h4>
+                            <p class="text-muted">Review and process applications from job seekers.</p>
+                            <a asp-controller="Employer" asp-action="Applications" class="btn btn-outline-primary mt-2">View
+                                Applications</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="step-icon mb-3">
+                                <i class="fas fa-users fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">Shortlisted Candidates</h4>
+                            <p class="text-muted">Manage your shortlisted candidates for interviews and hiring.</p>
+                            <a asp-controller="Employer" asp-action="Candidates" class="btn btn-outline-primary mt-2">View
+                                Candidates</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Add any JavaScript needed for the home page
+            console.log("Home page loaded");
+        });
+    </script>
+}

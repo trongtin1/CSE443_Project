@@ -1,0 +1,227 @@
+@model Application
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0">Application Details</h1>
+                        <span class="badge @(Model.Status == "Pending" ? "bg-warning" : 
+                                            Model.Status == "Reviewed" ? "bg-info" : 
+                                            Model.Status == "Shortlisted" ? "bg-primary" : 
+                                            Model.Status == "Interviewed" ? "bg-secondary" : 
+                                            Model.Status == "Accepted" ? "bg-success" : 
+                                            "bg-danger")">
+                            @Model.Status
+                        </span>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card mb-3">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Job Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        @if (Model.Job != null && Model.Job.Employer != null)
+                                        {
+                                            <img src="@Model.Job.Employer.Logo" alt="@Model.Job.Employer.CompanyName"
+                                                class="rounded-circle me-3" style="width: 40px; height: 40px;">
+                                            <div>
+                                                <h5 class="mb-0">@Model.Job.JobTitle</h5>
+                                                <span class="text-muted">@Model.Job.Employer.CompanyName</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <h5 class="mb-0">@(Model.Job?.JobTitle ?? "Job information unavailable")</h5>
+                                                <span class="text-muted">Company information unavailable</span>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="mb-3">
+                                        @if (Model.Job != null)
+                                        {
+                                            <span class="badge bg-@(Model.Job.JobType == "Full-time" ? "success" : 
+                                                                  Model.Job.JobType == "Part-time" ? "info" : 
+                                                                  Model.Job.JobType == "Contract" ? "warning" : 
+                                                                  Model.Job.JobType == "Internship" ? "secondary" : "primary")">
+                                                @Model.Job.JobType
+                                            </span>
+
+                                            @if (Model.Job.IsRemote)
+                                            {
+                                                <span class="badge bg-light text-dark ms-1">Remote</span>
+                                            }
+
+                                            <span class="ms-2">
+                                                <i class="fas fa-map-marker-alt text-muted me-1"></i> @Model.Job.Location
+                                            </span>
+
+                                            <span class="ms-2">
+                                                <i class="fas fa-money-bill-wave text-muted me-1"></i>
+                                                @(Model.Job.SalaryMin > 0 && Model.Job.SalaryMax > 0 ?
+                                                    $"${Model.Job.SalaryMin:N0} - ${Model.Job.SalaryMax:N0}" :
+                                                    "Competitive")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>Job details unavailable</span>
+                                        }
+                                    </div>
+
+                                    @if (Model.Job != null)
+                                    {
+                                        <a asp-controller="Job" asp-action="Details" asp-route-id="@Model.JobId" 
+                                        class="btn btn-outline-primary btn-sm">View Job</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card mb-3">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Application Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <h6 class="text-muted mb-1">Application Date</h6>
+                                            <p>@Model.ApplicationDate.ToString("MMMM dd, yyyy")</p>
+                                        </div>
+                                        @if (Model.ReviewDate.HasValue)
+                                        {
+                                            <div class="col-md-6">
+                                                <h6 class="text-muted mb-1">Review Date</h6>
+                                                <p>@Model.ReviewDate.Value.ToString("MMMM dd, yyyy")</p>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    @if (Model.CV != null)
+                                    {
+                                        <div class="mb-3">
+                                            <h6 class="text-muted mb-1">Resume/CV</h6>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-pdf text-danger me-2 fs-4"></i>
+                                                <div>
+                                                    <p class="mb-0 fw-bold">@Model.CV.Title</p>
+                                                    <small class="text-muted">@Model.CV.Description</small>
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(Model.CV.FilePath))
+                                                {
+                                                    <div class="ms-auto">
+                                                        <a href="@Model.CV.FilePath" target="_blank" class="btn btn-sm btn-outline-primary me-2">
+                                                            <i class="fas fa-eye me-1"></i> View
+                                                        </a>
+                                                        <a href="@Model.CV.FilePath" download class="btn btn-sm btn-outline-secondary">
+                                                            <i class="fas fa-download me-1"></i> Download
+                                                        </a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(Model.CoverLetter))
+                                    {
+                                        <div class="mb-3">
+                                            <h6 class="text-muted mb-1">Cover Letter</h6>
+                                            <div class="p-3 bg-light rounded">
+                                                @Html.Raw(Model.CoverLetter)
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Employer Notes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="p-3 bg-light rounded">
+                                            @Html.Raw(Model.Notes)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (TempData.ContainsKey("EmployerId"))
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Update Application Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form asp-action="UpdateStatus" method="post">
+                                            <input type="hidden" name="id" value="@Model.Id" />
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                                                    <option value="Reviewed" selected="@(Model.Status == "Reviewed")">Reviewed</option>
+                                                    <option value="Shortlisted" selected="@(Model.Status == "Shortlisted")">Shortlisted</option>
+                                                    <option value="Interviewed" selected="@(Model.Status == "Interviewed")">Interviewed</option>
+                                                    <option value="Accepted" selected="@(Model.Status == "Accepted")">Accepted</option>
+                                                    <option value="Rejected" selected="@(Model.Status == "Rejected")">Rejected</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Notes to Candidate</label>
+                                                <textarea name="notes" class="form-control" rows="3">@Model.Notes</textarea>
+                                            </div>
+                                            
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-primary">Update Status</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Applications
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Basic initialization code for the application details page
+            console.log("Application details page loaded");
+            
+            // Show success message if available
+            if (TempData && TempData["SuccessMessage"]) {
+                toastr.success(TempData["SuccessMessage"]);
+            }
+            
+            // If status is updated, highlight the status badge
+            $(".badge").addClass("animate__animated animate__pulse");
+        });
+    </script>
+} 

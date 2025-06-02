@@ -1,0 +1,262 @@
+@model IEnumerable<Job>
+
+@{
+    ViewData["Title"] = "Jobs";
+}
+
+<div class="container">
+    <div class="row">
+        <!-- Sidebar with filters -->
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Filter Jobs</h5>
+
+                    <form asp-action="Filter" method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control" value="@ViewBag.Location">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Job Type</label>
+                            <select name="jobType" class="form-select">
+                                <option value="">All Types</option>
+                                @if (ViewBag.JobType == "Full-time")
+                                {
+                                    <option value="Full-time" selected>Full-time</option>
+                                }
+                                else
+                                {
+                                    <option value="Full-time">Full-time</option>
+                                }
+
+                                @if (ViewBag.JobType == "Part-time")
+                                {
+                                    <option value="Part-time" selected>Part-time</option>
+                                }
+                                else
+                                {
+                                    <option value="Part-time">Part-time</option>
+                                }
+
+                                @if (ViewBag.JobType == "Contract")
+                                {
+                                    <option value="Contract" selected>Contract</option>
+                                }
+                                else
+                                {
+                                    <option value="Contract">Contract</option>
+                                }
+
+                                @if (ViewBag.JobType == "Internship")
+                                {
+                                    <option value="Internship" selected>Internship</option>
+                                }
+                                else
+                                {
+                                    <option value="Internship">Internship</option>
+                                }
+
+                                @if (ViewBag.JobType == "Temporary")
+                                {
+                                    <option value="Temporary" selected>Temporary</option>
+                                }
+                                else
+                                {
+                                    <option value="Temporary">Temporary</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Salary Range</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" name="minSalary" class="form-control" placeholder="Min"
+                                        value="@ViewBag.MinSalary">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="maxSalary" class="form-control" placeholder="Max"
+                                        value="@ViewBag.MaxSalary">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="isRemote" value="true"
+                                    id="isRemote" @(ViewBag.IsRemote == true ? "checked" : "")>
+                                <label class="form-check-label" for="isRemote">
+                                    Remote Jobs Only
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="categoryId" class="form-select">
+                                <option value="">All Categories</option>
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                    @if (ViewBag.CategoryId == category.Id)
+                                    {
+                                        <option value="@category.Id" selected>@category.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content with job listings -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                    {
+                        <span>Search Results for "@ViewBag.SearchTerm"</span>
+                    }
+                    else if (ViewBag.CategoryName != null)
+                    {
+                        <span>Jobs in @ViewBag.CategoryName</span>
+                    }
+                    else if (ViewBag.EmployerName != null)
+                    {
+                        <span>Jobs at @ViewBag.EmployerName</span>
+                    }
+                    else
+                    {
+                        <span>All Jobs</span>
+                    }
+                </h1>
+
+                <div class="d-flex align-items-center">
+                    <span class="me-2">@Model.Count() jobs found</span>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort by
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                            <li><a class="dropdown-item" href="#">Newest</a></li>
+                            <li><a class="dropdown-item" href="#">Salary: High to Low</a></li>
+                            <li><a class="dropdown-item" href="#">Salary: Low to High</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search form -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <form asp-action="Index" method="get" class="d-flex">
+                        <input type="text" name="searchTerm" class="form-control me-2"
+                            placeholder="Search jobs by title, company, or keywords" value="@ViewBag.SearchTerm">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Job listings -->
+            @if (Model.Any())
+            {
+                <div class="job-list">
+                    @foreach (var job in Model)
+                    {
+                        <div class="card border-0 shadow-sm mb-3">
+                            <div class="card-body p-4">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="d-flex align-items-center mb-2"></div>
+
+                                        <div>
+                                            <h5 class="card-title mb-1">
+                                                <a asp-action="Details" asp-route-id="@job.Id"
+                                                    class="text-decoration-none text-dark">@job.JobTitle
+                                                    (@job.Category.Name)</a>
+                                            </h5>
+                                            <div class="d-flex align-items-center">
+                                                <img src="@job.Employer.Logo" alt="@job.Employer.CompanyName"
+                                                    class="rounded-circle me-2" style="width: 30px; height: 30px;">
+                                                <span class="text-muted mb-0">@job.Employer.CompanyName</span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <span
+                                            class="badge bg-@(job.JobType == "Full-time" ? "success" : 
+                                                                                                                                                                                                       job.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                       job.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                       job.JobType == "Internship" ? "secondary" : "primary")">
+                                    @job.JobType
+                                </span>
+
+                                @if (job.IsRemote)
+                                        {
+                                            <span class="badge bg-light text-dark ms-1">Remote</span>
+                                        }
+
+                                    <span class="ms-2">
+                                        <i class="fas fa-map-marker-alt text-muted me-1"></i> @job.Location
+                                    </span>
+                                </div>
+
+                                <p class="card-text text-muted mb-0">
+                                    @(job.JobDescription != null && job.JobDescription.Length > 150 ?
+                                                                    job.JobDescription.Substring(0, 150) + "..." : job.JobDescription)
+                                                                                                                                  </p>
+                                                                                                                              </div>
+
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <div class="mb-2">
+                                    <span class="fw-bold text-primary">
+                                        @(job.SalaryMin > 0 && job.SalaryMax > 0 ?
+                                                                            $"${job.SalaryMin:N0} - ${job.SalaryMax:N0}" :
+                                                                            "Competitive")
+                                </span>
+                            </div>
+
+                                    <div class="mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i> @((DateTime.Now - job.CreatedAt).Days) days ago
+                                        </small>
+                                    </div>
+
+                                    <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-outline-primary">View
+                                        Details</a>
+                                </div>
+                            </div>
+                        </div>
+
+                                }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> No jobs found matching your criteria. Try adjusting your filters
+                    or search terms.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add any JavaScript needed for the job listing page
+    </script>
+}

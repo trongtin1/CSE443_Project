@@ -3,46 +3,122 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CSE443_Project</title>
+    <title>@ViewData["Title"] - JobPortal</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CSE443_Project.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CSE443_Project</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-briefcase me-2"></i>JobPortal
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Job" asp-action="Index">Jobs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Category" asp-action="Index">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
                         </li>
                     </ul>
+                    <div class="d-flex">
+                        @if (TempData.ContainsKey("UserId"))
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle me-1"></i> My Account
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                    @if (TempData.ContainsKey("JobSeekerId"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a></li>
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Profile">Profile</a></li>
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Applications">My Applications</a></li>
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a></li>
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="CVs">My CVs</a></li>
+                                    }
+                                    else if (TempData.ContainsKey("EmployerId"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="Dashboard">Dashboard</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="Profile">Company Profile</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="Jobs">Manage Jobs</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="Applications">Applications</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="Candidates">Candidates</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Job" asp-action="Create">Post a Job</a></li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Logout">Logout</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-light me-2" asp-controller="User" asp-action="Login">Login</a>
+                            <a class="btn btn-light" asp-controller="User" asp-action="Register">Register</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    
+    <div class="container py-4">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="bg-dark text-light py-4 mt-5">
         <div class="container">
-            &copy; 2025 - CSE443_Project - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>JobPortal</h5>
+                    <p>Find your dream job or the perfect candidate with our comprehensive job portal platform.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="text-light" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a class="text-light" asp-controller="Job" asp-action="Index">Jobs</a></li>
+                        <li><a class="text-light" asp-controller="Home" asp-action="About">About Us</a></li>
+                        <li><a class="text-light" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt me-2"></i> 123 Job Street, Employment City</p>
+                        <p><i class="fas fa-phone me-2"></i> (123) 456-7890</p>
+                        <p><i class="fas fa-envelope me-2"></i> info@jobportal.com</p>
+                    </address>
+                </div>
+            </div>
+            <hr class="bg-light" />
+            <div class="text-center">
+                <p>&copy; @DateTime.Now.Year - JobPortal - <a class="text-light" asp-controller="Home" asp-action="Privacy">Privacy</a> - <a class="text-light" asp-controller="Home" asp-action="Terms">Terms</a></p>
+            </div>
         </div>
     </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

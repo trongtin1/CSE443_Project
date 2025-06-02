@@ -1,3 +1,7 @@
+using CSE443_Project.Data;
+using CSE443_Project.Services.Implementations;
+using CSE443_Project.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 namespace CSE443_Project
 {
     public class Program
@@ -8,6 +12,23 @@ namespace CSE443_Project
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
+            {
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                var defaultConnection = configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(defaultConnection);
+            });
+
+            // Register services
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IJobService, JobService>();
+            builder.Services.AddScoped<IApplicationService, ApplicationService>();
+            builder.Services.AddScoped<ICVService, CVService>();
+            builder.Services.AddScoped<IEmployerService, EmployerService>();
+            builder.Services.AddScoped<IJobSeekerService, JobSeekerService>();
+            builder.Services.AddScoped<ISaveJobService, SaveJobService>();
+            builder.Services.AddScoped<ICandidateService, CandidateService>();
+            builder.Services.AddScoped<IJobCategoryService, JobCategoryService>();
 
             var app = builder.Build();
 
@@ -19,6 +40,22 @@ namespace CSE443_Project
                 app.UseHsts();
             }
 
+            // Seed the database
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    SeedData.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -26,10 +63,12 @@ namespace CSE443_Project
 
             app.UseAuthorization();
 
+            // app.MapControllerRoute(
+            //     name: "default",
+            //     pattern: "{area=Client}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{area=Client}/{controller=Home}/{action=Index}/{id?}");
-
+                pattern: "{controller=Home}/{action=Index}/{id?}");
             app.Run();
         }
     }

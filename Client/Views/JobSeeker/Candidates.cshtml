@@ -1,0 +1,164 @@
+@model IEnumerable<CSE443_Project.Models.Candidate>
+
+@{
+    ViewData["Title"] = "My Candidacies";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">My Candidacies</h1>
+            <p class="text-muted">Track your progress in hiring processes where you've been shortlisted</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-controller="Job" asp-action="Index" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i> Find More Jobs
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var candidate in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-@(candidate.Status == "Shortlisted" ? "info" : 
+                                                                               candidate.Status == "Interviewed" ? "primary" : 
+                                                                               candidate.Status == "Hired" ? "success" : 
+                                                                               "danger") bg-opacity-10 border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-@(candidate.Status == "Shortlisted" ? "info" : 
+                                                                                   candidate.Status == "Interviewed" ? "primary" : 
+                                                                                   candidate.Status == "Hired" ? "success" : 
+                                                                                   "danger")">
+                            @candidate.Status
+                        </span>
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i> Shortlisted on
+                            @candidate.ShortlistedDate.ToString("MMM dd, yyyy")
+                        </small>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        @if (!string.IsNullOrEmpty(candidate.Job?.Employer?.Logo))
+                                {
+                                    <img src="@candidate.Job.Employer.Logo" alt="@candidate.Job.Employer.CompanyName"
+                                        class="rounded-circle me-3" style="width: 48px; height: 48px;">
+                                }
+                                else
+                                {
+                                    <div class="company-placeholder rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                        style="width: 48px; height: 48px;">
+                                        <i class="fas fa-building text-secondary"></i>
+                                    </div>
+                                }
+                                <div>
+                                    <h5 class="card-title mb-1">
+                                        <a asp-controller="Job" asp-action="Details" asp-route-id="@candidate.JobId"
+                                            class="text-decoration-none">@candidate.Job?.JobTitle</a>
+                                    </h5>
+                                    <p class="text-muted mb-0">@candidate.Job?.Employer?.CompanyName</p>
+                                </div>
+                            </div>
+
+                            <div class="job-details mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    <span
+                                        class="badge bg-@(candidate.Job?.JobType == "Full-time" ? "success" : 
+                                                                                                  candidate.Job?.JobType == "Part-time" ? "info" : 
+                                                                                                  candidate.Job?.JobType == "Contract" ? "warning" : 
+                                                                                                  candidate.Job?.JobType == "Internship" ? "secondary" : "primary")">
+                                @candidate.Job?.JobType
+                            </span>
+
+                            @if (candidate.Job != null && candidate.Job.IsRemote)
+                                    {
+                                        <span class="badge bg-light text-dark">Remote</span>
+                                    }
+                                </div>
+
+                                <p class="mb-1">
+                                    <i class="fas fa-map-marker-alt text-muted me-1"></i> @candidate.Job?.Location
+                                </p>
+
+                                <p class="mb-1">
+                                    <i class="fas fa-money-bill-wave text-muted me-1"></i>
+                                    @if (candidate.Job != null && candidate.Job.SalaryMin > 0 && candidate.Job.SalaryMax > 0)
+                                    {
+                                        <span>$@candidate.Job.SalaryMin.ToString("N0") -
+                                            $@candidate.Job.SalaryMax.ToString("N0")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Competitive</span>
+                                    }
+                                </p>
+                            </div>
+
+                            @if (candidate.InterviewDate.HasValue)
+                            {
+                                <div class="interview-info alert alert-info">
+                                    <div class="d-flex">
+                                        <i class="fas fa-calendar-check text-primary me-2 mt-1"></i>
+                                        <div>
+                                            <h6 class="mb-1">Interview Scheduled</h6>
+                                            <p class="mb-0">@candidate.InterviewDate.Value.ToString("dddd, MMMM dd, yyyy")</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(candidate.InterviewNotes))
+                            {
+                                <div class="notes bg-light p-3 rounded mb-3">
+                                    <h6 class="mb-2">Employer Notes:</h6>
+                                    <p class="mb-0">@candidate.InterviewNotes</p>
+                                </div>
+                            }
+
+                            <div class="d-flex mt-3">
+                                <a asp-controller="Job" asp-action="Details" asp-route-id="@candidate.JobId"
+                                    class="btn btn-outline-primary w-100">
+                                    View Job Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-clipboard-check text-muted" style="font-size: 48px;"></i>
+                </div>
+                <h5>No Candidacies Yet</h5>
+                <p class="text-muted">You haven't been shortlisted for any positions yet. Keep applying to jobs and
+                    showcasing your skills!</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a asp-controller="Job" asp-action="Index" class="btn btn-primary">
+                        Browse Jobs
+                    </a>
+                    <a asp-action="Applications" class="btn btn-outline-secondary">
+                        View My Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Add any JavaScript for the candidacies page
+            console.log("Candidacies page loaded");
+        });
+    </script>
+}

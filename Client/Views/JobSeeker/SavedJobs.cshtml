@@ -1,0 +1,177 @@
+@model IEnumerable<SaveJob>
+
+@{
+    ViewData["Title"] = "Saved Jobs";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">Saved Jobs</h1>
+            <p class="text-muted">View and manage your saved job opportunities</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-controller="Job" asp-action="Index" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i> Find More Jobs
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var savedJob in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between mb-3">
+                                @if (!string.IsNullOrEmpty(savedJob.Job?.Employer?.Logo))
+                                {
+                                    <img src="@savedJob.Job.Employer.Logo" alt="@savedJob.Job.Employer.CompanyName"
+                                        class="rounded-circle me-3" style="width: 48px; height: 48px;">
+                                }
+                                else
+                                {
+                                    <div class="company-placeholder rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                        style="width: 48px; height: 48px;">
+                                        <i class="fas fa-building text-secondary"></i>
+                                    </div>
+                                }
+                                <div class="ms-2 flex-grow-1">
+                                    <h5 class="card-title mb-1">
+                                        <a asp-controller="Job" asp-action="Details" asp-route-id="@savedJob.JobId"
+                                            class="text-decoration-none">@savedJob.Job?.JobTitle</a>
+                                    </h5>
+                                    <p class="text-muted mb-0">@savedJob.Job?.Employer?.CompanyName</p>
+                                </div>
+                                <form asp-controller="JobSeeker" asp-action="UnsaveJob" asp-route-id="@savedJob.JobId"
+                                    method="post" class="ms-auto">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove from saved jobs">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="job-details mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    <span
+                                        class="badge bg-@(savedJob.Job?.JobType == "Full-time" ? "success" : 
+                                                                                                  savedJob.Job?.JobType == "Part-time" ? "info" : 
+                                                                                                  savedJob.Job?.JobType == "Contract" ? "warning" : 
+                                                                                                  savedJob.Job?.JobType == "Internship" ? "secondary" : "primary")">
+                                @savedJob.Job?.JobType
+                            </span>
+
+                            @if (savedJob.Job != null && savedJob.Job.IsRemote)
+                                    {
+                                        <span class="badge bg-light text-dark">Remote</span>
+                                    }
+
+                                    @if (savedJob.Job?.Category != null)
+                                    {
+                                        <span class="badge bg-secondary">@savedJob.Job.Category.Name</span>
+                                    }
+                                </div>
+
+                                <p class="mb-1">
+                                    <i class="fas fa-map-marker-alt text-muted me-1"></i> @savedJob.Job?.Location
+                                </p>
+
+                                <p class="mb-1">
+                                    <i class="fas fa-money-bill-wave text-muted me-1"></i>
+                                    @if (savedJob.Job != null && savedJob.Job.SalaryMin > 0 && savedJob.Job.SalaryMax > 0)
+                                    {
+                                        <span>$@savedJob.Job.SalaryMin.ToString("N0") -
+                                            $@savedJob.Job.SalaryMax.ToString("N0")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Competitive</span>
+                                    }
+                                </p>
+
+                                @if (savedJob.Job != null)
+                                {
+                                    <p class="text-muted mb-1">
+                                        <small>
+                                            <i class="far fa-clock me-1"></i> Saved on @savedJob.SavedAt.ToString("MMMM dd, yyyy")
+                                        </small>
+                                    </p>
+
+                                    @if (savedJob.Job.Deadline > DateTime.Now)
+                                    {
+                                        <p class="text-muted mb-1">
+                                            <small>
+                                                <i class="fas fa-hourglass-half me-1"></i>
+                                                Deadline: @savedJob.Job.Deadline.ToString("MMMM dd, yyyy")
+                                            </small>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger mb-1">
+                                            <small>
+                                                <i class="fas fa-exclamation-circle me-1"></i>
+                                                Application deadline has passed
+                                            </small>
+                                        </p>
+                                    }
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(savedJob.Notes))
+                            {
+                                <div class="notes bg-light p-2 rounded mb-3">
+                                    <small>
+                                        <strong>Notes:</strong> @savedJob.Notes
+                                    </small>
+                                </div>
+                            }
+
+                            <div class="d-flex gap-2 mt-auto">
+                                <a asp-controller="Job" asp-action="Details" asp-route-id="@savedJob.JobId"
+                                    class="btn btn-outline-primary flex-grow-1">
+                                    View Details
+                                </a>
+
+                                @if (savedJob.Job != null && savedJob.Job.Deadline > DateTime.Now)
+                                {
+                                    <a asp-controller="Application" asp-action="Apply" asp-route-id="@savedJob.JobId"
+                                        class="btn btn-primary flex-grow-1">
+                                        Apply Now
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-bookmark text-muted" style="font-size: 48px;"></i>
+                </div>
+                <h5>No Saved Jobs</h5>
+                <p class="text-muted">You haven't saved any jobs yet. Browse job listings and save the ones that interest
+                    you.</p>
+                <a asp-controller="Job" asp-action="Index" class="btn btn-primary">
+                    Browse Jobs
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Add any JavaScript for the saved jobs page
+            console.log("Saved jobs page loaded");
+        });
+    </script>
+}

@@ -1,0 +1,138 @@
+@model IEnumerable<Application>
+
+@{
+    ViewData["Title"] = "My Applications";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">My Applications</h1>
+            <p class="text-muted">Track the status of your job applications</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-controller="Job" asp-action="Index" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i> Find More Jobs
+            </a>
+        </div>
+    </div>
+    
+    @if (Model.Any())
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Applied On</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var application in Model.OrderByDescending(a => a.ApplicationDate))
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Job" asp-action="Details" asp-route-id="@application.JobId" class="text-decoration-none">
+                                            @application.Job?.JobTitle
+                                        </a>
+                                    </td>
+                                    <td>@application.Job?.Employer?.CompanyName</td>
+                                    <td>@application.ApplicationDate.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-@(application.Status == "Pending" ? "warning" : 
+                                                              application.Status == "Shortlisted" ? "info" : 
+                                                              application.Status == "Interviewed" ? "primary" : 
+                                                              application.Status == "Offered" ? "success" : 
+                                                              application.Status == "Rejected" ? "danger" : "secondary")">
+                                            @application.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Application" asp-action="Details" asp-route-id="@application.Id" class="btn btn-sm btn-outline-primary">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Application Status Summary -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Application Status Summary</h5>
+                        <div class="row mt-3">
+                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                <div class="p-3 rounded bg-warning bg-opacity-10">
+                                    <h6 class="mb-1">Pending</h6>
+                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Pending")</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                <div class="p-3 rounded bg-info bg-opacity-10">
+                                    <h6 class="mb-1">Shortlisted</h6>
+                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Shortlisted")</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                <div class="p-3 rounded bg-primary bg-opacity-10">
+                                    <h6 class="mb-1">Interviewed</h6>
+                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Interviewed")</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                <div class="p-3 rounded bg-success bg-opacity-10">
+                                    <h6 class="mb-1">Offered</h6>
+                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Offered")</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                <div class="p-3 rounded bg-danger bg-opacity-10">
+                                    <h6 class="mb-1">Rejected</h6>
+                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Rejected")</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
+                                <div class="p-3 rounded bg-secondary bg-opacity-10">
+                                    <h6 class="mb-1">Total</h6>
+                                    <h4 class="mb-0">@Model.Count()</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4 text-center">
+                <div class="py-4">
+                    <i class="fas fa-paper-plane fa-4x text-muted mb-3"></i>
+                    <h5>You haven't applied to any jobs yet</h5>
+                    <p class="text-muted">Start applying to jobs to track your applications here.</p>
+                    <a asp-controller="Job" asp-action="Index" class="btn btn-primary mt-2">
+                        <i class="fas fa-search me-1"></i> Browse Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Add any JavaScript needed for the applications page
+    </script>
+} 
