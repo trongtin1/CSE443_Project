@@ -31,7 +31,7 @@
                                         <i class="fas fa-user text-primary me-2"></i>
                                         <h6 class="mb-0 fw-semibold">Name</h6>
                                     </div>
-                                    <p class="mb-0">@Model.name</p>
+                                    <p class="mb-0">@(string.IsNullOrEmpty(Model.name) ? "Unnamed User" : Model.name)</p>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                         <i class="fas fa-envelope text-primary me-2"></i>
                                         <h6 class="mb-0 fw-semibold">Email</h6>
                                     </div>
-                                    <p class="mb-0">@Model.email</p>
+                                    <p class="mb-0">@(string.IsNullOrEmpty(Model.email) ? "No Email" : Model.email)</p>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                                         <i class="fas fa-user-shield text-primary me-2"></i>
                                         <h6 class="mb-0 fw-semibold">Role</h6>
                                     </div>
-                                    <p class="mb-0">@Model.role</p>
+                                    <p class="mb-0">@(string.IsNullOrEmpty(Model.role) ? "No Role" : Model.role)</p>
                                 </div>
                             </div>
                         </div>

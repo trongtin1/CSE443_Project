@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CSE443_Project.Data;
 using CSE443_Project.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CSE443_Project.Areas.Admin.Controllers
 {
@@ -16,9 +17,22 @@ namespace CSE443_Project.Areas.Admin.Controllers
         }
 
         // GET: Admin/CVs
-        public IActionResult Index()
+        public IActionResult Index(string searchTerm = null)
         {
-            var cvs = _context.CVs.Include(c => c.User).ToList();
+            var cvsQuery = _context.CVs.Include(c => c.User).AsQueryable();
+            
+            // Áp dụng tìm kiếm nếu có searchTerm
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                cvsQuery = cvsQuery.Where(c => 
+                    c.User.name.ToLower().Contains(searchTerm) ||
+                    c.User.email.ToLower().Contains(searchTerm) ||
+                    c.Content.ToLower().Contains(searchTerm)
+                );
+            }
+            
+            var cvs = cvsQuery.ToList();
             return View(cvs);
         }
 
@@ -49,6 +63,25 @@ namespace CSE443_Project.Areas.Admin.Controllers
             _context.CVs.Remove(cv);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
+        }
+        
+        // GET: Admin/CVs/Download/5
+        public IActionResult Download(int id)
+        {
+            var cv = _context.CVs.Find(id);
+            if (cv == null) return NotFound();
+            
+            // Giả sử CV.Content chứa đường dẫn tới file
+            string filePath = cv.Content;
+            string fileName = $"CV_{cv.UserId}_{id}.pdf";
+            
+            // Trả về file để tải xuống
+            if (System.IO.File.Exists(filePath))
+            {
+                return PhysicalFile(filePath, "application/pdf", fileName);
+            }
+            
+            return NotFound("File không tồn tại");
         }
     }
 }

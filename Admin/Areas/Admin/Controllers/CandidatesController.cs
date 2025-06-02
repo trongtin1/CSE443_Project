@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using CSE443_Project.Data;
+using CSE443_Project.Models;
+using Admin.Models;
 
 namespace Admin.Areas.Admin.Controllers
 {
@@ -7,14 +10,26 @@ namespace Admin.Areas.Admin.Controllers
     [Authorize(Roles = "Admin")]
     public class CandidatesController : Controller
     {
-        public IActionResult Index()
+        private readonly AppDbContext _context;
+
+        public CandidatesController(AppDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public IActionResult Index(string search)
+        {
+            var query = _context.Candidates.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(c => c.FullName.Contains(search) || c.Email.Contains(search));
+            return View(query.ToList());
         }
 
         public IActionResult Details(int id)
         {
-            return View();
+            var candidate = _context.Candidates.Find(id);
+            if (candidate == null) return NotFound();
+            return View(candidate);
         }
 
         public IActionResult Create()
@@ -23,11 +38,13 @@ namespace Admin.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CandidateViewModel model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Candidate model)
         {
             if (ModelState.IsValid)
             {
-                // Add logic to save candidate
+                _context.Candidates.Add(model);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -35,38 +52,36 @@ namespace Admin.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
-            return View();
+            var candidate = _context.Candidates.Find(id);
+            if (candidate == null) return NotFound();
+            return View(candidate);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, CandidateViewModel model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Candidate model)
         {
+            if (id != model.Id) return BadRequest();
             if (ModelState.IsValid)
             {
-                // Add logic to update candidate
+                _context.Candidates.Update(model);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            // Add logic to delete candidate
+            var candidate = _context.Candidates.Find(id);
+            if (candidate != null)
+            {
+                _context.Candidates.Remove(candidate);
+                _context.SaveChanges();
+            }
             return RedirectToAction(nameof(Index));
         }
     }
-
-    public class CandidateViewModel
-    {
-        public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Position { get; set; }
-        public string Status { get; set; }
-        public int Experience { get; set; }
-        public string Skills { get; set; }
-        public string Notes { get; set; }
-    }
-} 
+}
