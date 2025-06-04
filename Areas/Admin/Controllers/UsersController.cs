@@ -8,9 +8,9 @@ namespace CSE443_Project.Areas.Admin.Controllers
     [Area("Admin")]
     public class UsersController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public UsersController(AppDbContext context)
+        public UsersController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -35,11 +35,22 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.created_at = DateTime.UtcNow;
+                user.CreatedAt = DateTime.Now;
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Log errors to console for debugging
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Error in field {key}: {error.ErrorMessage}");
+                }
+            }
+
             return View(user);
         }
 
@@ -48,7 +59,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null) return NotFound();
 
             return View(user);
@@ -61,14 +72,17 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingUser = _context.Users.FirstOrDefault(u => u.user_id == user.user_id);
+                var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
                 if (existingUser == null) return NotFound();
 
-                // Cập nhật các trường
-                existingUser.name = user.name;
-                existingUser.email = user.email;
-                existingUser.password = user.password;
-                existingUser.phone = user.phone;
+                // Update fields
+                existingUser.Username = user.Username;
+                existingUser.Password = user.Password;
+                existingUser.Email = user.Email;
+                existingUser.Phone = user.Phone;
+                existingUser.Address = user.Address;
+                existingUser.City = user.City;
+                existingUser.IsActive = user.IsActive;
 
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -81,7 +95,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null) return NotFound();
 
             return View(user);
@@ -92,7 +106,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null) return NotFound();
 
             _context.Users.Remove(user);
@@ -105,7 +119,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             if (id == null) return NotFound();
 
-            var user = _context.Users.FirstOrDefault(u => u.user_id == id);
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
             if (user == null) return NotFound();
 
             return View(user);

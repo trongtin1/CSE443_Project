@@ -7,9 +7,9 @@ namespace CSE443_Project.Areas.Admin.Controllers
     [Area("Admin")]
     public class JobsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public JobsController(AppDbContext context)
+        public JobsController(ApplicationDbContext context)
         {
             _context = context;
         }

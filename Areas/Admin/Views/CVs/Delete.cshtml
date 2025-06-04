@@ -2,7 +2,7 @@
 
 <h2>Xác nhận xoá CV</h2>
 
-<p>Bạn có chắc chắn muốn xoá CV của <strong>@Model.User?.name</strong>?</p>
+<p>Bạn có chắc chắn muốn xoá CV của <strong>@Model.JobSeeker.User.Username</strong>?</p>
 
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="Id" />

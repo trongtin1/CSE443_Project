@@ -5,15 +5,23 @@
 <table class="table">
     <tr>
         <th>Người dùng</th>
-        <td>@Model.User?.name (@Model.User?.email)</td>
+        <td>@Model.JobSeeker.User.Username (@Model.JobSeeker.User.Email)</td>
+    </tr>
+    <tr>
+        <th>Tiêu đề</th>
+        <td>@Model.Title</td>
+    </tr>
+    <tr>
+        <th>Mô tả</th>
+        <td>@Model.Description</td>
     </tr>
     <tr>
         <th>Ngày tạo</th>
         <td>@Model.CreatedAt.ToString("dd/MM/yyyy")</td>
     </tr>
     <tr>
-        <th>Nội dung CV</th>
-        <td><pre>@Model.Content</pre></td>
+        <th>Ngày cập nhật</th>
+        <td>@(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToString("dd/MM/yyyy") : "")</td>
     </tr>
 </table>
 

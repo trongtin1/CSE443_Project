@@ -2,28 +2,266 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2>Admin Dashboard</h2>
+<div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-white mb-0">Job Portal</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="/Admin/Home" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Admin/Candidates" class="nav-link">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Manager Candidates</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Admin/Users" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Manager User</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Admin/CVs" class="nav-link">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Manager CVs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Admin/Settings" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
 
-<div class="row mt-4">
-    <div class="col-md-3">
-        <a href="/Admin/Users" class="btn btn-outline-primary btn-block w-100 mb-3">Quản lý Người dùng</a>
-    </div>
-    <div class="col-md-3">
-        <a href="/Admin/Jobs" class="btn btn-outline-primary btn-block w-100 mb-3">Quản lý Công việc</a>
-    </div>
-    <div class="col-md-3">
-        <a href="/Admin/Applications" class="btn btn-outline-primary btn-block w-100 mb-3">Quản lý Đơn ứng tuyển</a>
-    </div>
-    <div class="col-md-3">
-        <a href="/Admin/CVs" class="btn btn-outline-primary btn-block w-100 mb-3">Quản lý CV</a>
-    </div>
-    <div class="col-md-3">
-        <a href="/Admin/Industries" class="btn btn-outline-primary btn-block w-100 mb-3">Quản lý Ngành nghề</a>
-    </div>
-    <div class="col-md-3">
-        <a href="/Admin/Locations" class="btn btn-outline-primary btn-block w-100 mb-3">Quản lý Địa điểm</a>
-    </div>
-    <div class="col-md-3">
-        <a href="/Admin/Settings" class="btn btn-outline-secondary btn-block w-100 mb-3">Cài đặt</a>
-    </div>
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Top Bar -->
+        <div class="admin-topbar d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center w-100">
+                <button class="btn btn-link text-dark me-3" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="dropdown ms-auto">
+                    <button class="btn btn-link text-dark dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="https://ui-avatars.com/api/?name=Admin" class="rounded-circle me-2" width="32" height="32" alt="Admin">
+                        <span class="fw-semibold">Admin</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/Admin/Profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="/Admin/Settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form asp-area="Admin" asp-controller="Account" asp-action="Logout" method="post" class="dropdown-item">
+                                <button type="submit" class="btn btn-link text-dark p-0">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="admin-content">
+            <div class="row g-4 mb-4">
+                <!-- Statistics Cards -->
+                <div class="col-12">
+                    <div class="row g-4">
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="stat-card bg-primary text-white">
+                                <div class="stat-card-info">
+                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <p class="stat-card-label">Total Candidates</p>
+                                </div>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="stat-card bg-success text-white">
+                                <div class="stat-card-info">
+                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <p class="stat-card-label">Total Employees</p>
+                                </div>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="stat-card bg-warning text-white">
+                                <div class="stat-card-info">
+                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <p class="stat-card-label">Total CVs</p>
+                                </div>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="stat-card bg-info text-white">
+                                <div class="stat-card-info">
+                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <p class="stat-card-label">Active Jobs</p>
+                                </div>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Candidates -->
+                <div class="col-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent Candidates</h5>
+                            <a href="/Admin/Candidates" class="btn btn-sm btn-primary">View All</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Position</th>
+                                            <th>Status</th>
+                                            <th>Applied Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="https://ui-avatars.com/api/?name=John+Doe" class="rounded-circle me-2" width="32" height="32" alt="John Doe">
+                                                    <div>
+                                                        <div class="fw-semibold">John Doe</div>
+                                                        <div class="small text-muted">john@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>Frontend Developer</td>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                            <td>2024-03-15</td>
+                                            <td>
+                                                <a href="/Admin/Candidates/View/1" class="btn btn-sm btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent CVs -->
+                <div class="col-12 col-lg-4">
+                    <div class="card">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Recent CVs</h5>
+                            <a href="/Admin/CVs" class="btn btn-sm btn-primary">View All</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">John Doe's CV</h6>
+                                        <small>3 days ago</small>
+                                    </div>
+                                    <p class="mb-1">Frontend Developer Position</p>
+                                    <small class="text-muted">PDF • 2.4 MB</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Quick Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-sm-6 col-md-3">
+                                    <a href="/Admin/Candidates/Create" class="quick-action-item">
+                                        <i class="fas fa-user-plus"></i>
+                                        <span>Add New Candidate</span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <a href="/Admin/Users/Create" class="quick-action-item">
+                                        <i class="fas fa-user-plus"></i>
+                                        <span>Add New Employee</span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <a href="/Admin/CVs" class="quick-action-item">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Upload CV</span>
+                                    </a>
+                                </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <a href="/Admin/Settings" class="quick-action-item">
+                                        <i class="fas fa-cog"></i>
+                                        <span>System Settings</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Animate statistics
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    obj.textContent = Math.floor(progress * (end - start) + start);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // Animate all stat cards
+            document.querySelectorAll('.stat-card-value').forEach(stat => {
+                const value = Math.floor(Math.random() * 100) + 10;
+                animateValue(stat, 0, value, 2000);
+            });
+
+            // Sidebar Toggle
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.querySelector('.admin-sidebar').classList.toggle('show');
+            });
+        });
+    </script>
+}

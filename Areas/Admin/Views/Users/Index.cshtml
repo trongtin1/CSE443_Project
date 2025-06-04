@@ -1,31 +1,296 @@
 ﻿@model IEnumerable<CSE443_Project.Models.User>
 
-<h2>Danh sách người dùng</h2>
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <a href="/Admin/Home" class="btn btn-light rounded-circle me-3 shadow-sm hover-scale">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2 class="mb-0 fw-bold text-primary gradient-text">User Management</h2>
+        </div>
+        <a class="btn btn-primary d-flex align-items-center shadow-sm hover-scale" href="/Admin/Users/Create">
+            <i class="fas fa-plus me-2"></i>Add New User
+        </a>
+    </div>
 
-<a class="btn btn-primary" href="/Admin/Users/Create">Thêm mới</a>
+    <!-- Search and Filter Section -->
+    <div class="card shadow-sm mb-4 glass-effect">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group search-box">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Search users...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select custom-select" id="roleFilter">
+                        <option value="">All Roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<table class="table table-bordered mt-3">
-    <thead>
-        <tr>
-            <th>Họ tên</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.name</td>
-                <td>@user.email</td>
-                <td>@user.role</td>
-                <td>
-                    <a class="btn btn-info" href="/Admin/Users/Details/@user.user_id">Chi tiết</a>
-                    <a class="btn btn-warning" href="/Admin/Users/Edit/@user.user_id">Sửa</a>
-                    <a class="btn btn-danger" href="/Admin/Users/Delete/@user.user_id">Xóa</a>
-                </td>
-            </tr>
+    <!-- Users Table Section -->
+    <div class="card shadow-sm glass-effect">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle custom-table">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="fw-semibold">Username</th>
+                            <th class="fw-semibold">Email</th>
+                            <th class="fw-semibold">Phone</th>
+                            <th class="fw-semibold">Address</th>
+                            <th class="fw-semibold text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr class="hover-row">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-gradient me-3">
+                                            @(string.IsNullOrEmpty(user.Username) ? "?" : user.Username.Substring(0, 1).ToUpper())
+                                        </div>
+                                        <span class="fw-medium">@user.Username</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-envelope text-muted me-2"></i>
+                                        @user.Email
+                                    </div>
+                                </td>
+                                <td>
+                                    @user.Phone
+                                </td>
+                                <td>
+                                    @user.Address, @user.City
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a class="btn btn-sm btn-outline-info action-btn" href="/Admin/Users/Details/@user.Id" title="Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-warning action-btn" href="/Admin/Users/Edit/@user.Id" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-danger action-btn" href="/Admin/Users/Delete/@user.Id" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --success-color: #27ae60;
+        --danger-color: #e74c3c;
+        --warning-color: #f1c40f;
+        --light-bg: #ecf0f1;
+        --text-color: #2c3e50;
+    }
+
+    /* Modern Glass Effect */
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+        background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Avatar Circle with Gradient */
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        box-shadow: 0 2px 10px rgba(44, 62, 80, 0.2);
+        color: white;
+    }
+
+    /* Custom Table Styles */
+    .custom-table {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+    .custom-table tbody tr {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        background-color: white;
+    }
+
+    .hover-row:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(44, 62, 80, 0.1);
+    }
+
+    /* Custom Badge */
+    .custom-badge {
+        padding: 0.5em 1em;
+        border-radius: 20px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+
+    .bg-danger {
+        background-color: var(--danger-color) !important;
+    }
+
+    .bg-success {
+        background-color: var(--success-color) !important;
+    }
+
+    /* Action Buttons */
+    .action-btn {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 0.4rem 0.6rem;
+        border-color: var(--light-bg);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(44, 62, 80, 0.1);
+    }
+
+    .btn-outline-info {
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-outline-warning {
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+    }
+
+    .btn-outline-danger {
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+    }
+
+    /* Search Box */
+    .search-box {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(44, 62, 80, 0.05);
+    }
+
+    .search-box .form-control {
+        border: none;
+        padding: 0.8rem 1rem;
+        background-color: var(--light-bg);
+    }
+
+    .search-box .input-group-text {
+        border: none;
+        padding: 0.8rem 1rem;
+        background-color: var(--light-bg);
+    }
+
+    /* Custom Select */
+    .custom-select {
+        border: none;
+        box-shadow: 0 2px 10px rgba(44, 62, 80, 0.05);
+        padding: 0.8rem 1rem;
+        cursor: pointer;
+        background-color: var(--light-bg);
+    }
+
+    /* Hover Scale Effect */
+    .hover-scale {
+        transition: transform 0.3s ease;
+    }
+
+    .hover-scale:hover {
+        transform: scale(1.05);
+    }
+
+    /* Button Styles */
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    /* Responsive Adjustments */
+    @@media (max-width: 768px) {
+        .container-fluid {
+            padding: 1rem;
         }
-    </tbody>
-</table>
+        
+        .table-responsive {
+            margin: 0 -1rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Search functionality with debounce
+            let searchTimeout;
+            $("#searchInput").on("keyup", function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    var value = $(this).val().toLowerCase();
+                    $("table tbody tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                }, 300);
+            });
+
+            // Role filter functionality
+            $("#roleFilter").on("change", function() {
+                var value = $(this).val().toLowerCase();
+                if (value === "") {
+                    $("table tbody tr").show();
+                } else {
+                    $("table tbody tr").filter(function() {
+                        $(this).toggle($(this).find("td:nth-child(3)").text().toLowerCase().indexOf(value) > -1)
+                    });
+                }
+            });
+
+            // Add animation to table rows
+            $("table tbody tr").each(function(index) {
+                $(this).css('animation-delay', `${index * 0.1}s`);
+            });
+        });
+    </script>
+}

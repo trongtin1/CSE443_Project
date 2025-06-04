@@ -5,23 +5,59 @@
 <table class="table">
     <tr>
         <th>Tiêu đề</th>
-        <td>@Model.title</td>
+        <td>@Model.JobTitle</td>
     </tr>
     <tr>
         <th>Mô tả</th>
-        <td>@Model.description</td>
+        <td>@Model.JobDescription</td>
+    </tr>
+    <tr>
+        <th>Yêu cầu</th>
+        <td>@Model.Requirements</td>
+    </tr>
+    <tr>
+        <th>Quyền lợi</th>
+        <td>@Model.Benefits</td>
     </tr>
     <tr>
         <th>Vị trí</th>
-        <td>@Model.location</td>
+        <td>@Model.Location</td>
     </tr>
     <tr>
-        <th>Mức lương</th>
-        <td>@string.Format("{0:N0} VND", Model.salary)</td>
+        <th>Ngành nghề</th>
+        <td>@Model.Industry</td>
+    </tr>
+    <tr>
+        <th>Kinh nghiệm</th>
+        <td>@Model.ExperienceLevel</td>
+    </tr>
+    <tr>
+        <th>Lương</th>
+        <td>@string.Format("{0:N0} - {1:N0} VND", Model.SalaryMin, Model.SalaryMax)</td>
     </tr>
     <tr>
         <th>Loại công việc</th>
-        <td>@Model.job_type</td>
+        <td>@Model.JobType</td>
+    </tr>
+    <tr>
+        <th>Làm việc từ xa</th>
+        <td>@(Model.IsRemote ? "Có" : "Không")</td>
+    </tr>
+    <tr>
+        <th>Số lượng tuyển</th>
+        <td>@Model.Vacancies</td>
+    </tr>
+    <tr>
+        <th>Hạn nộp</th>
+        <td>@Model.Deadline.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <th>Nhà tuyển dụng</th>
+        <td>@Model.Employer?.User?.Username</td>
+    </tr>
+    <tr>
+        <th>Danh mục</th>
+        <td>@Model.Category?.Name</td>
     </tr>
 </table>
 

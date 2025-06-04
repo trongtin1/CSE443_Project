@@ -1,0 +1,86 @@
+@model CSE443_Project.Models.Candidate
+
+@{
+    ViewData["Title"] = "Add New Candidate";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                    <h5 class="mb-0">Add New Candidate</h5>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="ApplicationId" class="form-label">Application ID</label>
+                                <input asp-for="ApplicationId" class="form-control" type="number" min="1" />
+                                <span asp-validation-for="ApplicationId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="JobId" class="form-label">Job ID</label>
+                                <input asp-for="JobId" class="form-control" type="number" min="1" />
+                                <span asp-validation-for="JobId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="JobSeekerId" class="form-label">Job Seeker ID</label>
+                                <input asp-for="JobSeekerId" class="form-control" type="number" min="1" />
+                                <span asp-validation-for="JobSeekerId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label">Status</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="Shortlisted">Shortlisted</option>
+                                    <option value="Interviewed">Interviewed</option>
+                                    <option value="Hired">Hired</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="InterviewNotes" class="form-label">Interview Notes</label>
+                                <textarea asp-for="InterviewNotes" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="InterviewNotes" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="InterviewDate" class="form-label">Interview Date</label>
+                                <input asp-for="InterviewDate" class="form-control" type="datetime-local" />
+                                <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ShortlistedDate" class="form-label">Shortlisted Date</label>
+                                <input asp-for="ShortlistedDate" class="form-control" type="datetime-local" />
+                                <span asp-validation-for="ShortlistedDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-start mt-3">
+                            <button type="submit" class="btn btn-success me-2">Create</button>
+                            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

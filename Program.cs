@@ -1,6 +1,6 @@
 using CSE443_Project.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace CSE443_Project
 {
@@ -13,8 +13,20 @@ namespace CSE443_Project
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Add Authentication
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Admin/Account/Login";
+                    options.AccessDeniedPath = "/Admin/Account/AccessDenied";
+                    options.LogoutPath = "/Admin/Account/Logout";
+                    options.Cookie.Name = "AdminAuth";
+                    options.Cookie.HttpOnly = true;
+                    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                    options.SlidingExpiration = true;
+                });
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
@@ -27,16 +39,23 @@ namespace CSE443_Project
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            // Add Authentication middleware
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
                 name: "default",
-                pattern: "{area=Client}/{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}",
+                defaults: new { area = "Admin" });
 
             app.Run();
         }

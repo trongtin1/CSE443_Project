@@ -1,26 +1,208 @@
 @model IEnumerable<CSE443_Project.Models.CV>
 
-<h2>Danh sách CVs</h2>
+<div class="container-fluid">
+    <div class="d-flex align-items-center mb-4">
+        <a href="/Admin/Home" class="btn btn-outline-primary me-3">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+        <h2 class="mb-0">Manager CVs</h2>
+    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex gap-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm CV..." id="searchInput">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadCVModal">
+                        <i class="fas fa-upload me-2"></i>Upload CV
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<table class="table table-bordered mt-3">
-    <thead>
-        <tr>
-            <th>Ứng viên</th>
-            <th>Ngày tạo</th>
-            <th>Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var cv in Model)
-        {
-            <tr>
-                <td>@cv.User?.name</td>
-                <td>@cv.CreatedAt.ToString("dd/MM/yyyy")</td>
-                <td>
-                    <a class="btn btn-info" href="/Admin/CVs/Details/@cv.Id">Chi tiết</a>
-                    <a class="btn btn-danger" href="/Admin/CVs/Delete/@cv.Id">Xoá</a>
-                </td>
-            </tr>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 50px">#</th>
+                                    <th>Ứng viên</th>
+                                    <th>Vị trí</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Trạng thái</th>
+                                    <th>Lượt xem</th>
+                                    <th style="width: 200px">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cv in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="cv-thumbnail">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=@cv.JobSeeker.User.Username" class="rounded-circle me-2" width="32" height="32" alt="@cv.JobSeeker.User.Username">
+                                                <div>
+                                                    <div class="fw-semibold">@cv.JobSeeker.User.Username</div>
+                                                    <div class="small text-muted">@cv.JobSeeker.User.Email</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@cv.Title</td>
+                                        <td>@cv.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            <span class="badge @(cv.IsDefault ? "bg-success" : "bg-secondary")">
+                                                @(cv.IsDefault ? "Mặc định" : "Khác")
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted"><i class="fas fa-eye me-1"></i>24</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/Admin/CVs/Details/@cv.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/Admin/CVs/Download/@cv.Id" class="btn btn-sm btn-outline-success" title="Tải xuống">
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" title="Xóa" 
+                                                        onclick="confirmDelete(@cv.Id)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload CV Modal -->
+<div class="modal fade" id="uploadCVModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload CV mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadCVForm">
+                    <div class="mb-3">
+                        <label class="form-label">Chọn ứng viên</label>
+                        <select class="form-select" required>
+                            <option value="">-- Chọn ứng viên --</option>
+                            <!-- Add options dynamically -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Vị trí ứng tuyển</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">File CV</label>
+                        <input type="file" class="form-control" accept=".pdf,.doc,.docx" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" form="uploadCVForm" class="btn btn-primary">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .cv-thumbnail {
+            width: 40px;
+            height: 40px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc3545;
+            font-size: 1.2rem;
         }
-    </tbody>
-</table>
+
+        .btn-group .btn {
+            padding: 0.25rem 0.5rem;
+        }
+
+        .table > :not(caption) > * > * {
+            padding: 1rem;
+        }
+
+        .badge {
+            padding: 0.5em 0.75em;
+        }
+
+        /* New styles for search and upload button */
+        .input-group {
+            width: auto;
+            max-width: 300px;
+        }
+
+        .input-group .form-control {
+            height: 38px;
+            font-size: 0.9rem;
+        }
+
+        .input-group .btn {
+            height: 38px;
+            padding: 0 0.75rem;
+        }
+
+        .btn-primary[data-bs-toggle="modal"] {
+            height: 38px;
+            padding: 0 1rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-primary[data-bs-toggle="modal"] i {
+            font-size: 0.9rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function confirmDelete(cvId) {
+            if (confirm('Bạn có chắc chắn muốn xóa CV này?')) {
+                window.location.href = `/Admin/CVs/Delete/${cvId}`;
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchText = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchText) ? '' : 'none';
+            });
+        });
+    </script>
+}

@@ -5,7 +5,7 @@
 <table class="table table-bordered mt-3">
     <thead>
         <tr>
-            <th>User ID</th>
+            <th>Job Seeker ID</th>
             <th>Job ID</th>
             <th>CV ID</th>
             <th>Trạng thái</th>
@@ -17,14 +17,14 @@
         @foreach (var app in Model)
         {
             <tr>
-                <td>@app.user_id</td>
-                <td>@app.job_id</td>
-                <td>@app.cv_id</td>
-                <td>@app.status</td>
-                <td>@app.applied_at.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@app.JobSeekerId</td>
+                <td>@app.JobId</td>
+                <td>@app.CVId</td>
+                <td>@app.Status</td>
+                <td>@app.ApplicationDate.ToString("dd/MM/yyyy HH:mm")</td>
                 <td>
-                    <a class="btn btn-info" href="/Admin/Applications/Details/@app.id">Chi tiết</a>
-                    <a class="btn btn-danger" href="/Admin/Applications/Delete/@app.id">Xóa</a>
+                    <a class="btn btn-info" href="/Admin/Applications/Details/@app.Id">Chi tiết</a>
+                    <a class="btn btn-danger" href="/Admin/Applications/Delete/@app.Id">Xóa</a>
                 </td>
             </tr>
         }
