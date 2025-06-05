@@ -25,10 +25,9 @@
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
-                        <button class="btn btn-primary btn-lg d-flex align-items-center gap-2 add-candidate-btn"
-                            data-bs-toggle="modal" data-bs-target="#addCandidateModal">
+                        <a asp-action="Create" class="btn btn-primary btn-lg d-flex align-items-center gap-2 add-candidate-btn">
                             <i class="fas fa-plus"></i> Add New
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -37,11 +36,11 @@
                             <thead>
                                 <tr>
                                     <th class="bg-light">ID</th>
-                                    <th class="bg-light">Name</th>
-                                    <th class="bg-light">Email</th>
-                                    <th class="bg-light">Phone</th>
+                                    <th class="bg-light">Job Seeker</th>
+                                    <th class="bg-light">Job</th>
                                     <th class="bg-light">Status</th>
-                                    <th class="bg-light">Applied Date</th>
+                                    <th class="bg-light">Interview Date</th>
+                                    <th class="bg-light">Shortlisted Date</th>
                                     <th class="bg-light">Actions</th>
                                 </tr>
                             </thead>
@@ -50,23 +49,13 @@
                                 {
                                     <tr>
                                         <td>@item.Id</td>
+                                        <td>@item.JobSeeker?.FullName</td>
+                                        <td>@item.Job?.JobTitle</td>
                                         <td>
-                                            <div class="d-flex align-items-center">
-                                                <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(item.FullName)"
-                                                    class="rounded-circle me-3" width="40" height="40">
-                                                <div>
-                                                    <div class="fw-semibold">@item.FullName</div>
-                                                    <div class="small text-muted">@item.Position</div>
-                                                </div>
-                                            </div>
+                                            <span class="badge bg-@(item.Status == "Hired" ? "success" : item.Status == "Interviewed" ? "warning" : item.Status == "Rejected" ? "secondary" : "primary") text-white">@item.Status</span>
                                         </td>
-                                        <td>@item.Email</td>
-                                        <td>@item.Phone</td>
-                                        <td>
-                                            <span
-                                                class="badge bg-@(item.Status == "Active" ? "success" : item.Status == "Pending" ? "warning" : "secondary") text-white">@item.Status</span>
-                                        </td>
-                                        <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                        <td>@(item.InterviewDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                        <td>@item.ShortlistedDate.ToString("yyyy-MM-dd")</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a asp-action="Details" asp-route-id="@item.Id"
@@ -84,7 +73,6 @@
                                         </td>
                                     </tr>
                                 }
-
                             </tbody>
                         </table>
                     </div>
@@ -112,65 +100,6 @@
                         </nav>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add Candidate Modal -->
-<div class="modal fade" id="addCandidateModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content border-0 rounded-4">
-            <div class="modal-header border-0 bg-light">
-                <h5 class="modal-title fw-bold">Add New Candidate</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <form>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Full Name</label>
-                            <input type="text" class="form-control form-control-lg" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Email</label>
-                            <input type="email" class="form-control form-control-lg" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Phone</label>
-                            <input type="tel" class="form-control form-control-lg" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Position Applied</label>
-                            <input type="text" class="form-control form-control-lg" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Status</label>
-                            <select class="form-select form-select-lg">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                                <option value="pending">Pending</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Experience (Years)</label>
-                            <input type="number" class="form-control form-control-lg" min="0" max="50">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Skills</label>
-                            <input type="text" class="form-control form-control-lg"
-                                placeholder="Enter skills separated by commas">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Notes</label>
-                            <textarea class="form-control form-control-lg" rows="3"></textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-0 bg-light">
-                <button type="button" class="btn btn-light btn-lg" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-lg">Save Candidate</button>
             </div>
         </div>
     </div>

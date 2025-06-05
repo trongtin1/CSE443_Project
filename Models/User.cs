@@ -14,6 +14,8 @@ namespace CSE443_Project.Models
 
         // Navigation properties
         public JobSeeker? JobSeeker { get; set; }
-        public Employer? Employer { get; set; }
+        public int? EmployerId { get; set; } // nullable nếu có thể không có
+        public Employer Employer { get; set; }
+
     }
 }

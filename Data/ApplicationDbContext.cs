@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using CSE443_Project.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using CSE443_Project.Models;
 
 namespace CSE443_Project.Data;
 
@@ -63,10 +63,12 @@ public partial class ApplicationDbContext : DbContext
             .WithOne(e => e.User)
             .HasForeignKey<Employer>(e => e.UserId);
 
+
+
         // Job relationships
         modelBuilder.Entity<Job>()
             .HasOne(j => j.Employer)
-            .WithMany(e => e.Jobs)
+            .WithMany() // Employer không có navigation property Jobs
             .HasForeignKey(j => j.EmployerId);
 
         modelBuilder.Entity<Job>()
@@ -127,7 +129,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Candidate>()
             .HasOne(c => c.JobSeeker)
-            .WithMany(js => js.Candidacies)
+            .WithMany(js => js.Candidates)
             .HasForeignKey(c => c.JobSeekerId)
             .OnDelete(DeleteBehavior.NoAction);
     }

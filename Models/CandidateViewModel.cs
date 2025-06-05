@@ -1,4 +1,4 @@
-namespace Admin.Models
+namespace CSE443_Project.Models
 {
     public class CandidateViewModel
     {

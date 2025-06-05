@@ -18,6 +18,6 @@ namespace CSE443_Project.Models
         public ICollection<Application> Applications { get; set; } = new List<Application>();
         public ICollection<SaveJob> SavedJobs { get; set; } = new List<SaveJob>();
         public ICollection<CV> CVs { get; set; } = new List<CV>();
-        public ICollection<Candidate> Candidacies { get; set; } = new List<Candidate>();
+        public ICollection<Candidate> Candidates { get; set; } = new List<Candidate>();
     }
 }

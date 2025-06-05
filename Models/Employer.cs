@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Admin.Models
+namespace CSE443_Project.Models
 {
     public class Employer
     {
@@ -19,5 +19,9 @@ namespace Admin.Models
         public bool IsVerified { get; set; }
         public bool IsActive { get; set; }
         public int JobPostingsCount { get; set; }
+
+        public int UserId { get; set; }
+        public User User { get; set; }
+
     }
-} 
+}
