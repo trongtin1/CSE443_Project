@@ -26,8 +26,6 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Application> Applications { get; set; } = null!;
     public DbSet<SaveJob> SavedJobs { get; set; } = null!;
     public DbSet<Candidate> Candidates { get; set; } = null!;
-
-    public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Setting> Settings { get; set; }
 
 
@@ -64,12 +62,19 @@ public partial class ApplicationDbContext : DbContext
             .HasForeignKey<Employer>(e => e.UserId);
 
 
+        // Employer relationships
+        modelBuilder.Entity<Employer>()
+            .HasOne(e => e.User)
+            .WithOne(u => u.Employer)
+            .HasForeignKey<Employer>(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Job relationships
         modelBuilder.Entity<Job>()
             .HasOne(j => j.Employer)
-            .WithMany() // Employer không có navigation property Jobs
-            .HasForeignKey(j => j.EmployerId);
+            .WithMany(e => e.Jobs)
+            .HasForeignKey(j => j.EmployerId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Job>()
             .HasOne(j => j.Category)
