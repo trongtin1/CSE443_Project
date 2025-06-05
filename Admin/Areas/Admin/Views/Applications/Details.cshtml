@@ -3,11 +3,15 @@
 <h2>Chi tiết đơn ứng tuyển</h2>
 
 <table class="table">
-    <tr><th>User ID</th><td>@Model.user_id</td></tr>
-    <tr><th>Job ID</th><td>@Model.job_id</td></tr>
-    <tr><th>CV ID</th><td>@Model.cv_id</td></tr>
-    <tr><th>Trạng thái</th><td>@Model.status</td></tr>
-    <tr><th>Ngày ứng tuyển</th><td>@Model.applied_at.ToString("dd/MM/yyyy HH:mm")</td></tr>
+    <tr><th>ID</th><td>@Model.Id</td></tr>
+    <tr><th>Job ID</th><td>@Model.JobId</td></tr>
+    <tr><th>Job Seeker ID</th><td>@Model.JobSeekerId</td></tr>
+    <tr><th>CV ID</th><td>@Model.CVId</td></tr>
+    <tr><th>Ngày ứng tuyển</th><td>@Model.ApplicationDate.ToString("dd/MM/yyyy HH:mm")</td></tr>
+    <tr><th>Thư xin việc</th><td>@Model.CoverLetter</td></tr>
+    <tr><th>Trạng thái</th><td>@Model.Status</td></tr>
+    <tr><th>Ghi chú</th><td>@Model.Notes</td></tr>
+    <tr><th>Ngày duyệt</th><td>@(Model.ReviewDate.HasValue ? Model.ReviewDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</td></tr>
 </table>
 
 <a class="btn btn-secondary" href="/Admin/Applications">Quay lại</a>

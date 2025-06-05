@@ -44,8 +44,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2FuZGlkYXRlc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/huynhhai/Desktop/dotnet/CSE443_Project/Admin/Areas/Admin/Views/Candidates/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2FuZGlkYXRlc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/huynhhai/Desktop/dotnet/CSE443_Project/Admin/Areas/Admin/Views/Candidates/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2FuZGlkYXRlc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/huynhhai/Desktop/dotnet/CSE443_Project/Admin/Areas/Admin/Views/Candidates/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2FuZGlkYXRlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/huynhhai/Desktop/dotnet/CSE443_Project/Admin/Areas/Admin/Views/CVs/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ1ZzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/huynhhai/Desktop/dotnet/CSE443_Project/Admin/Areas/Admin/Views/CVs/Delete.cshtml]

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Admin.Models
+namespace CSE443_Project.Models
 {
     public class AdminUser
     {

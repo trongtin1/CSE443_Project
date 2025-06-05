@@ -7,9 +7,9 @@ namespace CSE443_Project.Areas.Admin.Controllers
     [Area("Admin")]
     public class ApplicationsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ApplicationsController(AppDbContext context)
+        public ApplicationsController(ApplicationDbContext context)
         {
             _context = context;
         }

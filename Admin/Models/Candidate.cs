@@ -1,36 +1,19 @@
- using System.ComponentModel.DataAnnotations;
-
-namespace Admin.Models
+namespace CSE443_Project.Models
 {
     public class Candidate
     {
-        [Key]
         public int Id { get; set; }
+        public int ApplicationId { get; set; }
+        public int JobId { get; set; }
+        public int JobSeekerId { get; set; }
+        public string Status { get; set; } = "Shortlisted"; // Shortlisted, Interviewed, Hired, Rejected
+        public string? InterviewNotes { get; set; }
+        public DateTime? InterviewDate { get; set; }
+        public DateTime ShortlistedDate { get; set; } = DateTime.Now;
 
-        [Required]
-        [StringLength(100)]
-        public string FullName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Phone]
-        public string Phone { get; set; }
-
-        [StringLength(100)]
-        public string Position { get; set; }
-
-        [StringLength(50)]
-        public string Status { get; set; }
-
-        [Range(0, 50)]
-        public int Experience { get; set; }
-
-        [StringLength(500)]
-        public string Skills { get; set; }
-
-        [StringLength(1000)]
-        public string Notes { get; set; }
+        // Navigation properties
+        public Application Application { get; set; } = null!;
+        public Job Job { get; set; } = null!;
+        public JobSeeker JobSeeker { get; set; } = null!;
     }
 }

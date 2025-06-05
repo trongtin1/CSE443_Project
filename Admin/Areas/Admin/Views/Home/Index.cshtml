@@ -1,3 +1,4 @@
+@model IEnumerable<CSE443_Project.Models.CV>
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -21,17 +22,15 @@
                         <i class="fas fa-user-tie"></i>
                         <span>Manager Candidates</span>
                     </a>
-                    
-                    
                 </li>
                 <li class="nav-item">
-                    <a href="/Admin/Users" class="nav-link">
+                    <a href="/Admin/Users/Index" class="nav-link">
                         <i class="fas fa-users"></i>
                         <span>Manager User</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/Admin/CVs" class="nav-link">
+                    <a href="/Admin/CVs/Index" class="nav-link">
                         <i class="fas fa-file-pdf"></i>
                         <span>Manager CVs</span>
                     </a>
@@ -84,7 +83,7 @@
                         <div class="col-12 col-sm-6 col-xl-3">
                             <div class="stat-card bg-primary text-white">
                                 <div class="stat-card-info">
-                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <h3 class="stat-card-value" data-count="@ViewBag.TotalCandidates">@ViewBag.TotalCandidates</h3>
                                     <p class="stat-card-label">Total Candidates</p>
                                 </div>
                                 <div class="stat-card-icon">
@@ -95,8 +94,8 @@
                         <div class="col-12 col-sm-6 col-xl-3">
                             <div class="stat-card bg-success text-white">
                                 <div class="stat-card-info">
-                                    <h3 class="stat-card-value" data-count="0">0</h3>
-                                    <p class="stat-card-label">Total Employees</p>
+                                    <h3 class="stat-card-value" data-count="@ViewBag.TotalUsers">@ViewBag.TotalUsers</h3>
+                                    <p class="stat-card-label">Total Users</p>
                                 </div>
                                 <div class="stat-card-icon">
                                     <i class="fas fa-users"></i>
@@ -106,7 +105,7 @@
                         <div class="col-12 col-sm-6 col-xl-3">
                             <div class="stat-card bg-warning text-white">
                                 <div class="stat-card-info">
-                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <h3 class="stat-card-value" data-count="@ViewBag.TotalCVs">@ViewBag.TotalCVs</h3>
                                     <p class="stat-card-label">Total CVs</p>
                                 </div>
                                 <div class="stat-card-icon">
@@ -117,7 +116,7 @@
                         <div class="col-12 col-sm-6 col-xl-3">
                             <div class="stat-card bg-info text-white">
                                 <div class="stat-card-info">
-                                    <h3 class="stat-card-value" data-count="0">0</h3>
+                                    <h3 class="stat-card-value" data-count="@ViewBag.ActiveJobs">@ViewBag.ActiveJobs</h3>
                                     <p class="stat-card-label">Active Jobs</p>
                                 </div>
                                 <div class="stat-card-icon">
@@ -128,43 +127,86 @@
                     </div>
                 </div>
 
-                <!-- Recent Candidates -->
+                <!-- Recent CVs (Main section - Replacing Recent Candidates) -->
                 <div class="col-12 col-lg-8">
                     <div class="card">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Recent Candidates</h5>
-                            <a href="/Admin/Candidates" class="btn btn-sm btn-primary">View All</a>
+                            <h5 class="card-title mb-0">Recent CVs</h5>
+                            <a href="/Admin/CVs/Index" class="btn btn-sm btn-primary">View All</a>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
+                                            <th>Job Seeker</th>
+                                            <th>CV Title</th>
                                             <th>Status</th>
-                                            <th>Applied Date</th>
-                                            <th>Action</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://ui-avatars.com/api/?name=John+Doe" class="rounded-circle me-2" width="32" height="32" alt="John Doe">
-                                                    <div>
-                                                        <div class="fw-semibold">John Doe</div>
-                                                        <div class="small text-muted">john@example.com</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Frontend Developer</td>
-                                            <td><span class="badge bg-success">Active</span></td>
-                                            <td>2024-03-15</td>
-                                            <td>
-                                                <a href="/Admin/Candidates/View/1" class="btn btn-sm btn-outline-primary">View</a>
-                                            </td>
-                                        </tr>
+                                        @if (Model != null && Model.Any())
+                                        {
+                                            foreach (var cv in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="https://ui-avatars.com/api/?name=@(cv.JobSeeker?.User?.Username ?? "Unknown")" class="rounded-circle me-2" width="32" height="32" alt="@(cv.JobSeeker?.User?.Username ?? "Unknown")">
+                                                            <div>
+                                                                <div class="fw-semibold">@(cv.JobSeeker?.User?.Username ?? "Unknown")</div>
+                                                                <div class="small text-muted">@(cv.JobSeeker?.User?.Email ?? "No email")</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>@cv.Title</div>
+                                                        <div class="small text-muted">
+                                                            @(string.IsNullOrEmpty(cv.Description) ? "No description" : 
+                                                            (cv.Description.Length > 30 ? cv.Description.Substring(0, 30) + "..." : cv.Description))
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @if (cv.IsDefault)
+                                                        {
+                                                            <span class="badge bg-success">Default CV</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-secondary">Regular CV</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <div>@cv.CreatedAt.ToString("dd/MM/yyyy")</div>
+                                                        <div class="small text-muted">@cv.CreatedAt.ToString("HH:mm")</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex gap-2">
+                                                            <a href="/Admin/CVs/Details/@cv.Id" class="btn btn-sm btn-outline-info" title="View Details">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                            <a href="/Admin/CVs/Download/@cv.Id" class="btn btn-sm btn-outline-success" title="Download">
+                                                                <i class="fas fa-download"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="5" class="text-center py-4">
+                                                    <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
+                                                    <p>No CVs available in the system yet.</p>
+                                                    <a href="/Admin/CVs/Create" class="btn btn-primary mt-2">
+                                                        <i class="fas fa-upload me-2"></i>Upload First CV
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -172,23 +214,39 @@
                     </div>
                 </div>
 
-                <!-- Recent CVs -->
+                <!-- Job Seekers -->
                 <div class="col-12 col-lg-4">
                     <div class="card">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Recent CVs</h5>
-                            <a href="/Admin/CVs" class="btn btn-sm btn-primary">View All</a>
+                            <h5 class="card-title mb-0">Job Seekers</h5>
+                            <a href="/Admin/Users/Index" class="btn btn-sm btn-primary">View All</a>
                         </div>
                         <div class="card-body p-0">
                             <div class="list-group list-group-flush">
-                                <a href="#" class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">John Doe's CV</h6>
-                                        <small>3 days ago</small>
+                                @if (Model != null && Model.Any())
+                                {
+                                    var distinctJobSeekers = Model.Select(cv => cv.JobSeeker).Distinct().Take(4);
+                                    foreach (var jobSeeker in distinctJobSeekers)
+                                    {
+                                        <a href="/Admin/Users/Details/@(jobSeeker?.User?.Id)" class="list-group-item list-group-item-action">
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=@(jobSeeker?.User?.Username ?? "Unknown")" class="rounded-circle me-3" width="40" height="40" alt="@(jobSeeker?.User?.Username ?? "Unknown")">
+                                                <div>
+                                                    <h6 class="mb-1">@(jobSeeker?.User?.Username ?? "Unknown")</h6>
+                                                    <p class="mb-1 small text-muted">@(jobSeeker?.CVs?.Count() ?? 0) CVs uploaded</p>
+                                                    <small class="text-muted">@(jobSeeker?.Headline ?? "No headline")</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                        <p>No job seekers available yet.</p>
                                     </div>
-                                    <p class="mb-1">Frontend Developer Position</p>
-                                    <small class="text-muted">PDF • 2.4 MB</small>
-                                </a>
+                                }
                             </div>
                         </div>
                     </div>
@@ -211,13 +269,13 @@
                                 <div class="col-sm-6 col-md-3">
                                     <a href="/Admin/Users/Create" class="quick-action-item">
                                         <i class="fas fa-user-plus"></i>
-                                        <span>Add New Employee</span>
+                                        <span>Add New User</span>
                                     </a>
                                 </div>
                                 <div class="col-sm-6 col-md-3">
-                                    <a href="/Admin/CVs" class="quick-action-item">
+                                    <a href="/Admin/CVs/Create" class="quick-action-item">
                                         <i class="fas fa-upload"></i>
-                                        <span>Upload CV</span>
+                                        <span>Upload New CV</span>
                                     </a>
                                 </div>
                                 <div class="col-sm-6 col-md-3">
@@ -254,15 +312,15 @@
                 window.requestAnimationFrame(step);
             }
 
-            // Animate all stat cards
-            document.querySelectorAll('.stat-card-value').forEach(stat => {
-                const value = Math.floor(Math.random() * 100) + 10;
-                animateValue(stat, 0, value, 2000);
+            // Animate statistics
+            document.querySelectorAll('.stat-card-value').forEach(function(obj) {
+                const count = parseInt(obj.getAttribute('data-count'));
+                animateValue(obj, 0, count, 1000);
             });
 
-            // Sidebar Toggle
+            // Toggle sidebar
             document.getElementById('sidebarToggle').addEventListener('click', function() {
-                document.querySelector('.admin-sidebar').classList.toggle('show');
+                document.querySelector('.admin-wrapper').classList.toggle('sidebar-collapsed');
             });
         });
     </script>

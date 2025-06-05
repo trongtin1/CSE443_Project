@@ -1,92 +1,151 @@
-@model Admin.Models.Candidate
-
+@model CSE443_Project.Models.Candidate
 @{
-    ViewData["Title"] = "Add New Candidate";
+    ViewData["Title"] = "Add Candidate";
+    var jobs = ViewBag.Jobs as SelectList;
+    var jobSeekers = ViewBag.JobSeekers as SelectList;
+    var applications = ViewBag.Applications as SelectList;
 }
 
-<div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">
-                        <i class="fas fa-arrow-left"></i> Back to Home
-                    </a>
-                    <h5 class="mb-0">Add New Candidate</h5>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Add New Candidate</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Candidates</a></li>
+        <li class="breadcrumb-item active">Add New</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user-plus me-1"></i>
+            Add New Candidate
+        </div>
+        <div class="card-body">
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.ErrorMessage
                 </div>
+            }
 
-                <div class="card-body">
-                    <form asp-action="Create" method="post" novalidate>
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label asp-for="FullName" class="form-label">Full Name</label>
-                                <input asp-for="FullName" class="form-control" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
-                            </div>
+                <ul class="nav nav-tabs mb-4" id="candidateSourceTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="application-tab" data-bs-toggle="tab" data-bs-target="#application-tab-pane" type="button" role="tab" aria-controls="application-tab-pane" aria-selected="true">From Application</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-tab-pane" type="button" role="tab" aria-controls="manual-tab-pane" aria-selected="false">Manual Selection</button>
+                    </li>
+                </ul>
 
-                            <div class="col-md-6">
-                                <label asp-for="Email" class="form-label">Email</label>
-                                <input asp-for="Email" class="form-control" type="email" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="Phone" class="form-label">Phone</label>
-                                <input asp-for="Phone" class="form-control" />
-                                <span asp-validation-for="Phone" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="Position" class="form-label">Position</label>
-                                <input asp-for="Position" class="form-control" />
-                                <span asp-validation-for="Position" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="Experience" class="form-label">Experience (years)</label>
-                                <input asp-for="Experience" class="form-control" type="number" min="0" />
-                                <span asp-validation-for="Experience" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label asp-for="Status" class="form-label">Status</label>
-                                <select asp-for="Status" class="form-select">
-                                    <option value="">-- Select Status --</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                    <option value="Pending">Pending</option>
+                <div class="tab-content" id="candidateSourceTabContent">
+                    <!-- From Application Tab -->
+                    <div class="tab-pane fade show active" id="application-tab-pane" role="tabpanel" aria-labelledby="application-tab" tabindex="0">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label asp-for="ApplicationId" class="form-label">Select Application</label>
+                                <select asp-for="ApplicationId" class="form-select" asp-items="applications">
+                                    <option value="">-- Select Application --</option>
                                 </select>
-                                <span asp-validation-for="Status" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-12">
-                                <label asp-for="Skills" class="form-label">Skills</label>
-                                <textarea asp-for="Skills" class="form-control" rows="3"></textarea>
-                                <span asp-validation-for="Skills" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-12">
-                                <label asp-for="Notes" class="form-label">Notes</label>
-                                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
-                                <span asp-validation-for="Notes" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-12 d-flex justify-content-start mt-3">
-                                <button type="submit" class="btn btn-success me-2">Create</button>
-                                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                                <div class="form-text">Select an existing application to create a candidate</div>
+                                <span asp-validation-for="ApplicationId" class="text-danger"></span>
                             </div>
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Manual Selection Tab -->
+                    <div class="tab-pane fade" id="manual-tab-pane" role="tabpanel" aria-labelledby="manual-tab" tabindex="0">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="JobSeekerId" class="form-label">Job Seeker</label>
+                                <select asp-for="JobSeekerId" class="form-select" asp-items="jobSeekers">
+                                    <option value="">-- Select Job Seeker --</option>
+                                </select>
+                                <span asp-validation-for="JobSeekerId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="JobId" class="form-label">Job Position</label>
+                                <select asp-for="JobId" class="form-select" asp-items="jobs">
+                                    <option value="">-- Select Job --</option>
+                                </select>
+                                <span asp-validation-for="JobId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-text mb-3">
+                            Manually selecting a Job Seeker and Job will either find an existing application or create one automatically.
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <h5 class="mt-4 mb-3">Candidate Details</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">Status</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="Shortlisted">Shortlisted</option>
+                            <option value="Interviewed">Interviewed</option>
+                            <option value="Hired">Hired</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="InterviewDate" class="form-label">Interview Date</label>
+                        <input asp-for="InterviewDate" class="form-control" type="date" />
+                        <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="InterviewNotes" class="form-label">Interview Notes</label>
+                    <textarea asp-for="InterviewNotes" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="InterviewNotes" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input type="hidden" asp-for="ShortlistedDate" value="@DateTime.Now" />
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-primary">Create Candidate</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // JavaScript to handle tab changes and form logic
+        document.addEventListener('DOMContentLoaded', function () {
+            const applicationTab = document.getElementById('application-tab');
+            const manualTab = document.getElementById('manual-tab');
+            const applicationIdField = document.getElementById('ApplicationId');
+            const jobSeekerIdField = document.getElementById('JobSeekerId');
+            const jobIdField = document.getElementById('JobId');
+
+            // Set required attributes based on active tab
+            applicationTab.addEventListener('click', function() {
+                applicationIdField.setAttribute('required', 'required');
+                jobSeekerIdField.removeAttribute('required');
+                jobIdField.removeAttribute('required');
+            });
+
+            manualTab.addEventListener('click', function() {
+                applicationIdField.removeAttribute('required');
+                jobSeekerIdField.setAttribute('required', 'required');
+                jobIdField.setAttribute('required', 'required');
+            });
+
+            // Initialize on page load
+            if (applicationTab.classList.contains('active')) {
+                applicationIdField.setAttribute('required', 'required');
+            } else if (manualTab.classList.contains('active')) {
+                jobSeekerIdField.setAttribute('required', 'required');
+                jobIdField.setAttribute('required', 'required');
+            }
+        });
+    </script>
 }

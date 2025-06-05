@@ -1,17 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
-
 namespace CSE443_Project.Models
 {
     public class User
     {
-        [Key]
-        public int user_id { get; set; }
-        public string name { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public string phone { get; set; }
-        public string role { get; set; } //
-        public DateTime created_at { get; set; }
-    }
+        public int Id { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public bool IsActive { get; set; } = true;
 
+        // Navigation properties
+        public JobSeeker? JobSeeker { get; set; }
+        public int? EmployerId { get; set; } // nullable nếu có thể không có
+        public Employer Employer { get; set; }
+
+    }
 }
