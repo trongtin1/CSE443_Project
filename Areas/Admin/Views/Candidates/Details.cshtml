@@ -1,0 +1,150 @@
+@model CSE443_Project.Models.Candidate
+@{
+    ViewData["Title"] = "Candidate Details";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Candidate Details</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Candidates</a></li>
+        <li class="breadcrumb-item active">Details</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fas fa-user-check me-1"></i>
+                    Candidate Information
+                </div>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit me-1"></i> Edit
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fas fa-trash me-1"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <i class="fas fa-user me-1"></i> Candidate
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-5">Job Seeker</dt>
+                                <dd class="col-sm-7">@(Model.JobSeeker?.User?.Username ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Job Position</dt>
+                                <dd class="col-sm-7">@(Model.Job?.JobTitle ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Status</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-@(Model.Status switch {
+                                        "Shortlisted" => "primary",
+                                        "Interviewed" => "info",
+                                        "Hired" => "success",
+                                        "Rejected" => "danger",
+                                        _ => "secondary"
+                                    })">@Model.Status</span>
+                                </dd>
+
+                                <dt class="col-sm-5">Shortlisted Date</dt>
+                                <dd class="col-sm-7">@Model.ShortlistedDate.ToString("dd MMM yyyy")</dd>
+
+                                <dt class="col-sm-5">Interview Date</dt>
+                                <dd class="col-sm-7">
+                                    @(Model.InterviewDate.HasValue ? Model.InterviewDate.Value.ToString("dd MMM yyyy") : "Not scheduled")
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <i class="fas fa-briefcase me-1"></i> Application
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-5">Application ID</dt>
+                                <dd class="col-sm-7">@Model.ApplicationId</dd>
+
+                                <dt class="col-sm-5">Application Date</dt>
+                                <dd class="col-sm-7">
+                                    @(Model.Application?.ApplicationDate.ToString("dd MMM yyyy") ?? "N/A")
+                                </dd>
+
+                                <dt class="col-sm-5">CV</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.Application?.CV != null)
+                                    {
+                                        <a asp-area="Admin" asp-controller="CVs" asp-action="Details" asp-route-id="@Model.Application.CV.Id" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-file-pdf me-1"></i> View CV
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>No CV attached</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5">Contact Email</dt>
+                                <dd class="col-sm-7">
+                                    @(Model.JobSeeker?.User?.Email ?? "N/A")
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <i class="fas fa-comment-alt me-1"></i> Interview Notes
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.InterviewNotes))
+                    {
+                        <p class="card-text">@Model.InterviewNotes</p>
+                    }
+                    else
+                    {
+                        <p class="card-text text-muted">No interview notes available.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="text-end">
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this candidate? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,3 +1,4 @@
+@model IEnumerable<CSE443_Project.Models.Candidate>
 @{
     ViewData["Title"] = "Manager Candidates";
 }
@@ -9,6 +10,14 @@
         </a>
         <h2 class="mb-0 text-gradient">Manager Candidates</h2>
     </div>
+    
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger mb-4">
+            <i class="fas fa-exclamation-triangle me-2"></i> @ViewBag.ErrorMessage
+        </div>
+    }
+    
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-sm border-0 rounded-4">
@@ -17,88 +26,94 @@
                         <h5 class="card-title mb-0 fw-bold">Candidates Management</h5>
                         <p class="text-muted mb-0">Manage all candidate applications and profiles</p>
                     </div>
-                    <div class="d-flex gap-3">
-                        <div class="search-container">
-                            <input type="text" class="form-control form-control-lg search-input"
-                                placeholder="Search candidates...">
-                            <button class="btn btn-outline-primary search-btn" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+                    <div>
                         <a asp-action="Create" class="btn btn-primary btn-lg d-flex align-items-center gap-2 add-candidate-btn">
                             <i class="fas fa-plus"></i> Add New
                         </a>
                     </div>
                 </div>
                 <div class="card-body p-4">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle custom-table">
-                            <thead>
-                                <tr>
-                                    <th class="bg-light">ID</th>
-                                    <th class="bg-light">Job Seeker</th>
-                                    <th class="bg-light">Job</th>
-                                    <th class="bg-light">Status</th>
-                                    <th class="bg-light">Interview Date</th>
-                                    <th class="bg-light">Shortlisted Date</th>
-                                    <th class="bg-light">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle custom-table">
+                                <thead>
                                     <tr>
-                                        <td>@item.Id</td>
-                                        <td>@item.JobSeeker?.FullName</td>
-                                        <td>@item.Job?.JobTitle</td>
-                                        <td>
-                                            <span class="badge bg-@(item.Status == "Hired" ? "success" : item.Status == "Interviewed" ? "warning" : item.Status == "Rejected" ? "secondary" : "primary") text-white">@item.Status</span>
-                                        </td>
-                                        <td>@(item.InterviewDate?.ToString("yyyy-MM-dd") ?? "-")</td>
-                                        <td>@item.ShortlistedDate.ToString("yyyy-MM-dd")</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a asp-action="Details" asp-route-id="@item.Id"
-                                                    class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                                <a asp-action="Edit" asp-route-id="@item.Id"
-                                                    class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></a>
-                                                <form asp-action="Delete" method="post" class="d-inline">
-                                                    <input type="hidden" name="id" value="@item.Id" />
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                        onclick="return confirm('Are you sure?')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
+                                        <th class="bg-light">ID</th>
+                                        <th class="bg-light">Job Seeker</th>
+                                        <th class="bg-light">Job</th>
+                                        <th class="bg-light">Status</th>
+                                        <th class="bg-light">Interview Date</th>
+                                        <th class="bg-light">Shortlisted Date</th>
+                                        <th class="bg-light">Actions</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div class="text-muted">
-                            Showing <span class="fw-semibold">1</span> to <span class="fw-semibold">1</span> of <span
-                                class="fw-semibold">1</span> entries
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@(item.JobSeeker?.User?.Username ?? "Unknown")</td>
+                                            <td>@item.Job?.JobTitle</td>
+                                            <td>
+                                                <span class="badge bg-@(item.Status == "Hired" ? "success" : item.Status == "Interviewed" ? "warning" : item.Status == "Rejected" ? "secondary" : "primary") text-white">@item.Status</span>
+                                            </td>
+                                            <td>@(item.InterviewDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                            <td>@item.ShortlistedDate.ToString("yyyy-MM-dd")</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                                        class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                                        class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></a>
+                                                    <form asp-action="Delete" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@item.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('Are you sure?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination pagination-sm mb-0">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
-                                </li>
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div class="text-muted">
+                                Showing <span class="fw-semibold">@Model.Count()</span> entries
+                            </div>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">1</a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-user-tie fa-4x text-muted mb-3"></i>
+                            <h4>No Candidates Found</h4>
+                            <p class="text-muted">There are no candidates available in the system yet.</p>
+                            <a asp-action="Create" class="btn btn-primary mt-3">
+                                <i class="fas fa-plus me-2"></i>Add First Candidate
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -131,94 +146,40 @@
         -webkit-text-fill-color: transparent;
     }
 
-    .search-container {
-        position: relative;
-        width: 300px;
-    }
-
-    .search-input {
-        padding-right: 45px;
-        border-radius: 50px;
-        border: 1px solid #e0e0e0;
-        transition: all 0.3s ease;
-    }
-
-    .search-input:focus {
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-        border-color: #0d6efd;
-    }
-
-    .search-btn {
-        position: absolute;
-        right: 5px;
-        top: 50%;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        width: 35px;
-        height: 35px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
     .add-candidate-btn {
         border-radius: 50px;
-        padding: 0.5rem 1.5rem;
+        padding: 10px 20px;
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
         transition: all 0.3s ease;
     }
 
     .add-candidate-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
     }
 
-    .custom-table {
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
-    .custom-table th {
+    /* Table styles */
+    .custom-table thead th {
         font-weight: 600;
-        padding: 1rem;
-        border-bottom: 2px solid #e0e0e0;
+        color: #495057;
+        border-bottom: 2px solid #e9ecef;
     }
 
-    .custom-table td {
-        padding: 1rem;
-        border-bottom: 1px solid #e0e0e0;
+    .custom-table tbody tr {
+        transition: all 0.2s;
     }
 
-    .candidate-row {
-        transition: all 0.3s ease;
+    .custom-table tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.05);
     }
 
-    .hover-row {
-        background-color: #f8f9fa;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* Badges */
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
     }
 
-    .btn-icon {
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-    }
-
-    .btn-icon:hover {
-        transform: translateY(-2px);
-    }
-
-    .candidate-avatar {
-        border: 2px solid #fff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
+    /* Hover effect */
     .hover-scale {
         transition: transform 0.3s ease;
     }
@@ -227,69 +188,28 @@
         transform: scale(1.05);
     }
 
-    .pagination {
-        margin: 0;
+    /* Custom round buttons */
+    .btn-group .btn {
+        border-radius: 0.25rem;
+        margin-right: 0.25rem;
     }
 
+    /* Custom alert styling */
+    .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+    }
+
+    /* Pagination styling */
     .pagination .page-link {
         color: #0d6efd;
-        background-color: #fff;
-        border: 1px solid #dee2e6;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
-        border-radius: 50%;
+        border-radius: 0.25rem;
         margin: 0 2px;
-    }
-
-    .pagination .page-link:hover {
-        color: #fff;
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-        transform: translateY(-2px);
     }
 
     .pagination .page-item.active .page-link {
         background-color: #0d6efd;
         border-color: #0d6efd;
-        color: #fff;
-        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
-    }
-
-    .pagination .page-item.disabled .page-link {
-        color: #6c757d;
-        pointer-events: none;
-        background-color: #fff;
-        border-color: #dee2e6;
-    }
-
-    /* Modal Styles */
-    .modal-content {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-control,
-    .form-select {
-        border: 1px solid #e0e0e0;
-        transition: all 0.3s ease;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    }
-
-    .form-label {
-        color: #495057;
-    }
-
-    /* Badge Styles */
-    .badge {
-        font-weight: 500;
-        letter-spacing: 0.3px;
-    }
-
-    .bg-success-subtle {
-        background-color: rgba(25, 135, 84, 0.1);
     }
 </style>

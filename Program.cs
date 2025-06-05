@@ -31,6 +31,26 @@ namespace CSE443_Project
 
             var app = builder.Build();
 
+            // Ensure database is created and migrations are applied
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    // This will create the database if it doesn't exist and apply any pending migrations
+                    context.Database.EnsureCreated();
+                    
+                    // Initialize seed data
+                    SeedData.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while creating/migrating the database.");
+                }
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
