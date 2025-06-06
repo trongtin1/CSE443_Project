@@ -47,12 +47,26 @@ namespace CSE443_Project.Services.Implementations
             await _context.SaveChangesAsync();
             return employer;
         }
-
         public async Task<Employer> UpdateEmployerAsync(Employer employer)
         {
-            _context.Entry(employer).State = EntityState.Modified;
+            var existingEmployer = await _context.Employers.FindAsync(employer.Id);
+            if (existingEmployer == null)
+            {
+                throw new InvalidOperationException($"Employer with ID {employer.Id} not found.");
+            }
+
+            // Update only the properties we want to change, not navigation properties
+            existingEmployer.CompanyName = employer.CompanyName;
+            existingEmployer.CompanyDescription = employer.CompanyDescription;
+            existingEmployer.Industry = employer.Industry;
+            existingEmployer.Website = employer.Website;
+            existingEmployer.Logo = employer.Logo;
+            existingEmployer.FoundedYear = employer.FoundedYear;
+            existingEmployer.CompanySize = employer.CompanySize;
+            // Note: UserId should not be updated after creation
+
             await _context.SaveChangesAsync();
-            return employer;
+            return existingEmployer;
         }
 
         public async Task<bool> DeleteEmployerAsync(int id)

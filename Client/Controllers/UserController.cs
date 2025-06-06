@@ -73,17 +73,17 @@ namespace CSE443_Project.Controllers
             // Validate unique username and email
             if (!await _userService.IsUsernameUniqueAsync(user.Username))
             {
-                ModelState.AddModelError("User.Username", "Username is already taken");
-                return View("Register", user);
+                ModelState.AddModelError("Username", "Username is already taken");
+                return View("Register");
             }
 
             if (!await _userService.IsEmailUniqueAsync(user.Email))
             {
-                ModelState.AddModelError("User.Email", "Email is already registered");
-                return View("Register", user);
+                ModelState.AddModelError("Email", "Email is already registered");
+                return View("Register");
             }
 
-            // Create user
+            // Create user (password will be hashed in the service)
             user.CreatedAt = DateTime.Now;
             user.IsActive = true;
             var createdUser = await _userService.CreateUserAsync(user);
@@ -101,17 +101,17 @@ namespace CSE443_Project.Controllers
             // Validate unique username and email
             if (!await _userService.IsUsernameUniqueAsync(user.Username))
             {
-                ModelState.AddModelError("User.Username", "Username is already taken");
-                return View("Register", user);
+                ModelState.AddModelError("Username", "Username is already taken");
+                return View("Register");
             }
 
             if (!await _userService.IsEmailUniqueAsync(user.Email))
             {
-                ModelState.AddModelError("User.Email", "Email is already registered");
-                return View("Register", user);
+                ModelState.AddModelError("Email", "Email is already registered");
+                return View("Register");
             }
 
-            // Create user
+            // Create user (password will be hashed in the service)
             user.CreatedAt = DateTime.Now;
             user.IsActive = true;
             var createdUser = await _userService.CreateUserAsync(user);

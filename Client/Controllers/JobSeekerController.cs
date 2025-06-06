@@ -16,9 +16,7 @@ namespace CSE443_Project.Controllers
         private readonly IApplicationService _applicationService;
         private readonly ISaveJobService _saveJobService;
         private readonly ICVService _cvService;
-        private readonly ICandidateService _candidateService;
-
-        public JobSeekerController(
+        private readonly ICandidateService _candidateService; public JobSeekerController(
             IJobSeekerService jobSeekerService,
             IUserService userService,
             IApplicationService applicationService,
@@ -33,8 +31,12 @@ namespace CSE443_Project.Controllers
             _cvService = cvService;
             _candidateService = candidateService;
         }
-
-        // GET: /JobSeeker/Dashboard
+        private int GetJobSeekerIdFromTempData()
+        {
+            if (TempData["JobSeekerId"] is int jobSeekerId)
+                return jobSeekerId;
+            return 0;
+        }// GET: /JobSeeker/Dashboard
         public async Task<IActionResult> Dashboard()
         {
             // Ensure the user is a job seeker
@@ -43,7 +45,7 @@ namespace CSE443_Project.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            var jobSeekerId = (int)TempData["JobSeekerId"];
+            var jobSeekerId = GetJobSeekerIdFromTempData();
             TempData.Keep("JobSeekerId");
 
             var jobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
@@ -58,9 +60,7 @@ namespace CSE443_Project.Controllers
             ViewBag.ShortlistedCount = (await _candidateService.GetCandidatesByJobSeekerIdAsync(jobSeekerId)).Count();
 
             return View(jobSeeker);
-        }
-
-        // GET: /JobSeeker/Profile
+        }        // GET: /JobSeeker/Profile
         public async Task<IActionResult> Profile()
         {
             // Ensure the user is a job seeker
@@ -69,7 +69,7 @@ namespace CSE443_Project.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            var jobSeekerId = (int)TempData["JobSeekerId"];
+            var jobSeekerId = GetJobSeekerIdFromTempData();
             TempData.Keep("JobSeekerId");
 
             var jobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
@@ -79,9 +79,7 @@ namespace CSE443_Project.Controllers
             }
 
             return View(jobSeeker);
-        }
-
-        // POST: /JobSeeker/UpdateProfile
+        }        // POST: /JobSeeker/UpdateProfile
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile(JobSeeker jobSeeker)
@@ -91,22 +89,172 @@ namespace CSE443_Project.Controllers
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var jobSeekerId = (int)TempData["JobSeekerId"];
-            TempData.Keep("JobSeekerId");
-
-            if (jobSeeker.Id != jobSeekerId)
+            var jobSeekerId = GetJobSeekerIdFromTempData();
+            TempData.Keep("JobSeekerId"); if (jobSeeker.Id != jobSeekerId)
             {
                 return Forbid();
             }
 
-            if (ModelState.IsValid)
+            // Remove validation for navigation properties that aren't being updated
+            ModelState.Remove("User");
+            ModelState.Remove("Applications");
+            ModelState.Remove("SavedJobs");
+            ModelState.Remove("CVs");
+            ModelState.Remove("Candidacies");
+
+            // Add debugging to check ModelState
+            if (!ModelState.IsValid)
             {
-                await _jobSeekerService.UpdateJobSeekerAsync(jobSeeker);
+                // Log validation errors for debugging
+                var errors = ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .Select(x => new { Field = x.Key, Errors = x.Value?.Errors.Select(e => e.ErrorMessage) })
+                    .ToList();
+
+                // Create detailed error message
+                var errorDetails = string.Join("; ", errors.Select(e => $"{e.Field}: {string.Join(", ", e.Errors ?? new string[0])}"));
+                TempData["ErrorMessage"] = $"Validation failed. Errors: {errorDetails}";                // If validation fails, get the full JobSeeker object with navigation properties
+                var fullJobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
+                if (fullJobSeeker == null)
+                {
+                    return NotFound();
+                }
+
+                // Copy the form values to the full object
+                fullJobSeeker.DateOfBirth = jobSeeker.DateOfBirth;
+                fullJobSeeker.Gender = jobSeeker.Gender;
+                fullJobSeeker.Headline = jobSeeker.Headline;
+                fullJobSeeker.Summary = jobSeeker.Summary;
+                fullJobSeeker.Skills = jobSeeker.Skills;
+                fullJobSeeker.Education = jobSeeker.Education;
+                fullJobSeeker.WorkExperience = jobSeeker.WorkExperience;
+                // Keep existing ProfilePicture - don't overwrite it
+
+                return View("Profile", fullJobSeeker);
+            }
+            try
+            {
+                // Get the existing JobSeeker to preserve ProfilePicture and other properties
+                var existingJobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
+                if (existingJobSeeker == null)
+                {
+                    return NotFound();
+                }
+
+                // Update only the fields that can be modified from the form
+                existingJobSeeker.DateOfBirth = jobSeeker.DateOfBirth;
+                existingJobSeeker.Gender = jobSeeker.Gender;
+                existingJobSeeker.Headline = jobSeeker.Headline;
+                existingJobSeeker.Summary = jobSeeker.Summary;
+                existingJobSeeker.Skills = jobSeeker.Skills;
+                existingJobSeeker.Education = jobSeeker.Education;
+                existingJobSeeker.WorkExperience = jobSeeker.WorkExperience;
+
+                // Keep the existing ProfilePicture if it's not provided in the form
+                if (string.IsNullOrEmpty(jobSeeker.ProfilePicture))
+                {
+                    // Don't update ProfilePicture, keep the existing one
+                }
+                else
+                {
+                    existingJobSeeker.ProfilePicture = jobSeeker.ProfilePicture;
+                }
+
+                await _jobSeekerService.UpdateJobSeekerAsync(existingJobSeeker);
+                TempData["SuccessMessage"] = "Profile updated successfully!";
                 return RedirectToAction(nameof(Profile));
             }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Failed to update profile. Please try again.";
 
-            return View("Profile", jobSeeker);
+                // Get the full JobSeeker object with navigation properties
+                var fullJobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
+                if (fullJobSeeker == null)
+                {
+                    return NotFound();
+                }
+
+                // Copy the form values to the full object
+                fullJobSeeker.DateOfBirth = jobSeeker.DateOfBirth;
+                fullJobSeeker.Gender = jobSeeker.Gender;
+                fullJobSeeker.Headline = jobSeeker.Headline;
+                fullJobSeeker.Summary = jobSeeker.Summary;
+                fullJobSeeker.Skills = jobSeeker.Skills;
+                fullJobSeeker.Education = jobSeeker.Education;
+                fullJobSeeker.WorkExperience = jobSeeker.WorkExperience;
+
+                return View("Profile", fullJobSeeker);
+            }
+        }
+
+        // POST: /JobSeeker/UploadProfilePicture
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile profilePicture)
+        {
+            // Ensure the user is a job seeker
+            if (!TempData.ContainsKey("JobSeekerId"))
+            {
+                return Json(new { success = false, message = "User session expired. Please log in again." });
+            }
+
+            var jobSeekerId = (int)TempData["JobSeekerId"];
+            TempData.Keep("JobSeekerId");
+
+            if (profilePicture == null || profilePicture.Length == 0)
+            {
+                return Json(new { success = false, message = "Please select an image file." });
+            }
+
+            // Validate file type
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(profilePicture.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return Json(new { success = false, message = "Only JPG, PNG, and GIF files are allowed." });
+            }
+
+            // Validate file size (5MB max)
+            if (profilePicture.Length > 5 * 1024 * 1024)
+            {
+                return Json(new { success = false, message = "File size cannot exceed 5MB." });
+            }
+
+            try
+            {
+                // Get current job seeker
+                var jobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
+                if (jobSeeker == null)
+                {
+                    return Json(new { success = false, message = "Job seeker not found." });
+                }
+
+                // Create uploads directory if it doesn't exist
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profile-pictures");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Generate unique filename
+                var uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Save the file
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await profilePicture.CopyToAsync(fileStream);
+                }
+
+                // Update job seeker profile picture path
+                jobSeeker.ProfilePicture = "/uploads/profile-pictures/" + uniqueFileName;
+                await _jobSeekerService.UpdateJobSeekerAsync(jobSeeker);
+
+                return Json(new { success = true, message = "Profile picture updated successfully!", imageUrl = jobSeeker.ProfilePicture });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred while uploading the image. Please try again." });
+            }
         }
 
         // GET: /JobSeeker/SavedJobs
@@ -128,7 +276,7 @@ namespace CSE443_Project.Controllers
         // POST: /JobSeeker/SaveJob/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveJob(int id, string notes = null)
+        public async Task<IActionResult> SaveJob(int id, string? notes = null)
         {
             // Ensure the user is a job seeker
             if (!TempData.ContainsKey("JobSeekerId"))
@@ -476,10 +624,10 @@ namespace CSE443_Project.Controllers
 
             // Remove leading slash if present
             string filePath = cv.FilePath.TrimStart('/');
-            
+
             // Combine with wwwroot path
             string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filePath);
-            
+
             if (!System.IO.File.Exists(fullPath))
             {
                 return NotFound("The file does not exist.");
@@ -491,7 +639,7 @@ namespace CSE443_Project.Controllers
                 contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
             else if (filePath.EndsWith(".doc"))
                 contentType = "application/msword";
-            
+
             // Get filename from path
             string fileName = Path.GetFileName(filePath);
 
