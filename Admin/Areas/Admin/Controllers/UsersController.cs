@@ -56,6 +56,17 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             try
             {
+                // Kiểm tra trùng username
+                if (_context.Users.Any(u => u.Username == user.Username))
+                {
+                    ModelState.AddModelError("Username", "Username already exists.");
+                }
+                // Kiểm tra trùng email
+                if (_context.Users.Any(u => u.Email == user.Email))
+                {
+                    ModelState.AddModelError("Email", "Email already exists.");
+                }
+
                 if (ModelState.IsValid)
                 {
                     user.CreatedAt = DateTime.Now;

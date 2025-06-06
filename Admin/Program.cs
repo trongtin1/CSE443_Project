@@ -40,9 +40,7 @@ namespace CSE443_Project
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     // This will create the database if it doesn't exist and apply any pending migrations
                     context.Database.EnsureCreated();
-                    
-                    // Initialize seed data
-                    SeedData.Initialize(context);
+
                 }
                 catch (Exception ex)
                 {

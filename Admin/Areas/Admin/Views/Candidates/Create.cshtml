@@ -26,6 +26,12 @@
                     @ViewBag.ErrorMessage
                 </div>
             }
+            @if (ViewBag.DebugModelState != null)
+            {
+                <div class="alert alert-warning">
+                    @ViewBag.DebugModelState
+                </div>
+            }
 
             <form asp-action="Create" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -45,7 +51,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label asp-for="ApplicationId" class="form-label">Select Application</label>
-                                <select asp-for="ApplicationId" class="form-select" asp-items="applications">
+                                <select asp-for="ApplicationId" class="form-select" asp-items="applications" id="ApplicationId" name="ApplicationId">
                                     <option value="">-- Select Application --</option>
                                 </select>
                                 <div class="form-text">Select an existing application to create a candidate</div>
@@ -59,14 +65,14 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label asp-for="JobSeekerId" class="form-label">Job Seeker</label>
-                                <select asp-for="JobSeekerId" class="form-select" asp-items="jobSeekers">
+                                <select asp-for="JobSeekerId" class="form-select" asp-items="jobSeekers" id="JobSeekerId" name="JobSeekerId">
                                     <option value="">-- Select Job Seeker --</option>
                                 </select>
                                 <span asp-validation-for="JobSeekerId" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="JobId" class="form-label">Job Position</label>
-                                <select asp-for="JobId" class="form-select" asp-items="jobs">
+                                <select asp-for="JobId" class="form-select" asp-items="jobs" id="JobId" name="JobId">
                                     <option value="">-- Select Job --</option>
                                 </select>
                                 <span asp-validation-for="JobId" class="text-danger"></span>
@@ -131,20 +137,28 @@
                 applicationIdField.setAttribute('required', 'required');
                 jobSeekerIdField.removeAttribute('required');
                 jobIdField.removeAttribute('required');
+                // Clear manual fields so they don't get submitted
+                jobSeekerIdField.value = '';
+                jobIdField.value = '';
             });
 
             manualTab.addEventListener('click', function() {
                 applicationIdField.removeAttribute('required');
                 jobSeekerIdField.setAttribute('required', 'required');
                 jobIdField.setAttribute('required', 'required');
+                // Clear application field so it doesn't get submitted
+                applicationIdField.value = '';
             });
 
             // Initialize on page load
             if (applicationTab.classList.contains('active')) {
                 applicationIdField.setAttribute('required', 'required');
+                jobSeekerIdField.removeAttribute('required');
+                jobIdField.removeAttribute('required');
             } else if (manualTab.classList.contains('active')) {
                 jobSeekerIdField.setAttribute('required', 'required');
                 jobIdField.setAttribute('required', 'required');
+                applicationIdField.removeAttribute('required');
             }
         });
     </script>

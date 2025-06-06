@@ -31,7 +31,7 @@ namespace Admin.Areas.Admin.Controllers
                     .Include(c => c.Job)
                     .Include(c => c.Application)
                     .AsQueryable();
-                
+
                 if (!string.IsNullOrEmpty(search))
                 {
                     query = query.Where(c =>
@@ -48,14 +48,14 @@ namespace Admin.Areas.Admin.Controllers
             {
                 // Log the error
                 Console.WriteLine($"Error fetching candidates: {ex.Message}");
-                
+
                 // Check if error is related to missing table
                 if (ex.Message.Contains("Invalid object name") || ex.InnerException?.Message.Contains("Invalid object name") == true)
                 {
                     ViewBag.ErrorMessage = "The database schema is not properly set up. Please run migrations to create the required tables.";
                     return View(new List<Candidate>());
                 }
-                
+
                 // Return empty list with error message for other errors
                 ViewBag.ErrorMessage = "An error occurred while fetching candidates. Please try again later.";
                 return View(new List<Candidate>());
@@ -106,7 +106,7 @@ namespace Admin.Areas.Admin.Controllers
                     .Include(a => a.Job)
                     .Where(a => a.Status == "Pending" || a.Status == "Reviewed")
                     .ToList();
-                
+
                 // Create a formatted list of applications with job seeker and job info
                 var formattedApplications = applications.Select(a => new
                 {
@@ -131,76 +131,60 @@ namespace Admin.Areas.Admin.Controllers
         {
             try
             {
+                // Debug: Log các giá trị nhận được
+                Console.WriteLine($"ApplicationId: {model.ApplicationId}, JobId: {model.JobId}, JobSeekerId: {model.JobSeekerId}");
+
+                // Nếu Application, lấy JobId và JobSeekerId từ Application
+                if (model.ApplicationId.HasValue && model.ApplicationId.Value > 0)
+                {
+                    var application = _context.Applications.Find(model.ApplicationId.Value);
+                    if (application != null)
+                    {
+                        model.JobId = application.JobId;
+                        model.JobSeekerId = application.JobSeekerId;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("ApplicationId", "Selected application does not exist.");
+                    }
+                }
+                // Thủ công phải có cả JobId và JobSeekerId
+                else if (!model.JobId.HasValue || !model.JobSeekerId.HasValue || model.JobId.Value == 0 || model.JobSeekerId.Value == 0)
+                {
+                    ModelState.AddModelError("", "Please select either an application or both job and job seeker.");
+                }
+
+                // Debug: Kiểm tra ModelState
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.DebugModelState = string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                }
+
                 if (ModelState.IsValid)
                 {
-                    // If only ApplicationId is provided, get JobId and JobSeekerId from the Application
-                    if (model.ApplicationId > 0 && (model.JobId == 0 || model.JobSeekerId == 0))
-                    {
-                        var application = _context.Applications.Find(model.ApplicationId);
-                        if (application != null)
-                        {
-                            model.JobId = application.JobId;
-                            model.JobSeekerId = application.JobSeekerId;
-                        }
-                    }
-                    // If JobId and JobSeekerId are provided but ApplicationId is not, try to find a matching application
-                    else if (model.ApplicationId == 0 && model.JobId > 0 && model.JobSeekerId > 0)
-                    {
-                        var application = _context.Applications
-                            .FirstOrDefault(a => a.JobId == model.JobId && a.JobSeekerId == model.JobSeekerId);
-                        
-                        if (application != null)
-                        {
-                            model.ApplicationId = application.Id;
-                        }
-                        else
-                        {
-                            // Create a new application if none exists
-                            var newApp = new Application
-                            {
-                                JobId = model.JobId,
-                                JobSeekerId = model.JobSeekerId,
-                                ApplicationDate = DateTime.Now,
-                                Status = "Shortlisted",
-                                CoverLetter = "Added directly as candidate"
-                            };
-                            _context.Applications.Add(newApp);
-                            _context.SaveChanges();
-                            model.ApplicationId = newApp.Id;
-                        }
-                    }
-
                     model.ShortlistedDate = DateTime.Now;
                     _context.Candidates.Add(model);
                     _context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
 
-                // If ModelState is invalid, reload the dropdowns
-                var jobSeekers = _context.JobSeekers
-                    .Include(js => js.User)
-                    .ToList();
+                // Reload dropdowns nếu có lỗi
+                var jobSeekers = _context.JobSeekers.Include(js => js.User).ToList();
                 ViewBag.JobSeekers = new SelectList(jobSeekers, "Id", "User.Username", model.JobSeekerId);
 
-                var jobs = _context.Jobs
-                    .Where(j => j.IsActive && j.Deadline >= DateTime.Now)
-                    .ToList();
+                var jobs = _context.Jobs.Where(j => j.IsActive && j.Deadline >= DateTime.Now).ToList();
                 ViewBag.Jobs = new SelectList(jobs, "Id", "JobTitle", model.JobId);
 
                 var applications = _context.Applications
-                    .Include(a => a.JobSeeker)
-                    .ThenInclude(js => js.User)
+                    .Include(a => a.JobSeeker).ThenInclude(js => js.User)
                     .Include(a => a.Job)
                     .Where(a => a.Status == "Pending" || a.Status == "Reviewed")
                     .ToList();
-                
-                // Create a formatted list of applications with job seeker and job info
                 var formattedApplications = applications.Select(a => new
                 {
                     Id = a.Id,
                     DisplayText = $"[{a.Id}] {a.JobSeeker?.User?.Username ?? "Unknown"} - {a.Job?.JobTitle ?? "Unknown Job"}"
                 }).ToList();
-
                 ViewBag.Applications = new SelectList(formattedApplications, "Id", "DisplayText", model.ApplicationId);
 
                 return View(model);
@@ -208,34 +192,25 @@ namespace Admin.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "An error occurred while creating the candidate: " + ex.Message;
-                
                 // Reload dropdowns
-                var jobSeekers = _context.JobSeekers
-                    .Include(js => js.User)
-                    .ToList();
+                var jobSeekers = _context.JobSeekers.Include(js => js.User).ToList();
                 ViewBag.JobSeekers = new SelectList(jobSeekers, "Id", "User.Username", model.JobSeekerId);
 
-                var jobs = _context.Jobs
-                    .Where(j => j.IsActive && j.Deadline >= DateTime.Now)
-                    .ToList();
+                var jobs = _context.Jobs.Where(j => j.IsActive && j.Deadline >= DateTime.Now).ToList();
                 ViewBag.Jobs = new SelectList(jobs, "Id", "JobTitle", model.JobId);
 
                 var applications = _context.Applications
-                    .Include(a => a.JobSeeker)
-                    .ThenInclude(js => js.User)
+                    .Include(a => a.JobSeeker).ThenInclude(js => js.User)
                     .Include(a => a.Job)
                     .Where(a => a.Status == "Pending" || a.Status == "Reviewed")
                     .ToList();
-                
-                // Create a formatted list of applications with job seeker and job info
                 var formattedApplications = applications.Select(a => new
                 {
                     Id = a.Id,
                     DisplayText = $"[{a.Id}] {a.JobSeeker?.User?.Username ?? "Unknown"} - {a.Job?.JobTitle ?? "Unknown Job"}"
                 }).ToList();
-
                 ViewBag.Applications = new SelectList(formattedApplications, "Id", "DisplayText", model.ApplicationId);
-                
+
                 return View(model);
             }
         }
@@ -250,15 +225,15 @@ namespace Admin.Areas.Admin.Controllers
                     .Include(c => c.Job)
                     .Include(c => c.Application)
                     .FirstOrDefault(c => c.Id == id);
-                
+
                 if (candidate == null) return NotFound();
-                
+
                 // Load job seekers for dropdown (read-only in edit mode)
                 ViewBag.JobSeekerName = candidate.JobSeeker?.User?.Username ?? "Unknown";
-                
+
                 // Load job title (read-only in edit mode)
                 ViewBag.JobTitle = candidate.Job?.JobTitle ?? "Unknown Job";
-                
+
                 // Status options
                 ViewBag.StatusOptions = new List<SelectListItem>
                 {
@@ -267,7 +242,7 @@ namespace Admin.Areas.Admin.Controllers
                     new SelectListItem { Value = "Hired", Text = "Hired" },
                     new SelectListItem { Value = "Rejected", Text = "Rejected" }
                 };
-                
+
                 return View(candidate);
             }
             catch (Exception ex)
@@ -284,23 +259,23 @@ namespace Admin.Areas.Admin.Controllers
             try
             {
                 if (id != model.Id) return BadRequest();
-                
+
                 // Get existing entity to preserve values we don't want to change
                 var existingCandidate = _context.Candidates.Find(id);
                 if (existingCandidate == null) return NotFound();
-                
+
                 // Only update specific fields
                 existingCandidate.Status = model.Status;
                 existingCandidate.InterviewNotes = model.InterviewNotes;
                 existingCandidate.InterviewDate = model.InterviewDate;
-                
+
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "An error occurred while updating the candidate: " + ex.Message;
-                
+
                 // Reload dropdown data
                 ViewBag.StatusOptions = new List<SelectListItem>
                 {
@@ -309,7 +284,7 @@ namespace Admin.Areas.Admin.Controllers
                     new SelectListItem { Value = "Hired", Text = "Hired" },
                     new SelectListItem { Value = "Rejected", Text = "Rejected" }
                 };
-                
+
                 return View(model);
             }
         }

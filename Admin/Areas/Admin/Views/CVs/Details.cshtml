@@ -13,6 +13,12 @@
             <a href="/Admin/CVs/Download/@Model.Id" class="btn btn-outline-primary">
                 <i class="fas fa-download me-2"></i>Download
             </a>
+            @if (!string.IsNullOrEmpty(Model.FilePath) && System.IO.Path.GetExtension(Model.FilePath).ToLower() == ".pdf")
+            {
+                <a href="/Admin/CVs/Preview/@Model.Id" target="_blank" class="btn btn-outline-success">
+                    <i class="fas fa-eye me-2"></i>View PDF
+                </a>
+            }
         </div>
     </div>
 
@@ -219,4 +225,4 @@
         border-color: rgba(231, 76, 60, 0.3);
         color: #c0392b;
     }
-</style> 
+</style>

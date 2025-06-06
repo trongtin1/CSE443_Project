@@ -19,8 +19,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
             var model = new DashboardViewModel
             {
                 TotalUsers = _context.Users.Count(),
-                TotalJobs = _context.Jobs.Count(),
-                TotalRevenue = _context.Transactions.Sum(t => t.Amount)
+                TotalJobs = _context.Jobs.Count()
             };
 
             return View(model);

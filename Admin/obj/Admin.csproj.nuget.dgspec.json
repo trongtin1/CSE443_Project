@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\huynhhai\\Desktop\\dotnet\\CSE443_Project\\Admin\\Admin.csproj": {}
+    "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\Admin\\Admin.csproj": {}
   },
   "projects": {
-    "C:\\Users\\huynhhai\\Desktop\\dotnet\\CSE443_Project\\Admin\\Admin.csproj": {
+    "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\Admin\\Admin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\huynhhai\\Desktop\\dotnet\\CSE443_Project\\Admin\\Admin.csproj",
+        "projectUniqueName": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\Admin\\Admin.csproj",
         "projectName": "Admin",
-        "projectPath": "C:\\Users\\huynhhai\\Desktop\\dotnet\\CSE443_Project\\Admin\\Admin.csproj",
-        "packagesPath": "C:\\Users\\huynhhai\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\huynhhai\\Desktop\\dotnet\\CSE443_Project\\Admin\\obj\\",
+        "projectPath": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\Admin\\Admin.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Documents\\Education\\Q3 2024-2025\\CSE443_Project\\Admin\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\huynhhai\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -80,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
