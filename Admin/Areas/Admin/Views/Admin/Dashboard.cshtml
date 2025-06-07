@@ -1,9 +1,18 @@
-﻿@model CSE443_Project.Models.ViewModels.DashboardViewModel
+﻿@model Admin.Models.Dashboard.DashboardViewModel
 
 <h2>Admin Dashboard</h2>
 
 <ul>
-    <li><strong>Tổng số người dùng:</strong> @Model.TotalUsers</li>
+    <li><strong>Tổng số ứng viên:</strong> @Model.TotalCandidates</li>
+    <li><strong>Ứng viên đang hoạt động:</strong> @Model.ActiveCandidates</li>
+    <li><strong>Ứng viên mới hôm nay:</strong> @Model.NewCandidatesToday</li>
+    <li><strong>Tổng số nhà tuyển dụng:</strong> @Model.TotalEmployers</li>
+    <li><strong>Nhà tuyển dụng đã xác thực:</strong> @Model.VerifiedEmployers</li>
+    <li><strong>Nhà tuyển dụng mới hôm nay:</strong> @Model.NewEmployersToday</li>
     <li><strong>Tổng số bài tuyển dụng:</strong> @Model.TotalJobs</li>
-    <li><strong>Tổng doanh thu:</strong> @Model.TotalRevenue VNĐ</li>
+    <li><strong>Bài tuyển dụng đang hoạt động:</strong> @Model.ActiveJobs</li>
+    <li><strong>Bài tuyển dụng đã hết hạn:</strong> @Model.ExpiredJobs</li>
+    <li><strong>Bài tuyển dụng mới hôm nay:</strong> @Model.NewJobsToday</li>
+    <li><strong>Tổng số đơn ứng tuyển:</strong> @Model.TotalApplications</li>
+    <li><strong>Đơn ứng tuyển mới hôm nay:</strong> @Model.NewApplicationsToday</li>
 </ul>
