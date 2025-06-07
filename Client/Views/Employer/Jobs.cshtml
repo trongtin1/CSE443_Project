@@ -1,0 +1,354 @@
+@model IEnumerable<Job>
+
+@{
+    ViewData["Title"] = "Manage Jobs";
+}
+
+<div class="container my-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-2">Manage Jobs</h1>
+            <p class="text-muted">View and manage all your posted jobs</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-controller="Job" asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Post New Job
+            </a>
+        </div>
+    </div>
+
+    <!-- Jobs Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-box bg-primary bg-opacity-10 rounded p-3 me-3">
+                            <i class="fas fa-briefcase text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 mb-0">@Model.Count()</h4>
+                            <small class="text-muted">Total Jobs</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-box bg-success bg-opacity-10 rounded p-3 me-3">
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 mb-0">@Model.Count(j => j.IsActive && j.Deadline >= DateTime.Now)</h4>
+                            <small class="text-muted">Active Jobs</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-box bg-warning bg-opacity-10 rounded p-3 me-3">
+                            <i class="fas fa-clock text-warning"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 mb-0">@Model.Count(j => j.Deadline < DateTime.Now || !j.IsActive)</h4>
+                            <small class="text-muted">Expired/Inactive</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-box bg-info bg-opacity-10 rounded p-3 me-3">
+                            <i class="fas fa-users text-info"></i>
+                        </div>
+                        <div>
+                            <h4 class="h5 mb-0">@Model.Sum(j => j.Applications?.Count ?? 0)</h4>
+                            <small class="text-muted">Total Applications</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter and Search Section -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="searchJobs" placeholder="Search jobs...">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterStatus">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterJobType">
+                                <option value="">All Job Types</option>
+                                <option value="Full-time">Full-time</option>
+                                <option value="Part-time">Part-time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Internship">Internship</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                <i class="fas fa-times me-1"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jobs List -->
+    <div class="row">
+        <div class="col-12">
+            @if (Model.Any())
+            {
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">Your Posted Jobs</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="jobsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Category</th>
+                                        <th>Location</th>
+                                        <th>Job Type</th>
+                                        <th>Salary Range</th>
+                                        <th>Applications</th>
+                                        <th>Deadline</th>
+                                        <th>Status</th>
+                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var job in Model)
+                                    {
+                                        <tr data-job-type="@job.JobType" data-status="@(job.IsActive && job.Deadline >= DateTime.Now ? "active" : (job.Deadline < DateTime.Now ? "expired" : "inactive"))">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">
+                                                            <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id" class="text-decoration-none">
+                                                                @job.JobTitle
+                                                            </a>
+                                                        </h6>
+                                                        <small class="text-muted">Posted @job.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-dark">@(job.Category?.Name ?? "N/A")</span>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                                                @job.Location
+                                                @if (job.IsRemote)
+                                                {
+                                                    <span class="badge bg-info ms-1">Remote</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">@job.JobType</span>
+                                            </td>
+                                            <td>
+                                                @if (job.SalaryMin > 0 && job.SalaryMax > 0)
+                                                {
+                                                    <span class="fw-semibold text-success">
+                                                        $@job.SalaryMin.ToString("N0") - $@job.SalaryMax.ToString("N0")
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Not specified</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a asp-controller="Application" asp-action="ByJob" asp-route-id="@job.Id" class="text-decoration-none">
+                                                    <span class="badge bg-primary">@ViewBag.ApplicationCount Applications</span>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @if (job.Deadline < DateTime.Now)
+                                                {
+                                                    <span class="text-danger">
+                                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                                        @job.Deadline.ToString("MMM dd, yyyy")
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">@job.Deadline.ToString("MMM dd, yyyy")</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (job.IsActive && job.Deadline >= DateTime.Now)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else if (job.Deadline < DateTime.Now)
+                                                {
+                                                    <span class="badge bg-danger">Expired</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                }
+                                            </td>
+                                         
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Empty State -->
+                <div class="card border-0 shadow-sm text-center">
+                    <div class="card-body py-5">
+                        <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted mb-3">No Jobs Posted Yet</h4>
+                        <p class="text-muted mb-4">Start attracting top talent by posting your first job opportunity.</p>
+                        <a asp-controller="Job" asp-action="Create" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i>Post Your First Job
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .icon-box {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.025);
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .btn {
+        border-radius: 8px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+    }
+
+    .table th {
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+    }
+
+    .dropdown-menu {
+        border-radius: 8px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .text-primary {
+        color: #0d6efd !important;
+    }
+
+    .text-success {
+        color: #198754 !important;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .text-info {
+        color: #0dcaf0 !important;
+    }
+</style>
+
+<!-- JavaScript for filtering and search -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchJobs');
+        const statusFilter = document.getElementById('filterStatus');
+        const jobTypeFilter = document.getElementById('filterJobType');
+        const tableRows = document.querySelectorAll('#jobsTable tbody tr');
+
+        function filterJobs() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusValue = statusFilter.value;
+            const jobTypeValue = jobTypeFilter.value;
+
+            tableRows.forEach(row => {
+                const jobTitle = row.querySelector('td:first-child h6 a').textContent.toLowerCase();
+                const rowStatus = row.getAttribute('data-status');
+                const rowJobType = row.getAttribute('data-job-type');
+
+                const matchesSearch = jobTitle.includes(searchTerm);
+                const matchesStatus = !statusValue || rowStatus === statusValue;
+                const matchesJobType = !jobTypeValue || rowJobType === jobTypeValue;
+
+                if (matchesSearch && matchesStatus && matchesJobType) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        searchInput.addEventListener('keyup', filterJobs);
+        statusFilter.addEventListener('change', filterJobs);
+        jobTypeFilter.addEventListener('change', filterJobs);
+    });
+
+    function clearFilters() {
+        document.getElementById('searchJobs').value = '';
+        document.getElementById('filterStatus').value = '';
+        document.getElementById('filterJobType').value = '';
+        
+        const tableRows = document.querySelectorAll('#jobsTable tbody tr');
+        tableRows.forEach(row => {
+            row.style.display = '';
+        });
+    }
+</script>

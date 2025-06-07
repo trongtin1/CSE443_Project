@@ -1,0 +1,266 @@
+@model CSE443_Project.Models.Candidate
+
+@{
+    ViewData["Title"] = "Candidate Details";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a asp-action="Candidates">All Candidates</a></li>
+                    <li class="breadcrumb-item"><a asp-action="CandidatesByJob"
+                            asp-route-id="@Model.JobId">@Model.Job.JobTitle</a></li>
+                    <li class="breadcrumb-item active">Candidate Details</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">Candidate Details</h1>
+            <p class="text-muted">Review and manage candidate information</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-action="Candidates" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Candidates
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <!-- Candidate Profile Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center p-4">
+                    @if (!string.IsNullOrEmpty(Model.JobSeeker?.ProfilePicture))
+                    {
+                        <img src="@Model.JobSeeker.ProfilePicture" alt="@Model.JobSeeker.User.Username"
+                            class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
+                            style="width: 100px; height: 100px;">
+                            <i class="fas fa-user text-secondary" style="font-size: 40px;"></i>
+                        </div>
+                    }
+                    <h5 class="mb-1">@Model.JobSeeker?.User?.Username</h5>
+                    <p class="text-muted mb-2">@Model.JobSeeker?.Headline</p>
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="mailto:@Model.JobSeeker?.User?.Email" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-1"></i> Contact Candidate
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer bg-light p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Shortlisted on</span>
+                        <span class="fw-medium">@Model.ShortlistedDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    @if (Model.InterviewDate.HasValue)
+                    {
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="text-muted">Interview date</span>
+                            <span class="fw-medium">@Model.InterviewDate.Value.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Job Information Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light p-3">
+                    <h5 class="card-title mb-0">Job Information</h5>
+                </div>
+                <div class="card-body p-3">
+                    <h6 class="mb-1">@Model.Job?.JobTitle</h6>
+                    <p class="text-muted mb-3">@Model.Job?.Location</p>
+                    <div class="mb-3">
+                        <span class="badge bg-light text-dark me-1">@Model.Job?.JobType</span>
+                        <span class="badge bg-light text-dark me-1">@Model.Job?.ExperienceLevel</span>
+                        @if (Model.Job?.IsRemote == true)
+                        {
+                            <span class="badge bg-light text-dark">Remote</span>
+                        }
+                    </div>
+                    <a asp-controller="Job" asp-action="Details" asp-route-id="@Model.JobId"
+                        class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-external-link-alt me-1"></i> View Job
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- Status Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light p-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Candidate Status</h5>
+                    <span
+                        class="badge bg-@(Model.Status == "Shortlisted" ? "info" : 
+                                                                                                                                              Model.Status == "Interviewed" ? "primary" : 
+                                                                                                                                              Model.Status == "Hired" ? "success" : 
+                                                                                                                                              "danger") px-3 py-2">@Model.Status</span>
+                </div>
+                <div class="card-body p-3">
+                    <form asp-action="UpdateCandidateStatus" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Update Status</label>
+                            <select name="status" class="form-select">
+                                @if (Model.Status == "Shortlisted")
+                                {
+                                    <option value="Shortlisted" selected>Shortlisted</option>
+                                }
+                                else
+                                {
+                                    <option value="Shortlisted">Shortlisted</option>
+                                }
+
+                                @if (Model.Status == "Interviewed")
+                                {
+                                    <option value="Interviewed" selected>Interviewed</option>
+                                }
+                                else
+                                {
+                                    <option value="Interviewed">Interviewed</option>
+                                }
+
+                                @if (Model.Status == "Hired")
+                                {
+                                    <option value="Hired" selected>Hired</option>
+                                }
+                                else
+                                {
+                                    <option value="Hired">Hired</option>
+                                }
+
+                                @if (Model.Status == "Rejected")
+                                {
+                                    <option value="Rejected" selected>Rejected</option>
+                                }
+                                else
+                                {
+                                    <option value="Rejected">Rejected</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Interview Date</label>
+                            <input type="date" name="interviewDate" class="form-control"
+                                value="@(Model.InterviewDate.HasValue ? Model.InterviewDate.Value.ToString("yyyy-MM-dd") : "")" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Interview Notes</label>
+                            <textarea name="interviewNotes" class="form-control"
+                                rows="4">@Model.InterviewNotes</textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Application Details Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light p-3">
+                    <h5 class="card-title mb-0">Application Details</h5>
+                </div>
+                <div class="card-body p-3">
+                    <div class="mb-4">
+                        <h6 class="mb-2">Cover Letter</h6>
+                        <div class="p-3 bg-light rounded">
+                            @if (!string.IsNullOrEmpty(Model.Application?.CoverLetter))
+                            {
+                                <p class="mb-0">@Model.Application.CoverLetter</p>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">No cover letter provided</p>
+                            }
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Application?.CV?.FilePath))
+                    {
+                        <div class="mb-3">
+                            <h6 class="mb-2">Resume/CV</h6>
+                            <a href="@Model.Application.CV.FilePath" class="btn btn-outline-secondary" target="_blank">
+                                <i class="fas fa-file-pdf me-1"></i> View Resume/CV
+                            </a>
+                        </div>
+                    }
+
+                    <div>
+                        <h6 class="mb-2">Application Date</h6>
+                        <p class="mb-0">@Model.Application?.ApplicationDate.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidate Information Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light p-3">
+                    <h5 class="card-title mb-0">Candidate Information</h5>
+                </div>
+                <div class="card-body p-3">
+                    @if (!string.IsNullOrEmpty(Model.JobSeeker?.Summary))
+                    {
+                        <div class="mb-4">
+                            <h6 class="mb-2">Summary</h6>
+                            <p>@Model.JobSeeker.Summary</p>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.JobSeeker?.Skills))
+                    {
+                        <div class="mb-4">
+                            <h6 class="mb-2">Skills</h6>
+                            <div>
+                                @foreach (var skill in Model.JobSeeker.Skills.Split(','))
+                                {
+                                    <span class="badge bg-light text-dark me-1 mb-1">@skill.Trim()</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.JobSeeker?.Education))
+                    {
+                        <div class="mb-4">
+                            <h6 class="mb-2">Education</h6>
+                            <p>@Model.JobSeeker.Education</p>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.JobSeeker?.WorkExperience))
+                    {
+                        <div class="mb-4">
+                            <h6 class="mb-2">Work Experience</h6>
+                            <p>@Model.JobSeeker.WorkExperience</p>
+                        </div>
+                    }
+
+                    <div class="mb-0">
+                        <h6 class="mb-2">Contact Information</h6>
+                        <p class="mb-1"><i class="fas fa-envelope me-2"></i> @Model.JobSeeker?.User?.Email</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Add any JavaScript for the candidate details page
+            console.log("Candidate details page loaded");
+        });
+    </script>
+}

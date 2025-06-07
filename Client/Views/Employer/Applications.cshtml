@@ -4,10 +4,23 @@
     ViewData["Title"] = "Applications";
 }
 
-<div class="container my-4">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="h3 mb-0">
+<div class="container-fluid py-4">
+    <!-- Toast notification container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="statusToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="toastMessage">Status updated successfully</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4 align-items-center">
+        <div class="col-lg-8 col-md-7">
+            <h1 class="h3 mb-1 fw-bold">
                 @if (ViewBag.Job != null)
                 {
                     <span>Applications for @ViewBag.Job.Title</span>
@@ -21,68 +34,109 @@
                     <span>All Applications</span>
                 }
             </h1>
-            <p class="text-muted">Manage job applications from candidates</p>
+            <p class="text-muted">Manage and track candidate applications</p>
         </div>
-        <div class="col-md-4 text-md-end">
+        <div class="col-lg-4 col-md-5 text-md-end mt-3 mt-md-0">
             <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    Filter by Status
+                <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-filter me-1"></i> Filter Applications
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="filterDropdown">
                     <li><a class="dropdown-item" asp-action="Applications">All Applications</a></li>
-                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus" asp-route-status="Pending">Pending</a></li>
-                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus" asp-route-status="Shortlisted">Shortlisted</a></li>
-                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus" asp-route-status="Interviewed">Interviewed</a></li>
-                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus" asp-route-status="Offered">Offered</a></li>
-                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus" asp-route-status="Rejected">Rejected</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus"
+                            asp-route-status="Pending">Pending</a></li>
+                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus"
+                            asp-route-status="Shortlisted">Shortlisted</a></li>
+                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus"
+                            asp-route-status="Interviewed">Interviewed</a></li>
+                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus"
+                            asp-route-status="Offered">Offered</a></li>
+                    <li><a class="dropdown-item" asp-action="ApplicationsByStatus"
+                            asp-route-status="Rejected">Rejected</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    
+
     @if (Model.Any())
     {
         <!-- Application Status Summary -->
         <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card border-0 shadow-sm">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="card-title mb-0 fw-bold">Application Status Overview</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Application Status Summary</h5>
-                        <div class="row mt-3">
-                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
-                                <div class="p-3 rounded bg-warning bg-opacity-10">
-                                    <h6 class="mb-1">Pending</h6>
-                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Pending")</h4>
+                        <div class="row g-4">
+                            <div class="col-xl-2 col-md-4 col-6">
+                                <div class="p-3 rounded-3 bg-warning bg-opacity-10 text-center h-100">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-2">
+                                            <i class="fas fa-clock text-warning fa-2x"></i>
+                                        </div>
+                                        <h6 class="mb-2 text-warning">Pending</h6>
+                                        <h3 class="mb-0 fw-bold">@Model.Count(a => a.Status == "Pending")</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
-                                <div class="p-3 rounded bg-info bg-opacity-10">
-                                    <h6 class="mb-1">Shortlisted</h6>
-                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Shortlisted")</h4>
+                            <div class="col-xl-2 col-md-4 col-6">
+                                <div class="p-3 rounded-3 bg-info bg-opacity-10 text-center h-100">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-2">
+                                            <i class="fas fa-list-check text-info fa-2x"></i>
+                                        </div>
+                                        <h6 class="mb-2 text-info">Shortlisted</h6>
+                                        <h3 class="mb-0 fw-bold">@Model.Count(a => a.Status == "Shortlisted")</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
-                                <div class="p-3 rounded bg-primary bg-opacity-10">
-                                    <h6 class="mb-1">Interviewed</h6>
-                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Interviewed")</h4>
+                            <div class="col-xl-2 col-md-4 col-6">
+                                <div class="p-3 rounded-3 bg-primary bg-opacity-10 text-center h-100">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-2">
+                                            <i class="fas fa-comments text-primary fa-2x"></i>
+                                        </div>
+                                        <h6 class="mb-2 text-primary">Interviewed</h6>
+                                        <h3 class="mb-0 fw-bold">@Model.Count(a => a.Status == "Interviewed")</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
-                                <div class="p-3 rounded bg-success bg-opacity-10">
-                                    <h6 class="mb-1">Offered</h6>
-                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Offered")</h4>
+                            <div class="col-xl-2 col-md-4 col-6">
+                                <div class="p-3 rounded-3 bg-success bg-opacity-10 text-center h-100">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-2">
+                                            <i class="fas fa-check-circle text-success fa-2x"></i>
+                                        </div>
+                                        <h6 class="mb-2 text-success">Offered</h6>
+                                        <h3 class="mb-0 fw-bold">@Model.Count(a => a.Status == "Offered")</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
-                                <div class="p-3 rounded bg-danger bg-opacity-10">
-                                    <h6 class="mb-1">Rejected</h6>
-                                    <h4 class="mb-0">@Model.Count(a => a.Status == "Rejected")</h4>
+                            <div class="col-xl-2 col-md-4 col-6">
+                                <div class="p-3 rounded-3 bg-danger bg-opacity-10 text-center h-100">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-2">
+                                            <i class="fas fa-times-circle text-danger fa-2x"></i>
+                                        </div>
+                                        <h6 class="mb-2 text-danger">Rejected</h6>
+                                        <h3 class="mb-0 fw-bold">@Model.Count(a => a.Status == "Rejected")</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-4 col-6 mb-3 text-center">
-                                <div class="p-3 rounded bg-secondary bg-opacity-10">
-                                    <h6 class="mb-1">Total</h6>
-                                    <h4 class="mb-0">@Model.Count()</h4>
+                            <div class="col-xl-2 col-md-4 col-6">
+                                <div class="p-3 rounded-3 bg-secondary bg-opacity-10 text-center h-100">
+                                    <div class="d-flex flex-column h-100">
+                                        <div class="mb-2">
+                                            <i class="fas fa-users text-secondary fa-2x"></i>
+                                        </div>
+                                        <h6 class="mb-2 text-secondary">Total</h6>
+                                        <h3 class="mb-0 fw-bold">@Model.Count()</h3>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -90,122 +144,120 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Applications Table -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold">Applications List</h5>
+           
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">Applicant</th>
+                            <th>Job Title</th>
+                            <th>Applied On</th>
+                            <th>Status</th>
+                            <th class="text-end pe-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var application in Model.OrderByDescending(a => a.ApplicationDate))
+                        {
                             <tr>
-                                <th>Applicant</th>
-                                <th>Job Title</th>
-                                <th>Applied On</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <td class="ps-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-placeholder bg-primary bg-opacity-10 rounded-circle text-center me-3"
+                                            style="width: 42px; height: 42px; line-height: 42px;">
+                                            <i class="fas fa-user text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-semibold">@application.JobSeeker.User.Username</h6>
+                                            <small class="text-muted">@application.JobSeeker.User.Email</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-controller="Job" asp-action="Details" asp-route-id="@application.JobId"
+                                        class="text-decoration-none fw-medium">
+                                        @application.Job.JobTitle
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="text-nowrap">@application.ApplicationDate.ToString("MMM dd, yyyy")</span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-@(
+                                          application.Status == "Pending" ? "warning" :
+                                          application.Status == "Shortlisted" ? "info" :
+                                          application.Status == "Interviewed" ? "primary" :
+                                          application.Status == "Offered" ? "success" :
+                                          application.Status == "Rejected" ? "danger" : "secondary")">
+                                @application.Status
+                            </span>
+                        </td>
+                        <td class="text-end pe-3">
+                            <a asp-controller="Application" asp-action="Details" asp-route-id="@application.Id"
+                                class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-eye me-1"></i> View
+                            </a>
+
+                                    <div class="dropdown d-inline-block">
+                                        <button class="btn btn-sm btn-@(
+                                            application.Status == "Pending" ? "outline-warning" :
+                                            application.Status == "Shortlisted" ? "outline-info" :
+                                            application.Status == "Interviewed" ? "outline-primary" :
+                                            application.Status == "Offered" ? "outline-success" :
+                                            application.Status == "Rejected" ? "outline-danger" : "outline-secondary")" 
+                                            type="button"
+                                            id="statusDropdown_@application.Id" 
+                                            data-bs-toggle="dropdown" 
+                                            aria-expanded="false"
+                                            data-bs-title="Change application status"
+                                            data-bs-placement="top">
+                                            <i class="fas fa-@(
+                                                application.Status == "Pending" ? "clock" :
+                                                application.Status == "Shortlisted" ? "list-check" :
+                                                application.Status == "Interviewed" ? "comments" :
+                                                application.Status == "Offered" ? "check-circle" :
+                                                application.Status == "Rejected" ? "times-circle" : "exchange-alt") me-1"></i> @application.Status
+                                        </button>
+                                       
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var application in Model.OrderByDescending(a => a.ApplicationDate))
-                            {
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-placeholder bg-primary bg-opacity-10 rounded-circle p-2 me-2">
-                                                <i class="fas fa-user text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-0">@application.JobSeeker.User.Username</h6>
-                                                <small class="text-muted">@application.JobSeeker.User.Email</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a asp-controller="Job" asp-action="Details" asp-route-id="@application.JobId" class="text-decoration-none">
-                                            @application.Job.JobTitle
-                                        </a>
-                                    </td>
-                                    <td>@application.ApplicationDate.ToString("MMM dd, yyyy")</td>
-                                    <td>
-                                        <span class="badge bg-@(application.Status == "Pending" ? "warning" : 
-                                                              application.Status == "Shortlisted" ? "info" : 
-                                                              application.Status == "Interviewed" ? "primary" : 
-                                                              application.Status == "Offered" ? "success" : 
-                                                              application.Status == "Rejected" ? "danger" : "secondary")">
-                                            @application.Status
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a asp-controller="Application" asp-action="Details" asp-route-id="@application.Id" class="btn btn-sm btn-outline-primary">
-                                            View Details
-                                        </a>
-                                        
-                                        <div class="dropdown d-inline-block ms-1">
-                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="statusDropdown_@application.Id" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Update Status
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="statusDropdown_@application.Id">
-                                                <li>
-                                                    <form asp-controller="Application" asp-action="UpdateStatus" asp-route-id="@application.Id" method="post">
-                                                        <input type="hidden" name="status" value="Pending" />
-                                                        <button type="submit" class="dropdown-item">Pending</button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <form asp-controller="Application" asp-action="UpdateStatus" asp-route-id="@application.Id" method="post">
-                                                        <input type="hidden" name="status" value="Shortlisted" />
-                                                        <button type="submit" class="dropdown-item">Shortlist</button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <form asp-controller="Application" asp-action="UpdateStatus" asp-route-id="@application.Id" method="post">
-                                                        <input type="hidden" name="status" value="Interviewed" />
-                                                        <button type="submit" class="dropdown-item">Interviewed</button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <form asp-controller="Application" asp-action="UpdateStatus" asp-route-id="@application.Id" method="post">
-                                                        <input type="hidden" name="status" value="Offered" />
-                                                        <button type="submit" class="dropdown-item">Offer Job</button>
-                                                    </form>
-                                                </li>
-                                                <li>
-                                                    <form asp-controller="Application" asp-action="UpdateStatus" asp-route-id="@application.Id" method="post">
-                                                        <input type="hidden" name="status" value="Rejected" />
-                                                        <button type="submit" class="dropdown-item">Reject</button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
+
     }
     else
     {
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-4 text-center">
-                <div class="py-4">
-                    <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                    <h5>No applications found</h5>
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-5 text-center">
+                <div class="py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-inbox fa-5x text-muted"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">No applications found</h4>
                     @if (ViewBag.Job != null)
                     {
-                        <p class="text-muted">There are no applications for this job yet.</p>
+                        <p class="text-muted mb-4">There are no applications for this job position yet.</p>
                     }
                     else if (ViewBag.Status != null)
                     {
-                        <p class="text-muted">There are no applications with status '@ViewBag.Status'.</p>
+                        <p class="text-muted mb-4">There are no applications with status '@ViewBag.Status' at the moment.</p>
                     }
                     else
                     {
-                        <p class="text-muted">You haven't received any job applications yet.</p>
-                        <a asp-controller="Job" asp-action="Create" class="btn btn-primary mt-2">
-                            <i class="fas fa-plus-circle me-1"></i> Post a Job
+                        <p class="text-muted mb-4">You haven't received any job applications yet. Post a new job to attract
+                            candidates.</p>
+                        <a asp-controller="Job" asp-action="Create" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i> Post a New Job
                         </a>
                     }
                 </div>
@@ -216,6 +268,108 @@
 
 @section Scripts {
     <script>
-        // Add any JavaScript needed for the applications page
+        // Search functionality for applications
+        $(document).ready(function () {
+            $("#searchApplications").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("table tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+            
+            // Improve status update experience
+            $(".status-update-form").on("submit", function(e) {
+                var $button = $(this).find("button");
+                var $icon = $button.find(".status-icon i");
+                var originalIcon = $icon.attr("class");
+                var newStatus = $(this).find("input[name='status']").val();
+                
+                // Show loading state
+                $button.prop("disabled", true);
+                $icon.attr("class", "fas fa-spinner fa-spin");
+                
+                // Store form data for potential toast notification
+                sessionStorage.setItem('lastStatusUpdate', newStatus);
+                
+                // Restore if there's an error
+                $(this).on("error", function() {
+                    $button.prop("disabled", false);
+                    $icon.attr("class", originalIcon);
+                });
+            });
+            
+            // Check if we need to show a status update toast
+            if (sessionStorage.getItem('lastStatusUpdate')) {
+                var statusClass = '';
+                var status = sessionStorage.getItem('lastStatusUpdate');
+                
+                // Set toast color based on status
+                if (status === 'Pending') statusClass = 'bg-warning';
+                else if (status === 'Shortlisted') statusClass = 'bg-info';
+                else if (status === 'Interviewed') statusClass = 'bg-primary';
+                else if (status === 'Offered') statusClass = 'bg-success';
+                else if (status === 'Rejected') statusClass = 'bg-danger';
+                else statusClass = 'bg-secondary';
+                
+                // Update toast message and show it
+                $('#statusToast').addClass(statusClass);
+                $('#toastMessage').text('Status updated to ' + status + ' successfully');
+                var toast = new bootstrap.Toast(document.getElementById('statusToast'));
+                toast.show();
+                
+                // Clear the session storage
+                sessionStorage.removeItem('lastStatusUpdate');
+            }
+            
+            // Initialize tooltips
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-title]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        });
     </script>
-} 
+    
+    <style>
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        
+        .dropdown-item.active {
+            background-color: rgba(var(--bs-primary-rgb), 0.15);
+            color: var(--bs-body-color);
+            font-weight: 500;
+        }
+        
+        .status-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        
+        .status-update-form {
+            margin-bottom: 0;
+        }
+        
+        .dropdown-menu {
+            padding: 0.5rem 0;
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .dropdown-header {
+            font-weight: 600;
+            color: var(--bs-primary);
+            padding: 0.5rem 1rem;
+        }
+        
+        .dropdown-divider {
+            margin: 0.25rem 0;
+        }
+    </style>
+}

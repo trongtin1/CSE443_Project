@@ -1,0 +1,147 @@
+@model IEnumerable<CSE443_Project.Models.Application>
+
+@{
+    ViewData["Title"] = "Applications by Job";
+    var job = ViewBag.Job;
+}
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 mb-0">Applications for @job.JobTitle</h1>
+                            <p class="text-muted mb-0">Total: @Model.Count() applications</p>
+                        </div>
+                        <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Job
+                        </a>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            @if (!string.IsNullOrEmpty(job.Employer?.Logo))
+                            {
+                                <img src="@job.Employer.Logo" alt="@job.Employer.CompanyName" class="me-3" style="width: 50px; height: 50px; object-fit: contain;">
+                            }
+                            else
+                            {
+                                <div class="company-placeholder me-3">
+                                    <i class="fas fa-building fa-2x text-muted"></i>
+                                </div>
+                            }
+                            <div>
+                                <h5 class="mb-0">@job.JobTitle</h5>
+                                <p class="text-muted mb-0">@job.Employer?.CompanyName</p>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge bg-@(job.JobType == "Full-time" ? "success" : 
+                                                job.JobType == "Part-time" ? "info" : 
+                                                job.JobType == "Contract" ? "warning" : 
+                                                job.JobType == "Internship" ? "secondary" : "primary")">
+                                @job.JobType
+                            </span>
+                            <span class="ms-2">
+                                <i class="fas fa-map-marker-alt text-muted me-1"></i> @job.Location
+                            </span>
+                            <span class="ms-2">
+                                <i class="fas fa-money-bill-wave text-muted me-1"></i>
+                                @(job.SalaryMin > 0 && job.SalaryMax > 0 ?
+                                    $"${job.SalaryMin:N0} - ${job.SalaryMax:N0}" :
+                                    "Competitive")
+                            </span>
+                            <span class="ms-2">
+                                <i class="fas fa-calendar-alt text-muted me-1"></i>
+                                Deadline: @job.Deadline.ToString("MMM dd, yyyy")
+                            </span>
+                        </div>
+                    </div>
+
+                 
+
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> No applications found for this job.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Applicant</th>
+                                        <th>Date Applied</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var application in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @if (!string.IsNullOrEmpty(application.JobSeeker?.ProfilePicture))
+                                                    {
+                                                        <img src="@application.JobSeeker.ProfilePicture" alt="@application.JobSeeker.User.Username"
+                                                            class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2"
+                                                            style="width: 40px; height: 40px;">
+                                                            <i class="fas fa-user"></i>
+                                                        </div>
+                                                    }
+                                                    <div>
+                                                        <h6 class="mb-0">@application.JobSeeker?.User?.Username</h6>
+                                                        <small class="text-muted">@application.JobSeeker?.Headline</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @application.ApplicationDate.ToString("MMM dd, yyyy")
+                                                <br>
+                                                <small class="text-muted">@application.ApplicationDate.ToString("hh:mm tt")</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge @(application.Status == "Pending" ? "bg-warning" : 
+                                                                    application.Status == "Reviewed" ? "bg-info" : 
+                                                                    application.Status == "Shortlisted" ? "bg-primary" : 
+                                                                    application.Status == "Interviewed" ? "bg-secondary" : 
+                                                                    application.Status == "Accepted" ? "bg-success" : 
+                                                                    "bg-danger")">
+                                                    @application.Status
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a asp-controller="Application" asp-action="Details" asp-route-id="@application.Id" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye me-1"></i> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Add any JavaScript functionality here
+            console.log("ByJob view loaded for job ID: @job.Id");
+        });
+    </script>
+}

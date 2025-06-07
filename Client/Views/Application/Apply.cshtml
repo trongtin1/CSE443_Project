@@ -1,10 +1,19 @@
 @using System.Linq
+@using Microsoft.AspNetCore.Http
 @model Application
 
 @{
     ViewData["Title"] = "Apply for Job";
-    var job = ViewBag.Job;
-    var cvs = ViewBag.CVs;
+    var job = ViewBag.Job ?? new { };
+    var cvs = ViewBag.CVs ?? new List<dynamic>();
+    var jobSeekerId = Context.Session.GetInt32("JobSeekerId");
+
+    // Redirect if job is null or has invalid ID
+    if (ViewBag.Job == null || ViewBag.Job.Id <= 0)
+    {
+        Context.Response.Redirect("/Job/Index");
+        return;
+    }
 }
 
 <div class="container my-4">
@@ -32,25 +41,41 @@
                                 </div>
                             } *@
                             <div>
-                                <h5 class="mb-0">@job.JobTitle</h5>
-                                <p class="text-muted mb-0">@job.Employer.CompanyName</p>
+                                <h5 class="mb-0">@(job?.JobTitle ?? "Job")</h5>
+                                <p class="text-muted mb-0">@(job?.Employer?.CompanyName ?? "Company")</p>
                             </div>
                         </div>
                         <div class="mt-2">
-                            <span class="badge bg-@(job.JobType == "Full-time" ? "success" : 
-                                                job.JobType == "Part-time" ? "info" : 
-                                                job.JobType == "Contract" ? "warning" : 
-                                                job.JobType == "Internship" ? "secondary" : "primary")">
-                                @job.JobType
+                            <span
+                                class="badge bg-@(job?.JobType == "Full-time" ? "success" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Internship" ? "secondary" : "primary")">
+                                @(job?.JobType ?? "Job")
                             </span>
                             <span class="ms-2">
-                                <i class="fas fa-map-marker-alt text-muted me-1"></i> @job.Location
+                                <i class="fas fa-map-marker-alt text-muted me-1"></i> @(job?.Location ?? "Remote")
                             </span>
                         </div>
                     </div>
 
-                    <form asp-action="Apply" asp-route-id="@job.Id" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <!-- Error Message -->
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger mb-3">
+                            <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    <form method="post" id="applicationForm" action="/Application/Apply/@job.Id">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <!-- Hidden fields -->
+                        <input type="hidden" name="JobId" value="@job.Id" />
+                        <!-- Debug info for JobId -->
+                        <input type="hidden" name="OriginalJobId" value="@job.Id" />
+                        <!-- Don't set ID explicitly -->
+                        <input type="hidden" name="Id" value="0" />
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">Select CV</label>
@@ -61,23 +86,18 @@
                                     {
                                         <label class="list-group-item list-group-item-action">
                                             <div class="d-flex align-items-center">
-                                                <input class="form-check-input me-3" type="radio" name="CVId" value="@cv.Id" @(cv.IsDefault ? "checked" : "")>
+                                                <input class="form-check-input me-3" type="radio" name="CVId" value="@cv.Id"
+                                                    @(cv.IsDefault ? "checked" : "") required>
                                                 <div>
                                                     <h6 class="mb-1">@cv.Title</h6>
-                                                    <p class="text-muted small mb-0">
-                                                        Last updated: @cv.UpdatedAt?.ToString("MMM dd, yyyy") ?? cv.CreatedAt.ToString("MMM dd, yyyy")
-                                                        @if (cv.IsDefault)
-                                                        {
-                                                            <span class="badge bg-primary ms-2">Default</span>
-                                                        }
-                                                    </p>
                                                 </div>
                                             </div>
                                         </label>
                                     }
                                 </div>
                                 <div class="text-end mb-3">
-                                    <a asp-controller="JobSeeker" asp-action="CreateCV" class="btn btn-sm btn-outline-primary">
+                                    <a asp-controller="JobSeeker" asp-action="CreateCV"
+                                        class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-plus-circle me-1"></i> Create New CV
                                     </a>
                                 </div>
@@ -92,13 +112,15 @@
                                         <i class="fas fa-plus-circle me-1"></i> Create CV
                                     </a>
                                 </div>
+                                <input type="hidden" name="NoCVsAvailable" value="true" />
                             }
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="CoverLetter" class="form-label fw-bold">Cover Letter</label>
-                            <textarea asp-for="CoverLetter" class="form-control" rows="6" placeholder="Introduce yourself and explain why you're a good fit for this position..."></textarea>
-                            <span asp-validation-for="CoverLetter" class="text-danger"></span>
+                            <label class="form-label fw-bold">Cover Letter</label>
+                            <textarea name="CoverLetter" class="form-control" rows="6"
+                                placeholder="Introduce yourself and explain why you're a good fit for this position..."
+                                required>@Model?.CoverLetter</textarea>
                             <div class="form-text">
                                 A well-written cover letter can help you stand out from other applicants.
                             </div>
@@ -106,7 +128,8 @@
 
                         <div class="mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" name="agreeTerms"
+                                    required>
                                 <label class="form-check-label" for="agreeTerms">
                                     I confirm that the information provided is accurate and complete.
                                 </label>
@@ -114,7 +137,8 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Submit Application</button>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitButton">Submit
+                                Application</button>
                         </div>
                     </form>
                 </div>
@@ -125,4 +149,50 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-} 
+    <script>
+        $(document).ready(function () {
+            console.log("Form ready");
+
+            // Direct submit button click handler for debugging
+            $('#submitButton').on('click', function () {
+                console.log("Submit button clicked directly");
+            });
+
+            $('#applicationForm').on('submit', function (e) {
+                console.log("Form submitted");
+
+                // Check if at least one CV is selected when CVs are available
+                var hasCVs = @(cvs != null && (cvs is IEnumerable<dynamic>) && ((IEnumerable<dynamic>)cvs).Any() ? "true" : "false");
+                console.log("Has CVs: " + hasCVs);
+
+                if (hasCVs) {
+                    var selectedCV = $('input[name="CVId"]:checked').val();
+                    console.log("Selected CV: " + selectedCV);
+
+                    if (!selectedCV) {
+                        e.preventDefault();
+                        alert('Please select a CV to continue.');
+                        return false;
+                    }
+                }
+
+                // Check if terms are agreed
+                var termsAgreed = $('#agreeTerms').is(':checked');
+                console.log("Terms agreed: " + termsAgreed);
+
+                if (!termsAgreed) {
+                    e.preventDefault();
+                    alert('You must agree to the terms to continue.');
+                    return false;
+                }
+
+                // Add form data to log
+                var formData = $(this).serialize();
+                console.log("Form data: " + formData);
+
+                console.log("Form validation passed, submitting...");
+                return true;
+            });
+        });
+    </script>
+}

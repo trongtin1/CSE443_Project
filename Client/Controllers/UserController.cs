@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CSE443_Project.Controllers
 {
@@ -35,22 +36,21 @@ namespace CSE443_Project.Controllers
             {
                 var user = await _userService.GetUserByUsernameAsync(username);
 
-                // Store user ID in session or cookies
-                // For simplicity, we'll use TempData for demo purposes
-                TempData["UserId"] = user.Id;
+                // Store user ID in session
+                HttpContext.Session.SetInt32("UserId", user.Id);
 
                 // Explicitly check if user is associated with an employer or job seeker
                 var employer = await _employerService.GetEmployerByUserIdAsync(user.Id);
                 if (employer != null)
                 {
-                    TempData["EmployerId"] = employer.Id;
+                    HttpContext.Session.SetInt32("EmployerId", employer.Id);
                     return RedirectToAction("Dashboard", "Employer");
                 }
 
                 var jobSeeker = await _jobSeekerService.GetJobSeekerByUserIdAsync(user.Id);
                 if (jobSeeker != null)
                 {
-                    TempData["JobSeekerId"] = jobSeeker.Id;
+                    HttpContext.Session.SetInt32("JobSeekerId", jobSeeker.Id);
                     return RedirectToAction("Dashboard", "JobSeeker");
                 }
 
@@ -73,17 +73,17 @@ namespace CSE443_Project.Controllers
             // Validate unique username and email
             if (!await _userService.IsUsernameUniqueAsync(user.Username))
             {
-                ModelState.AddModelError("User.Username", "Username is already taken");
-                return View("Register", user);
+                ModelState.AddModelError("Username", "Username is already taken");
+                return View("Register");
             }
 
             if (!await _userService.IsEmailUniqueAsync(user.Email))
             {
-                ModelState.AddModelError("User.Email", "Email is already registered");
-                return View("Register", user);
+                ModelState.AddModelError("Email", "Email is already registered");
+                return View("Register");
             }
 
-            // Create user
+            // Create user (password will be hashed in the service)
             user.CreatedAt = DateTime.Now;
             user.IsActive = true;
             var createdUser = await _userService.CreateUserAsync(user);
@@ -101,17 +101,17 @@ namespace CSE443_Project.Controllers
             // Validate unique username and email
             if (!await _userService.IsUsernameUniqueAsync(user.Username))
             {
-                ModelState.AddModelError("User.Username", "Username is already taken");
-                return View("Register", user);
+                ModelState.AddModelError("Username", "Username is already taken");
+                return View("Register");
             }
 
             if (!await _userService.IsEmailUniqueAsync(user.Email))
             {
-                ModelState.AddModelError("User.Email", "Email is already registered");
-                return View("Register", user);
+                ModelState.AddModelError("Email", "Email is already registered");
+                return View("Register");
             }
 
-            // Create user
+            // Create user (password will be hashed in the service)
             user.CreatedAt = DateTime.Now;
             user.IsActive = true;
             var createdUser = await _userService.CreateUserAsync(user);
@@ -126,7 +126,7 @@ namespace CSE443_Project.Controllers
         public IActionResult Logout()
         {
             // Clear user session
-            TempData.Clear();
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 

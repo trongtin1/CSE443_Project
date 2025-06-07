@@ -86,6 +86,8 @@ namespace CSE443_Project.Services.Implementations
 
         public async Task<Application> CreateApplicationAsync(Application application)
         {
+            // Ensure we don't set the ID explicitly
+            application.Id = 0;
             application.ApplicationDate = DateTime.Now;
             application.Status = "Pending";
 

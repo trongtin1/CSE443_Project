@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using CSE443_Project.Models;
+using CSE443_Project.Services.Utilities;
 using System;
 using System.Linq;
 
@@ -19,7 +20,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "admin",
-                        Password = "admin123", // In production, use password hashing
+                        Password = PasswordHasher.HashPassword("admin123"),
                         Email = "admin@jobportal.com",
                         Phone = "1234567890",
                         Address = "123 Admin St",
@@ -30,7 +31,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "company1",
-                        Password = "company123",
+                        Password = PasswordHasher.HashPassword("company123"),
                         Email = "hr@techcorp.com",
                         Phone = "2345678901",
                         Address = "456 Tech Blvd",
@@ -41,7 +42,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "company2",
-                        Password = "company123",
+                        Password = PasswordHasher.HashPassword("company123"),
                         Email = "hr@financeco.com",
                         Phone = "3456789012",
                         Address = "789 Finance Ave",
