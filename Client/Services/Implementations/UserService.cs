@@ -1,6 +1,7 @@
 using CSE443_Project.Data;
 using CSE443_Project.Models;
 using CSE443_Project.Services.Interfaces;
+using CSE443_Project.Services.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,9 @@ namespace CSE443_Project.Services.Implementations
 
         public async Task<User> CreateUserAsync(User user)
         {
+            // Hash the password before storing
+            user.Password = PasswordHasher.HashPassword(user.Password);
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;
@@ -51,6 +55,25 @@ namespace CSE443_Project.Services.Implementations
 
         public async Task<User> UpdateUserAsync(User user)
         {
+            // Check if password was changed (not empty)
+            if (!string.IsNullOrEmpty(user.Password))
+            {
+                // If the password doesn't look like a hash, hash it
+                if (!user.Password.StartsWith("$2"))
+                {
+                    user.Password = PasswordHasher.HashPassword(user.Password);
+                }
+            }
+            else
+            {
+                // If password is empty, get the existing password
+                var existingUser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == user.Id);
+                if (existingUser != null)
+                {
+                    user.Password = existingUser.Password;
+                }
+            }
+
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return user;
@@ -69,13 +92,14 @@ namespace CSE443_Project.Services.Implementations
 
         public async Task<bool> ValidateCredentialsAsync(string username, string password)
         {
-            // In a real application, you would hash the password and compare with stored hash
-            var user = await _context.Users.FirstOrDefaultAsync(u =>
-                u.Username == username &&
-                u.Password == password &&
-                u.IsActive);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
 
-            return user != null;
+            if (user == null)
+                return false;
+
+            // Verify the password using BCrypt
+            return PasswordHasher.VerifyPassword(password, user.Password);
         }
 
         public async Task<bool> IsUsernameUniqueAsync(string username)

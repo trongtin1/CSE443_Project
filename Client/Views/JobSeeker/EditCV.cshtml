@@ -1,5 +1,5 @@
 @model CSE443_Project.Models.CV
-
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Edit CV";
 }
@@ -57,9 +57,40 @@
                 </div>
             </div>
         </div>
-
         <div class="col-lg-8">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
             <form asp-action="EditCV" method="post" enctype="multipart/form-data">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Please correct the following errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="JobSeekerId" />
                 <input type="hidden" asp-for="CreatedAt" />
@@ -85,7 +116,6 @@
                             <div class="form-text">Describe what this CV is for (e.g. "For tech positions" or
                                 "Highlighting project management skills")</div>
                         </div>
-
                         <div class="mb-3">
                             <label for="cvFile" class="form-label">Upload New CV File</label>
                             <input type="file" class="form-control" id="cvFile" name="cvFile" accept=".pdf,.doc,.docx">
@@ -96,21 +126,27 @@
                             {
                                 <div class="mt-2">
                                     <p class="mb-1"><strong>Current File:</strong></p>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-file-pdf text-danger me-2"></i>
-                                        <a href="@Url.Action("DownloadCV", "JobSeeker", new { id = Model.Id })"
-                                            target="_blank" class="text-decoration-none">
-                                            View Current CV
-                                        </a>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                                            <a href="@Url.Action("DownloadCV", "JobSeeker", new { id = Model.Id })"
+                                                target="_blank" class="text-decoration-none">
+                                                View Current CV
+                                            </a>
+                                        </div>
+                                        <small class="text-muted">
+                                            @{
+                                                var fileName = System.IO.Path.GetFileName(Model.FilePath);
+                                            }
+                                            @fileName
+                                        </small>
                                     </div>
                                 </div>
                             }
                         </div>
-
                         <div class="form-check mb-0">
-                            <input class="form-check-input" type="checkbox" id="isDefault" name="isDefault"
-                                checked="@Model.IsDefault">
-                            <label class="form-check-label" for="isDefault">
+                            <input asp-for="IsDefault" class="form-check-input" type="checkbox">
+                            <label asp-for="IsDefault" class="form-check-label">
                                 Set as default CV
                             </label>
                             <div class="form-text">Your default CV will be used automatically when applying for jobs
@@ -147,8 +183,45 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Add any JavaScript needed for the edit CV page
             console.log("Edit CV page loaded");
+
+            // Handle file input change
+            $('#cvFile').on('change', function () {
+                var file = this.files[0];
+                if (file) {
+                    // Check file size (5MB max)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File size cannot exceed 5MB.');
+                        $(this).val('');
+                        return;
+                    }
+
+                    // Check file type
+                    var allowedTypes = ['.pdf', '.doc', '.docx'];
+                    var fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                    if (!allowedTypes.includes(fileExtension)) {
+                        alert('Only PDF, DOC, and DOCX files are allowed.');
+                        $(this).val('');
+                        return;
+                    }
+
+                    console.log('File selected: ' + file.name);
+                }
+            });
+
+            // Handle form submission
+            $('form').on('submit', function (e) {
+                console.log('Form submitted');
+
+                // Show loading state
+                var submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Updating...');
+
+                // Re-enable button after 10 seconds to prevent permanent disable
+                setTimeout(function () {
+                    submitBtn.prop('disabled', false).html('Update CV');
+                }, 10000);
+            });
         });
     </script>
 }

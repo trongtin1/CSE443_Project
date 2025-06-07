@@ -2,15 +2,69 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
+                        <a asp-controller="Employer" asp-action="Applications" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Applications
+                        </a>
                         <h1 class="h3 mb-0">Application Details</h1>
-                        <span class="badge @(Model.Status == "Pending" ? "bg-warning" : 
-                                            Model.Status == "Reviewed" ? "bg-info" : 
-                                            Model.Status == "Shortlisted" ? "bg-primary" : 
-                                            Model.Status == "Interviewed" ? "bg-secondary" : 
-                                            Model.Status == "Accepted" ? "bg-success" : 
-                                            "bg-danger")">
-                            @Model.Status
-                        </span>
+                        <div class="dropdown">
+                            <button class="btn btn-@(
+                                Model.Status == "Pending" ? "warning" :
+                                Model.Status == "Shortlisted" ? "info" :
+                                Model.Status == "Interviewed" ? "primary" :
+                                Model.Status == "Offered" ? "success" :
+                                Model.Status == "Rejected" ? "danger" : "secondary")" 
+                                type="button"
+                                id="statusDropdown" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false">
+                                <i class="fas fa-@(
+                                    Model.Status == "Pending" ? "clock" :
+                                    Model.Status == "Shortlisted" ? "list-check" :
+                                    Model.Status == "Interviewed" ? "comments" :
+                                    Model.Status == "Offered" ? "check-circle" :
+                                    Model.Status == "Rejected" ? "times-circle" : "exchange-alt") me-1"></i> @Model.Status
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                aria-labelledby="statusDropdown">
+                                <li class="dropdown-header">Update Status</li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                @foreach (var status in new[] { "Pending", "Shortlisted", "Interviewed", "Offered", "Rejected" })
+                                {
+                                    var statusIcon = status == "Pending" ? "clock" :
+                                                    status == "Shortlisted" ? "list-check" :
+                                                    status == "Interviewed" ? "comments" :
+                                                    status == "Offered" ? "check-circle" :
+                                                    status == "Rejected" ? "times-circle" : "";
+                                    
+                                    var statusColor = status == "Pending" ? "warning" :
+                                                    status == "Shortlisted" ? "info" :
+                                                    status == "Interviewed" ? "primary" :
+                                                    status == "Offered" ? "success" :
+                                                    status == "Rejected" ? "danger" : "secondary";
+                                    <li>
+                                        <form asp-controller="Application" asp-action="UpdateStatus"
+                                            asp-route-id="@Model.Id" method="post" class="status-update-form">
+                                            <input type="hidden" name="status" value="@status" />
+                                            <button type="submit"
+                                                class="dropdown-item d-flex align-items-center py-2 @(Model.Status == status ? "active" : "")">
+                                                <span class="status-icon me-2 text-@statusColor">
+                                                    <i class="fas fa-@statusIcon"></i>
+                                                </span>
+                                                <span>@status</span>
+                                                @if (Model.Status == status)
+                                                {
+                                                    <span class="ms-auto">
+                                                        <i class="fas fa-check text-success"></i>
+                                                    </span>
+                                                }
+                                            </button>
+                                        </form>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="row mb-4">
@@ -139,70 +193,54 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    @if (!string.IsNullOrEmpty(Model.Notes))
-                    {
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <div class="card mb-3">
-                                    <div class="card-header bg-light">
-                                        <h5 class="mb-0">Employer Notes</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="p-3 bg-light rounded">
+                    </div>                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card mb-3">                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Employer Notes</h5>
+                                    @if (Context.Session.GetInt32("EmployerId") != null)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="editNotesBtn">
+                                            <i class="fas fa-edit me-1"></i> Edit Notes
+                                        </button>
+                                    }
+                                </div>
+                                <div class="card-body">
+                                    <div id="notesDisplay" class="p-3 bg-light rounded">
+                                        @if (!string.IsNullOrEmpty(Model.Notes))
+                                        {
                                             @Html.Raw(Model.Notes)
-                                        </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted mb-0">No notes added yet.</p>
+                                        }
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                    @if (TempData.ContainsKey("EmployerId"))
+                                                      @if (Context.Session.GetInt32("EmployerId") != null)
                     {
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card mb-3">
-                                    <div class="card-header bg-light">
-                                        <h5 class="mb-0">Update Application Status</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <form asp-action="UpdateStatus" method="post">
-                                            <input type="hidden" name="id" value="@Model.Id" />
-                                            
-                                            <div class="mb-3">
-                                                <label class="form-label">Status</label>
-                                                <select name="status" class="form-select">
-                                                    <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
-                                                    <option value="Reviewed" selected="@(Model.Status == "Reviewed")">Reviewed</option>
-                                                    <option value="Shortlisted" selected="@(Model.Status == "Shortlisted")">Shortlisted</option>
-                                                    <option value="Interviewed" selected="@(Model.Status == "Interviewed")">Interviewed</option>
-                                                    <option value="Accepted" selected="@(Model.Status == "Accepted")">Accepted</option>
-                                                    <option value="Rejected" selected="@(Model.Status == "Rejected")">Rejected</option>
-                                                </select>
-                                            </div>
-                                            
-                                            <div class="mb-3">
-                                                <label class="form-label">Notes to Candidate</label>
-                                                <textarea name="notes" class="form-control" rows="3">@Model.Notes</textarea>
-                                            </div>
-                                            
-                                            <div class="d-grid">
-                                                <button type="submit" class="btn btn-primary">Update Status</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                        <div id="notesEditor" class="d-none">
+                                            <form id="notesForm">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@Model.Id" />
+                                                <div class="mb-3">
+                                                    <textarea name="notes" id="notesTextarea" class="form-control" rows="6" 
+                                                              placeholder="Add your notes about this application...">@Html.Raw(Model.Notes)</textarea>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-save me-1"></i> Save Notes
+                                                    </button>
+                                                    <button type="button" class="btn btn-secondary" id="cancelNotesBtn">
+                                                        <i class="fas fa-times me-1"></i> Cancel
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
-                    }
+                    </div><!-- Removed toast notification container -->
 
-                    <div class="mt-4">
-                        <a asp-action="Index" class="btn btn-outline-secondary me-2">
-                            <i class="fas fa-arrow-left me-1"></i> Back to Applications
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -212,16 +250,142 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Basic initialization code for the application details page
-            console.log("Application details page loaded");
-            
-            // Show success message if available
-            if (TempData && TempData["SuccessMessage"]) {
-                toastr.success(TempData["SuccessMessage"]);
+            // Improve status update experience
+            $(".status-update-form").on("submit", function(e) {
+                var $button = $(this).find("button");
+                var $icon = $button.find(".status-icon i");
+                var originalIcon = $icon.attr("class");
+                var newStatus = $(this).find("input[name='status']").val();
+                
+                // Show loading state
+                $button.prop("disabled", true);
+                $icon.attr("class", "fas fa-spinner fa-spin");
+                
+                // Store form data for potential toast notification
+                sessionStorage.setItem('lastStatusUpdate', newStatus);
+                
+                // Restore if there's an error
+                $(this).on("error", function() {
+                    $button.prop("disabled", false);
+                    $icon.attr("class", originalIcon);
+                });
+            });
+              // Simple status update notification
+            if (sessionStorage.getItem('lastStatusUpdate')) {
+                var status = sessionStorage.getItem('lastStatusUpdate');
+                alert('Status updated to ' + status + ' successfully');
+                sessionStorage.removeItem('lastStatusUpdate');
             }
             
-            // If status is updated, highlight the status badge
-            $(".badge").addClass("animate__animated animate__pulse");
+            // Notes editing functionality
+            $('#editNotesBtn').on('click', function() {
+                $('#notesDisplay').addClass('d-none');
+                $('#notesEditor').removeClass('d-none');
+                $('#notesTextarea').focus();
+            });
+            
+            $('#cancelNotesBtn').on('click', function() {
+                $('#notesEditor').addClass('d-none');
+                $('#notesDisplay').removeClass('d-none');
+                // Reset textarea to original value
+                $('#notesTextarea').val('@Html.Raw(Html.Encode(Model.Notes ?? ""))');
+            });
+            
+            $('#notesForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var $form = $(this);
+                var $saveBtn = $form.find('button[type="submit"]');
+                var $icon = $saveBtn.find('i');
+                var originalIcon = $icon.attr('class');
+                var notes = $('#notesTextarea').val();
+                var applicationId = $('input[name="id"]').val();
+                
+                // Show loading state
+                $saveBtn.prop('disabled', true);
+                $icon.attr('class', 'fas fa-spinner fa-spin');
+                
+                $.ajax({
+                    url: '@Url.Action("UpdateNotes", "Application")',
+                    type: 'POST',
+                    data: {
+                        id: applicationId,
+                        notes: notes,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },                    success: function(response) {
+                        if (response.success) {
+                            // Update the display with new notes
+                            if (notes.trim()) {
+                                $('#notesDisplay').html(response.notes);
+                            } else {
+                                $('#notesDisplay').html('<p class="text-muted mb-0">No notes added yet.</p>');
+                            }
+                            
+                            // Hide editor and show display
+                            $('#notesEditor').addClass('d-none');
+                            $('#notesDisplay').removeClass('d-none');
+                            
+                            // Show success message
+                            alert('Notes updated successfully!');
+                        } else {
+                            alert('Error updating notes: ' + (response.message || 'Unknown error'));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error updating notes: ' + error);
+                    },
+                    complete: function() {
+                        // Restore button state
+                        $saveBtn.prop('disabled', false);
+                        $icon.attr('class', originalIcon);
+                    }
+                });
+            });
         });
     </script>
-} 
+    
+    <style>
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        
+        .dropdown-item.active {
+            background-color: rgba(var(--bs-primary-rgb), 0.15);
+            color: var(--bs-body-color);
+            font-weight: 500;
+        }
+        
+        .status-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+        }
+        
+        .status-update-form {
+            margin-bottom: 0;
+        }
+        
+        .dropdown-menu {
+            padding: 0.5rem 0;
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .dropdown-header {
+            font-weight: 600;
+            color: var(--bs-primary);
+            padding: 0.5rem 1rem;
+        }        
+        .dropdown-divider {
+            margin: 0.25rem 0;
+        }
+    </style>
+}

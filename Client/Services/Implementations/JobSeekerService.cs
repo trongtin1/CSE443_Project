@@ -17,20 +17,22 @@ namespace CSE443_Project.Services.Implementations
         {
             _context = context;
         }
-
         public async Task<JobSeeker> GetJobSeekerByIdAsync(int id)
         {
             return await _context.JobSeekers
                 .Include(js => js.User)
                 .Include(js => js.CVs)
+                .Include(js => js.Applications)
+                .Include(js => js.SavedJobs)
                 .FirstOrDefaultAsync(js => js.Id == id);
         }
-
         public async Task<JobSeeker> GetJobSeekerByUserIdAsync(int userId)
         {
             return await _context.JobSeekers
                 .Include(js => js.User)
                 .Include(js => js.CVs)
+                .Include(js => js.Applications)
+                .Include(js => js.SavedJobs)
                 .FirstOrDefaultAsync(js => js.UserId == userId);
         }
 

@@ -56,3 +56,96 @@ body {
   white-space: nowrap;
   line-height: 60px;
 }
+
+/* Profile Picture Styles */
+.avatar-placeholder {
+  width: 150px;
+  height: 150px;
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.avatar-placeholder:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.profile-picture-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-picture-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-picture-container:hover .profile-picture-overlay {
+  opacity: 1;
+}
+
+.profile-picture-overlay i {
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Company Logo Styles */
+.logo-placeholder {
+  transition: all 0.3s ease;
+}
+
+.logo-placeholder:hover {
+  background-color: #e9ecef !important;
+  border-color: #adb5bd !important;
+}
+
+.logo-container {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.logo-container:hover .logo-overlay {
+  opacity: 1;
+}
+
+.logo-overlay i {
+  color: white;
+  font-size: 1.25rem;
+}

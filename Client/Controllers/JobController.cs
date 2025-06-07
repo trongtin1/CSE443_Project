@@ -2,7 +2,9 @@ using CSE443_Project.Models;
 using CSE443_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CSE443_Project.Controllers
 {
@@ -69,13 +71,11 @@ namespace CSE443_Project.Controllers
             ViewBag.ApplicationCount = await _applicationService.GetApplicationCountByJobIdAsync(id);
 
             // Check if the current user has saved this job
-            if (TempData.ContainsKey("JobSeekerId"))
+            var jobSeekerId = HttpContext.Session.GetInt32("JobSeekerId");
+            if (jobSeekerId != null)
             {
-                var jobSeekerId = (int)TempData["JobSeekerId"];
-                TempData.Keep("JobSeekerId"); // Keep for the next request
-
-                ViewBag.HasSaved = await _saveJobService.HasJobSeekerSavedJobAsync(jobSeekerId, id);
-                ViewBag.HasApplied = await _applicationService.HasJobSeekerAppliedToJobAsync(jobSeekerId, id);
+                ViewBag.HasSaved = await _saveJobService.HasJobSeekerSavedJobAsync(jobSeekerId.Value, id);
+                ViewBag.HasApplied = await _applicationService.HasJobSeekerAppliedToJobAsync(jobSeekerId.Value, id);
             }
 
             return View(job);
@@ -85,8 +85,10 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Create()
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId"))
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
+                TempData["ErrorMessage"] = "You must be logged in as an employer to post jobs.";
                 return RedirectToAction("Login", "User");
             }
 
@@ -99,23 +101,85 @@ namespace CSE443_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Job job)
         {
-            if (!TempData.ContainsKey("EmployerId"))
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
+                TempData["ErrorMessage"] = "You must be logged in as an employer to post jobs.";
                 return RedirectToAction("Login", "User");
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                job.EmployerId = (int)TempData["EmployerId"];
-                TempData.Keep("EmployerId");
+                // Log all form data for debugging
+                var formData = Request.Form;
+                foreach (var key in formData.Keys)
+                {
+                    Console.WriteLine($"Form data: {key} = {formData[key]}");
+                }
 
-                job.CreatedAt = DateTime.Now;
-                job.IsActive = true;
+                // Remove validation errors for navigation properties
+                ModelState.Remove("Employer");
+                ModelState.Remove("Category");
 
-                await _jobService.CreateJobAsync(job);
-                return RedirectToAction(nameof(Details), new { id = job.Id });
+                if (ModelState.IsValid)
+                {
+                    job.EmployerId = employerId.Value;
+                    job.CreatedAt = DateTime.Now;
+                    job.IsActive = true;
+
+                    Console.WriteLine($"Creating job: {job.JobTitle}, EmployerId: {job.EmployerId}");
+
+                    try
+                    {
+                        var createdJob = await _jobService.CreateJobAsync(job);
+                        Console.WriteLine($"Job created with ID: {createdJob.Id}");
+
+                        TempData["SuccessMessage"] = "Job posted successfully!";
+                        return RedirectToAction(nameof(Details), new { id = createdJob.Id });
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Database save error: {ex.Message}");
+                        if (ex.InnerException != null)
+                        {
+                            Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                        }
+                        ModelState.AddModelError("", "Failed to save job to database. Please try again.");
+                        TempData["ErrorMessage"] = "Database error: " + ex.Message;
+                    }
+                }
+                else
+                {
+                    // Capture model validation errors for debugging
+                    var errors = ModelState
+                        .Where(x => x.Value != null && x.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine($"Validation error for {error.Key}: {string.Join(", ", error.Value)}");
+                    }
+
+                    ViewBag.ModelErrors = errors;
+                    TempData["ErrorMessage"] = "Please fix the validation errors below.";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+
+                TempData["ErrorMessage"] = $"An error occurred while posting the job: {ex.Message}";
             }
 
+            // Always reload categories and return the view with the job when there's an error
             ViewBag.Categories = await _categoryService.GetAllJobCategoriesAsync();
             return View(job);
         }
@@ -123,7 +187,7 @@ namespace CSE443_Project.Controllers
         // GET: /Job/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            if (!TempData.ContainsKey("EmployerId"))
+            if (HttpContext.Session.GetInt32("EmployerId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -135,7 +199,7 @@ namespace CSE443_Project.Controllers
             }
 
             // Ensure the job belongs to the current employer
-            if (job.EmployerId != (int)TempData["EmployerId"])
+            if (job.EmployerId != HttpContext.Session.GetInt32("EmployerId").Value)
             {
                 return Forbid();
             }
@@ -149,7 +213,7 @@ namespace CSE443_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Job job)
         {
-            if (!TempData.ContainsKey("EmployerId"))
+            if (HttpContext.Session.GetInt32("EmployerId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -160,7 +224,7 @@ namespace CSE443_Project.Controllers
             }
 
             // Ensure the job belongs to the current employer
-            if (job.EmployerId != (int)TempData["EmployerId"])
+            if (job.EmployerId != HttpContext.Session.GetInt32("EmployerId").Value)
             {
                 return Forbid();
             }
@@ -180,7 +244,7 @@ namespace CSE443_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!TempData.ContainsKey("EmployerId"))
+            if (HttpContext.Session.GetInt32("EmployerId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -192,7 +256,7 @@ namespace CSE443_Project.Controllers
             }
 
             // Ensure the job belongs to the current employer
-            if (job.EmployerId != (int)TempData["EmployerId"])
+            if (job.EmployerId != HttpContext.Session.GetInt32("EmployerId").Value)
             {
                 return Forbid();
             }
@@ -206,7 +270,7 @@ namespace CSE443_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Deactivate(int id)
         {
-            if (!TempData.ContainsKey("EmployerId"))
+            if (HttpContext.Session.GetInt32("EmployerId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -218,7 +282,7 @@ namespace CSE443_Project.Controllers
             }
 
             // Ensure the job belongs to the current employer
-            if (job.EmployerId != (int)TempData["EmployerId"])
+            if (job.EmployerId != HttpContext.Session.GetInt32("EmployerId").Value)
             {
                 return Forbid();
             }

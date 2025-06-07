@@ -1,11 +1,11 @@
+@using CSE443_Project.Models
 @model JobSeeker
 
 @{
     ViewData["Title"] = "My Profile";
 }
 
-<div class="container my-4">
-    <div class="row mb-4">
+<div class="container my-4">    <div class="row mb-4">
         <div class="col-md-8">
             <h1 class="h3 mb-0">My Profile</h1>
             <p class="text-muted">Update your personal information and career details</p>
@@ -16,6 +16,22 @@
             </a>
         </div>
     </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="row">
         <div class="col-lg-4 mb-4">
@@ -59,11 +75,11 @@
                 </div>
             </div>
         </div>
-        
-        <div class="col-lg-8">
-            <form asp-action="UpdateProfile" method="post">
+          <div class="col-lg-8">            <form asp-action="UpdateProfile" method="post">
+                @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="ProfilePicture" />
                 
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-white py-3">
@@ -179,19 +195,100 @@
 
 @section Scripts {
     <script>
-        // Photo upload functionality would go here
-        // This would typically involve JavaScript to handle the file upload via AJAX
-        
-        document.getElementById('uploadPhotoBtn').addEventListener('click', function() {
-            // This is a placeholder for the actual upload functionality
-            // In a real implementation, you would send the file to the server via AJAX
-            alert('Photo upload functionality would be implemented here');
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+            const profilePictureInput = document.getElementById('profilePicture');
+            const uploadPhotoModal = document.getElementById('uploadPhotoModal');
             
-            // Close the modal after upload
-            var modal = bootstrap.Modal.getInstance(document.getElementById('uploadPhotoModal'));
-            modal.hide();
+            // Handle photo upload
+            uploadPhotoBtn.addEventListener('click', function() {
+                const file = profilePictureInput.files[0];
+                
+                if (!file) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please select a valid image file (JPG, PNG, or GIF).');
+                    return;
+                }
+                
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size cannot exceed 5MB.');
+                    return;
+                }
+                
+                // Disable button and show loading
+                uploadPhotoBtn.disabled = true;
+                uploadPhotoBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Uploading...';
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('profilePicture', file);
+                
+                // Add anti-forgery token
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                formData.append('__RequestVerificationToken', token);
+                
+                // Send AJAX request
+                fetch('@Url.Action("UploadProfilePicture", "JobSeeker")', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())                .then(data => {
+                    if (data.success) {
+                        // Update the profile picture in the UI
+                        const avatarContainer = document.querySelector('.avatar-placeholder')?.parentElement || 
+                                               document.querySelector('img[alt="Profile Picture"]')?.parentElement;
+                        
+                        if (avatarContainer) {
+                            avatarContainer.innerHTML = `
+                                <img src="${data.imageUrl}" alt="Profile Picture" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                            `;
+                        }
+                        
+                        // Show success message
+                        alert(data.message);
+                        
+                        // Close modal
+                        const modal = bootstrap.Modal.getInstance(uploadPhotoModal);
+                        modal.hide();
+                        
+                        // Reset form
+                        document.getElementById('photoUploadForm').reset();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading the image. Please try again.');
+                })
+                .finally(() => {
+                    // Re-enable button
+                    uploadPhotoBtn.disabled = false;
+                    uploadPhotoBtn.innerHTML = 'Upload';
+                });
+            });
+            
+            // Handle file selection preview
+            profilePictureInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // You could add a preview here if desired
+                        console.log('File selected:', file.name);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
         });
     </script>
     
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-} 
+}

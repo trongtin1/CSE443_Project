@@ -1,0 +1,272 @@
+@using CSE443_Project.Models
+
+@model Job
+
+@{
+    ViewData["Title"] = "Edit Job";
+}
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">
+                        <i class="fas fa-edit me-2"></i>Edit Job
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="EmployerId" />
+                        <input type="hidden" asp-for="CreatedAt" />
+
+                        <!-- Job Basic Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-info-circle me-1"></i>Job Information
+                                </h5>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="JobTitle" class="form-label">Job Title <span
+                                        class="text-danger">*</span></label>
+                                <input asp-for="JobTitle" class="form-control"
+                                    placeholder="e.g. Senior Software Developer" required />
+                                <span asp-validation-for="JobTitle" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="CategoryId" class="form-label">Category <span
+                                        class="text-danger">*</span></label> <select asp-for="CategoryId"
+                                    class="form-select" required>
+                                    <option value="">Select Category</option>
+                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="JobDescription" class="form-label">Job Description <span
+                                    class="text-danger">*</span></label>
+                            <textarea asp-for="JobDescription" class="form-control" rows="6"
+                                placeholder="Describe the role, responsibilities, and what you're looking for..."
+                                required></textarea>
+                            <span asp-validation-for="JobDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Requirements" class="form-label">Requirements <span
+                                    class="text-danger">*</span></label>
+                            <textarea asp-for="Requirements" class="form-control" rows="4"
+                                placeholder="List the required skills, qualifications, and experience..."
+                                required></textarea>
+                            <span asp-validation-for="Requirements" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Benefits" class="form-label">Benefits & Perks</label>
+                            <textarea asp-for="Benefits" class="form-control" rows="3"
+                                placeholder="List the benefits, perks, and what makes your company great..."></textarea>
+                            <span asp-validation-for="Benefits" class="text-danger"></span>
+                        </div>
+
+                        <!-- Job Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-cogs me-1"></i>Job Details
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="JobType" class="form-label">Job Type <span
+                                        class="text-danger">*</span></label>
+                                <select asp-for="JobType" class="form-select" required>
+                                    <option value="">Select Job Type</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Temporary">Temporary</option>
+                                    <option value="Internship">Internship</option>
+                                    <option value="Freelance">Freelance</option>
+                                </select>
+                                <span asp-validation-for="JobType" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ExperienceLevel" class="form-label">Experience Level <span
+                                        class="text-danger">*</span></label>
+                                <select asp-for="ExperienceLevel" class="form-select" required>
+                                    <option value="">Select Experience Level</option>
+                                    <option value="Entry Level">Entry Level (0-2 years)</option>
+                                    <option value="Mid Level">Mid Level (2-5 years)</option>
+                                    <option value="Senior Level">Senior Level (5-10 years)</option>
+                                    <option value="Executive">Executive (10+ years)</option>
+                                </select>
+                                <span asp-validation-for="ExperienceLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Location & Remote -->
+                        <div class="row mb-4">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Location" class="form-label">Location <span
+                                        class="text-danger">*</span></label>
+                                <input asp-for="Location" class="form-control" placeholder="e.g. New York, NY or Remote"
+                                    required />
+                                <span asp-validation-for="Location" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="form-check">
+                                    <input asp-for="IsRemote" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsRemote" class="form-check-label">
+                                        Remote Work Available
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Industry" class="form-label">Industry</label>
+                                <select asp-for="Industry" class="form-select">
+                                    <option value="">Select Industry</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Healthcare">Healthcare</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Manufacturing">Manufacturing</option>
+                                    <option value="Retail">Retail</option>
+                                    <option value="Construction">Construction</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Hospitality">Hospitality</option>
+                                    <option value="Real Estate">Real Estate</option>
+                                    <option value="Media & Entertainment">Media & Entertainment</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="Industry" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Vacancies" class="form-label">Number of Vacancies</label>
+                                <input asp-for="Vacancies" type="number" class="form-control" min="1" />
+                                <span asp-validation-for="Vacancies" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Salary Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-dollar-sign me-1"></i>Salary Information
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SalaryMin" class="form-label">Minimum Salary (USD)</label>
+                                <input asp-for="SalaryMin" type="number" class="form-control" step="0.01" min="0"
+                                    placeholder="0.00" />
+                                <span asp-validation-for="SalaryMin" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SalaryMax" class="form-label">Maximum Salary (USD)</label>
+                                <input asp-for="SalaryMax" type="number" class="form-control" step="0.01" min="0"
+                                    placeholder="0.00" />
+                                <span asp-validation-for="SalaryMax" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Job Status -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-toggle-on me-1"></i>Job Status
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch">
+                                    <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" />
+                                    <label asp-for="IsActive" class="form-check-label">
+                                        Job Active (visible to job seekers)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Application Deadline -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-calendar-alt me-1"></i>Application Deadline
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Deadline" class="form-label">Application Deadline <span
+                                        class="text-danger">*</span></label>
+                                <input asp-for="Deadline" type="date" class="form-control" required />
+                                <span asp-validation-for="Deadline" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="border-top pt-4 mt-4">
+                            <div class="d-flex gap-2 justify-content-between">
+                                <a asp-controller="Employer" asp-action="Jobs" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Jobs
+                                </a>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-resize textareas
+        document.addEventListener('DOMContentLoaded', function () {
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(function (textarea) {
+                textarea.addEventListener('input', function () {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+                
+                // Initialize height on page load
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            });
+
+            // Salary validation
+            const salaryMin = document.querySelector('input[name="SalaryMin"]');
+            const salaryMax = document.querySelector('input[name="SalaryMax"]');
+
+            if (salaryMin && salaryMax) {
+                salaryMax.addEventListener('input', function () {
+                    if (parseFloat(salaryMin.value) > parseFloat(salaryMax.value)) {
+                        salaryMax.setCustomValidity('Maximum salary must be greater than minimum salary');
+                    } else {
+                        salaryMax.setCustomValidity('');
+                    }
+                });
+
+                salaryMin.addEventListener('input', function () {
+                    if (parseFloat(salaryMin.value) > parseFloat(salaryMax.value) && salaryMax.value !== '') {
+                        salaryMin.setCustomValidity('Minimum salary must be less than maximum salary');
+                    } else {
+                        salaryMin.setCustomValidity('');
+                    }
+                });
+            }
+        });
+    </script>
+} 

@@ -121,9 +121,21 @@ namespace CSE443_Project.Services.Implementations
 
         public async Task<Job> CreateJobAsync(Job job)
         {
-            _context.Jobs.Add(job);
-            await _context.SaveChangesAsync();
-            return job;
+            try
+            {
+                _context.Jobs.Add(job);
+                await _context.SaveChangesAsync();
+                return job;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in JobService.CreateJobAsync: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+                throw; // Re-throw the exception after logging
+            }
         }
 
         public async Task<Job> UpdateJobAsync(Job job)
