@@ -52,7 +52,7 @@ namespace CSE443_Project.Controllers
         public IActionResult Create()
         {
             // Check if the user is an admin
-            if (!TempData.ContainsKey("UserId"))
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -66,7 +66,7 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Create(JobCategory category)
         {
             // Check if the user is an admin
-            if (!TempData.ContainsKey("UserId"))
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -84,7 +84,7 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             // Check if the user is an admin
-            if (!TempData.ContainsKey("UserId"))
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -104,7 +104,7 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Edit(int id, JobCategory category)
         {
             // Check if the user is an admin
-            if (!TempData.ContainsKey("UserId"))
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -127,7 +127,7 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             // Check if the user is an admin
-            if (!TempData.ContainsKey("UserId"))
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 return RedirectToAction("Login", "User");
             }
@@ -147,7 +147,7 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             // Check if the user is an admin
-            if (!TempData.ContainsKey("UserId"))
+            if (HttpContext.Session.GetInt32("UserId") == null)
             {
                 return RedirectToAction("Login", "User");
             }

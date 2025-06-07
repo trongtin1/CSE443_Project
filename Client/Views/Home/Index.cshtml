@@ -1,4 +1,5 @@
 @using System.Linq
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Home";
 }
@@ -13,7 +14,8 @@
                     with us!</p>
                 <div class="d-flex gap-3">
                     <a asp-controller="Job" asp-action="Index" class="btn btn-light btn-lg">Find Jobs</a>
-                    @if (!TempData.ContainsKey("JobSeekerId") && !TempData.ContainsKey("EmployerId"))
+                    @if (Context.Session.GetInt32("JobSeekerId") == null &&
+                                        Context.Session.GetInt32("EmployerId") == null)
                     {
                         <a asp-controller="User" asp-action="Register" class="btn btn-outline-light btn-lg">Join Now</a>
                     }
@@ -67,10 +69,11 @@
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
-                                <span class="badge bg-@(job.JobType == "Full-time" ? "success" : 
-                                                                                           job.JobType == "Part-time" ? "info" : 
-                                                                                           job.JobType == "Contract" ? "warning" : 
-                                                                                           job.JobType == "Internship" ? "secondary" : "primary")">
+                                <span
+                                    class="badge bg-@(job.JobType == "Full-time" ? "success" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   job.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   job.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   job.JobType == "Internship" ? "secondary" : "primary")">
                                 @job.JobType
                             </span>
                             <span class="text-muted small">
@@ -192,11 +195,11 @@
                 <p class="lead mb-0">Post a job on our platform and reach thousands of job seekers today.</p>
             </div>
             <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                @if (TempData.ContainsKey("EmployerId"))
+                @if (Context.Session.GetInt32("EmployerId") != null)
                 {
                     <a asp-controller="Job" asp-action="Create" class="btn btn-light btn-lg">Post a Job</a>
                 }
-                else if (TempData.ContainsKey("JobSeekerId"))
+                else if (Context.Session.GetInt32("JobSeekerId") != null)
                 {
                     <a asp-controller="JobSeeker" asp-action="Applications" class="btn btn-light btn-lg">My Applications</a>
                 }
@@ -213,7 +216,8 @@
 <section class="my-5">
     <div class="container">
         <div class="text-center mb-5">
-            @if (!TempData.ContainsKey("JobSeekerId") && !TempData.ContainsKey("EmployerId"))
+            @if (Context.Session.GetInt32("JobSeekerId") == null && Context.Session.GetInt32("EmployerId") ==
+                        null)
             {
                 <h2 class="mb-3">How It Works</h2>
                 <p class="text-muted">Simple steps to start your job search or hiring process</p>
@@ -226,7 +230,8 @@
         </div>
 
         <div class="row g-4">
-            @if (!TempData.ContainsKey("JobSeekerId") && !TempData.ContainsKey("EmployerId"))
+            @if (Context.Session.GetInt32("JobSeekerId") == null && Context.Session.GetInt32("EmployerId") ==
+                        null)
             {
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm h-100 text-center">
@@ -262,7 +267,7 @@
                     </div>
                 </div>
             }
-            else if (TempData.ContainsKey("JobSeekerId"))
+            else if (Context.Session.GetInt32("JobSeekerId") != null)
             {
                 <!-- Features for Job Seekers -->
                 <div class="col-md-4">
@@ -303,7 +308,7 @@
                     </div>
                 </div>
             }
-            else if (TempData.ContainsKey("EmployerId"))
+            else if (Context.Session.GetInt32("EmployerId") != null)
             {
                 <!-- Features for Employers -->
                 <div class="col-md-4">

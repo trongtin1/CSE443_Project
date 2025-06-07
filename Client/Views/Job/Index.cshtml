@@ -83,15 +83,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="isRemote" value="true"
-                                    id="isRemote" @(ViewBag.IsRemote == true ? "checked" : "")>
-                                <label class="form-check-label" for="isRemote">
-                                    Remote Jobs Only
-                                </label>
-                            </div>
-                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Category</label>
@@ -198,9 +189,9 @@
                                     <div class="mb-2">
                                         <span
                                             class="badge bg-@(job.JobType == "Full-time" ? "success" : 
-                                                                                                                                                                                                       job.JobType == "Part-time" ? "info" : 
-                                                                                                                                                                                                       job.JobType == "Contract" ? "warning" : 
-                                                                                                                                                                                                       job.JobType == "Internship" ? "secondary" : "primary")">
+                                                                                                                                                                                                                                                   job.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                                                                   job.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                                                                   job.JobType == "Internship" ? "secondary" : "primary")">
                                     @job.JobType
                                 </span>
 

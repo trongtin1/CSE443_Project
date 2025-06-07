@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CSE443_Project.Controllers
 {
@@ -32,25 +33,23 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Dashboard()
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
-
-            var employer = await _employerService.GetEmployerByIdAsync(employerId);
+            var employer = await _employerService.GetEmployerByIdAsync(employerId.Value);
             if (employer == null)
             {
                 return NotFound();
             }
 
-            ViewBag.ActiveJobCount = await _employerService.GetActiveJobCountByEmployerIdAsync(employerId);
-            ViewBag.TotalJobCount = await _employerService.GetJobCountByEmployerIdAsync(employerId);
+            ViewBag.ActiveJobCount = await _employerService.GetActiveJobCountByEmployerIdAsync(employerId.Value);
+            ViewBag.TotalJobCount = await _employerService.GetJobCountByEmployerIdAsync(employerId.Value);
 
             // Get application statistics
-            var applications = await _applicationService.GetApplicationsByEmployerIdAsync(employerId);
+            var applications = await _applicationService.GetApplicationsByEmployerIdAsync(employerId.Value);
             ViewBag.TotalApplications = applications.Count();
             ViewBag.PendingApplications = applications.Count(a => a.Status == "Pending");
             ViewBag.ShortlistedApplications = applications.Count(a => a.Status == "Shortlisted");
@@ -59,7 +58,7 @@ namespace CSE443_Project.Controllers
             ViewBag.RecentApplications = applications.OrderByDescending(a => a.ApplicationDate).Take(5);
 
             // Get active jobs
-            var activeJobs = await _jobService.GetJobsByEmployerIdAsync(employerId);
+            var activeJobs = await _jobService.GetJobsByEmployerIdAsync(employerId.Value);
             ViewBag.ActiveJobs = activeJobs.Where(j => j.IsActive && j.Deadline >= DateTime.Now).Take(5);
 
             return View(employer);
@@ -67,25 +66,23 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Profile()
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
-
-            var employer = await _employerService.GetEmployerByIdAsync(employerId);
+            var employer = await _employerService.GetEmployerByIdAsync(employerId.Value);
             if (employer == null)
             {
                 return NotFound();
             }
 
             // Get statistics for the profile page
-            ViewBag.ActiveJobCount = await _employerService.GetActiveJobCountByEmployerIdAsync(employerId);
-            ViewBag.TotalJobCount = await _employerService.GetJobCountByEmployerIdAsync(employerId);
+            ViewBag.ActiveJobCount = await _employerService.GetActiveJobCountByEmployerIdAsync(employerId.Value);
+            ViewBag.TotalJobCount = await _employerService.GetJobCountByEmployerIdAsync(employerId.Value);
 
-            var applications = await _applicationService.GetApplicationsByEmployerIdAsync(employerId);
+            var applications = await _applicationService.GetApplicationsByEmployerIdAsync(employerId.Value);
             ViewBag.TotalApplications = applications.Count();
 
             return View(employer);
@@ -99,18 +96,11 @@ namespace CSE443_Project.Controllers
             try
             {
                 // Ensure the user is an employer
-                if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
-                {
-                    return RedirectToAction("Login", "User");
-                }
-
-                employerId = GetEmployerIdFromTempData();
+                employerId = HttpContext.Session.GetInt32("EmployerId");
                 if (employerId == null)
                 {
                     return RedirectToAction("Login", "User");
                 }
-
-                TempData.Keep("EmployerId");
 
                 if (employer.Id != employerId)
                 {
@@ -213,23 +203,6 @@ namespace CSE443_Project.Controllers
             return View("Profile", employer);
         }
 
-        // Helper method to safely get employer ID from TempData
-        private int? GetEmployerIdFromTempData()
-        {
-            if (TempData.ContainsKey("EmployerId") && TempData["EmployerId"] != null)
-            {
-                if (TempData["EmployerId"] is int id)
-                {
-                    return id;
-                }
-                if (int.TryParse(TempData["EmployerId"]?.ToString(), out int parsedId))
-                {
-                    return parsedId;
-                }
-            }
-            return null;
-        }
-
         // Helper method to load ViewBag data for profile page
         private async Task LoadEmployerViewBag(int employerId)
         {
@@ -241,15 +214,14 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Jobs()
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
-
-            var jobs = await _jobService.GetJobsByEmployerIdAsync(employerId);
+            var jobs = await _jobService.GetJobsByEmployerIdAsync(employerId.Value);
+            ViewBag.ApplicationCount = await _applicationService.GetApplicationCountByJobIdAsync(jobs.First().Id);
             return View(jobs);
         }
 
@@ -257,15 +229,13 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Applications()
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
-
-            var applications = await _applicationService.GetApplicationsByEmployerIdAsync(employerId);
+            var applications = await _applicationService.GetApplicationsByEmployerIdAsync(employerId.Value);
             return View(applications);
         }
 
@@ -273,18 +243,16 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> ApplicationsByStatus(string status)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
 
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
-
             var applications = await _applicationService.GetApplicationsByStatusAsync(status);
 
             // Filter applications to only show those for jobs posted by this employer
-            var employerApplications = applications.Where(a => a.Job.EmployerId == employerId);
+            var employerApplications = applications.Where(a => a.Job.EmployerId == employerId.Value);
 
             ViewBag.Status = status;
 
@@ -295,13 +263,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> ApplicationsByJob(int id)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             var job = await _jobService.GetJobByIdAsync(id);
             if (job == null)
@@ -326,13 +292,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> Candidates()
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             // Get all candidates for jobs posted by this employer
             var allCandidates = await _candidateService.GetAllCandidatesAsync();
@@ -345,13 +309,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> CandidatesByJob(int id)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             var job = await _jobService.GetJobByIdAsync(id);
             if (job == null)
@@ -376,13 +338,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> CandidatesByStatus(string status)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             var candidates = await _candidateService.GetCandidatesByStatusAsync(status);
 
@@ -398,13 +358,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> CandidateDetails(int id)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             var candidate = await _candidateService.GetCandidateByIdAsync(id);
             if (candidate == null)
@@ -427,13 +385,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> UpdateCandidateStatus(int id, string status, string interviewNotes, DateTime? interviewDate)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return RedirectToAction("Login", "User");
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             var candidate = await _candidateService.GetCandidateByIdAsync(id);
             if (candidate == null)
@@ -458,13 +414,11 @@ namespace CSE443_Project.Controllers
         public async Task<IActionResult> UploadLogo(IFormFile logoFile)
         {
             // Ensure the user is an employer
-            if (!TempData.ContainsKey("EmployerId") || TempData["EmployerId"] == null)
+            var employerId = HttpContext.Session.GetInt32("EmployerId");
+            if (employerId == null)
             {
                 return Json(new { success = false, message = "User session expired. Please log in again." });
             }
-
-            var employerId = (int)TempData["EmployerId"]!;
-            TempData.Keep("EmployerId");
 
             if (logoFile == null || logoFile.Length == 0)
             {
@@ -489,7 +443,7 @@ namespace CSE443_Project.Controllers
             try
             {
                 // Get current employer
-                var employer = await _employerService.GetEmployerByIdAsync(employerId);
+                var employer = await _employerService.GetEmployerByIdAsync(employerId.Value);
                 if (employer == null)
                 {
                     return Json(new { success = false, message = "Employer not found." });

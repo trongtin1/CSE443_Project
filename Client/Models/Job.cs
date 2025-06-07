@@ -22,8 +22,8 @@ namespace CSE443_Project.Models
         public DateTime Deadline { get; set; }
 
         // Navigation properties
-        public Employer Employer { get; set; } = null!;
-        public JobCategory Category { get; set; } = null!;
+        public Employer? Employer { get; set; }
+        public JobCategory? Category { get; set; }
         public ICollection<Application> Applications { get; set; } = new List<Application>();
         public ICollection<SaveJob> SavedBy { get; set; } = new List<SaveJob>();
         public ICollection<Candidate> Candidates { get; set; } = new List<Candidate>();

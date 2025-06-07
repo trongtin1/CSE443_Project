@@ -1,4 +1,5 @@
 @model Job
+@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = Model.JobTitle;
@@ -14,7 +15,8 @@
                         <div class="d-flex">
                             @if (!string.IsNullOrEmpty(Model.Employer?.Logo))
                             {
-                                <img src="@Model.Employer.Logo" alt="@Model.Employer.CompanyName" class="me-3" style="width: 70px; height: 70px; object-fit: contain;">
+                                <img src="@Model.Employer.Logo" alt="@Model.Employer.CompanyName" class="me-3"
+                                    style="width: 70px; height: 70px; object-fit: contain;">
                             }
                             else
                             {
@@ -25,17 +27,19 @@
                             <div>
                                 <h1 class="h3 mb-1">@Model.JobTitle</h1>
                                 <p class="mb-0">
-                                    <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@Model.EmployerId" class="text-decoration-none">
+                                    <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@Model.EmployerId"
+                                        class="text-decoration-none">
                                         @Model.Employer.CompanyName
                                     </a>
                                 </p>
                             </div>
                         </div>
                         <div class="d-none d-md-block">
-                            <span class="badge bg-@(Model.JobType == "Full-time" ? "success" : 
-                                                Model.JobType == "Part-time" ? "info" : 
-                                                Model.JobType == "Contract" ? "warning" : 
-                                                Model.JobType == "Internship" ? "secondary" : "primary") p-2">
+                            <span
+                                class="badge bg-@(Model.JobType == "Full-time" ? "success" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Model.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Model.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Model.JobType == "Internship" ? "secondary" : "primary") p-2">
                                 @Model.JobType
                             </span>
                             @if (Model.IsRemote)
@@ -44,7 +48,7 @@
                             }
                         </div>
                     </div>
-                    
+
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="d-flex align-items-center mb-2">
@@ -54,9 +58,9 @@
                             <div class="d-flex align-items-center mb-2">
                                 <i class="fas fa-money-bill-wave text-primary me-2"></i>
                                 <span>
-                                    @(Model.SalaryMin > 0 && Model.SalaryMax > 0 ? 
-                                      $"${Model.SalaryMin:N0} - ${Model.SalaryMax:N0}" : 
-                                      "Competitive")
+                                    @(Model.SalaryMin > 0 && Model.SalaryMax > 0 ?
+                                                                        $"${Model.SalaryMin:N0} - ${Model.SalaryMax:N0}" :
+                                                                        "Competitive")
                                 </span>
                             </div>
                             <div class="d-flex align-items-center">
@@ -72,7 +76,8 @@
                             <div class="d-flex align-items-center mb-2">
                                 <i class="fas fa-folder text-primary me-2"></i>
                                 <span>
-                                    <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@Model.CategoryId" class="text-decoration-none">
+                                    <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@Model.CategoryId"
+                                        class="text-decoration-none">
                                         @Model.Category.Name
                                     </a>
                                 </span>
@@ -83,28 +88,28 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <h4 class="h5 mb-3">Job Description</h4>
                         <div class="job-description">
                             @Html.Raw(Model.JobDescription)
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <h4 class="h5 mb-3">Requirements</h4>
                         <div class="job-requirements">
                             @Html.Raw(Model.Requirements)
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <h4 class="h5 mb-3">Benefits</h4>
                         <div class="job-benefits">
                             @Html.Raw(Model.Benefits)
                         </div>
                     </div>
-                    
+
                     <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 pt-3 border-top">
                         <div class="mb-3 mb-md-0">
                             <a href="javascript:history.back()" class="btn btn-outline-secondary">
@@ -112,11 +117,12 @@
                             </a>
                         </div>
                         <div class="d-flex gap-2">
-                            @if (TempData.ContainsKey("JobSeekerId"))
+                            @if (Context.Session.GetInt32("JobSeekerId") != null)
                             {
                                 if (ViewBag.HasSaved)
                                 {
-                                    <form asp-controller="JobSeeker" asp-action="UnsaveJob" asp-route-id="@Model.Id" method="post">
+                                    <form asp-controller="JobSeeker" asp-action="UnsaveJob" asp-route-id="@Model.Id"
+                                        method="post">
                                         <button type="submit" class="btn btn-outline-primary">
                                             <i class="fas fa-bookmark me-1"></i> Saved
                                         </button>
@@ -124,13 +130,14 @@
                                 }
                                 else
                                 {
-                                    <form asp-controller="JobSeeker" asp-action="SaveJob" asp-route-id="@Model.Id" method="post">
+                                    <form asp-controller="JobSeeker" asp-action="SaveJob" asp-route-id="@Model.Id"
+                                        method="post">
                                         <button type="submit" class="btn btn-outline-primary">
                                             <i class="far fa-bookmark me-1"></i> Save Job
                                         </button>
                                     </form>
                                 }
-                                
+
                                 @if (ViewBag.HasApplied)
                                 {
                                     <button class="btn btn-secondary" disabled>
@@ -139,19 +146,46 @@
                                 }
                                 else
                                 {
-                                    <a asp-controller="Application" asp-action="Apply" asp-route-id="@Model.Id" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane me-1"></i> Apply Now
+                                    <a href="/Application/Apply/@Model.Id" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane me-1"></i> Apply Now (@Model.Id)
                                     </a>
                                 }
                             }
-                            else if (TempData.ContainsKey("EmployerId") && Model.EmployerId == (int)TempData["EmployerId"])
+                            else if (Context.Session.GetInt32("EmployerId") != null && Model.EmployerId ==
+                            Context.Session.GetInt32("EmployerId"))
                             {
-                                <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
-                                    <i class="fas fa-edit me-1"></i> Edit Job
-                                </a>
-                                <a asp-controller="Application" asp-action="ByJob" asp-route-id="@Model.Id" class="btn btn-primary">
-                                    <i class="fas fa-users me-1"></i> View Applications
-                                </a>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
+                                        <i class="fas fa-cog me-1"></i> Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Job" asp-action="Edit"
+                                                asp-route-id="@Model.Id">
+                                                <i class="fas fa-edit me-2"></i>Edit Job
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Application" asp-action="ByJob"
+                                                asp-route-id="@Model.Id">
+                                                <i class="fas fa-users me-2"></i>View Applications
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li>
+                                            <form asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id"
+                                                method="post" class="d-inline">
+                                                <button type="submit" class="dropdown-item text-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this job? This action cannot be undone.')">
+                                                    <i class="fas fa-trash me-2"></i>Delete
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             }
                             else
                             {
@@ -164,18 +198,19 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Sidebar with company info and similar jobs -->
         <div class="col-lg-4">
             <!-- Company info -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
                     <h4 class="h5 mb-3">About the Company</h4>
-                    
+
                     <div class="text-center mb-3">
                         @if (!string.IsNullOrEmpty(Model.Employer?.Logo))
                         {
-                            <img src="@Model.Employer.Logo" alt="@Model.Employer.CompanyName" class="img-fluid mb-3" style="max-height: 80px;">
+                            <img src="@Model.Employer.Logo" alt="@Model.Employer.CompanyName" class="img-fluid mb-3"
+                                style="max-height: 80px;">
                         }
                         else
                         {
@@ -186,7 +221,7 @@
                         <h5>@Model.Employer.CompanyName</h5>
                         <p class="text-muted">@Model.Employer.Industry</p>
                     </div>
-                    
+
                     <div class="mb-3">
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-map-marker-alt text-primary me-2"></i>
@@ -194,26 +229,30 @@
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-globe text-primary me-2"></i>
-                            <a href="@Model.Employer.Website" target="_blank" class="text-decoration-none">Company Website</a>
+                            <a href="@Model.Employer.Website" target="_blank" class="text-decoration-none">Company
+                                Website</a>
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-users text-primary me-2"></i>
                             <span>@Model.Employer.CompanySize</span>
                         </div>
                     </div>
-                    
+
                     <div class="company-description">
-                        <p>@(Model.Employer.CompanyDescription?.Length > 200 ? Model.Employer.CompanyDescription.Substring(0, 200) + "..." : Model.Employer.CompanyDescription)</p>
+                        <p>@(Model.Employer.CompanyDescription?.Length > 200 ?
+                                                        Model.Employer.CompanyDescription.Substring(0, 200) + "..." :
+                                                        Model.Employer.CompanyDescription)</p>
                     </div>
-                    
+
                     <div class="text-center mt-3">
-                        <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@Model.EmployerId" class="btn btn-outline-primary">
+                        <a asp-controller="Job" asp-action="ByEmployer" asp-route-id="@Model.EmployerId"
+                            class="btn btn-outline-primary">
                             View All Jobs
                         </a>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Share job -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
@@ -242,4 +281,4 @@
     <script>
         // Add any JavaScript needed for the job details page
     </script>
-} 
+}

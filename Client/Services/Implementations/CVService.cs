@@ -65,7 +65,6 @@ namespace CSE443_Project.Services.Implementations
             await _context.SaveChangesAsync();
             return cv;
         }
-
         public async Task<CV> UpdateCVAsync(CV cv)
         {
             cv.UpdatedAt = DateTime.Now;
@@ -74,6 +73,8 @@ namespace CSE443_Project.Services.Implementations
             {
                 // Ensure only one CV is set as default
                 await SetAllCVsAsNonDefaultAsync(cv.JobSeekerId);
+                // Ensure the current CV is set as default
+                cv.IsDefault = true;
             }
 
             _context.Entry(cv).State = EntityState.Modified;

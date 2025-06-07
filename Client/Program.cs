@@ -12,6 +12,16 @@ namespace CSE443_Project
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Add session support
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>();
@@ -60,6 +70,9 @@ namespace CSE443_Project
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Add session middleware
+            app.UseSession();
 
             app.UseAuthorization();
 

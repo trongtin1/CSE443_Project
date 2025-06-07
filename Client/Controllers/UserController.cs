@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CSE443_Project.Controllers
 {
@@ -35,22 +36,21 @@ namespace CSE443_Project.Controllers
             {
                 var user = await _userService.GetUserByUsernameAsync(username);
 
-                // Store user ID in session or cookies
-                // For simplicity, we'll use TempData for demo purposes
-                TempData["UserId"] = user.Id;
+                // Store user ID in session
+                HttpContext.Session.SetInt32("UserId", user.Id);
 
                 // Explicitly check if user is associated with an employer or job seeker
                 var employer = await _employerService.GetEmployerByUserIdAsync(user.Id);
                 if (employer != null)
                 {
-                    TempData["EmployerId"] = employer.Id;
+                    HttpContext.Session.SetInt32("EmployerId", employer.Id);
                     return RedirectToAction("Dashboard", "Employer");
                 }
 
                 var jobSeeker = await _jobSeekerService.GetJobSeekerByUserIdAsync(user.Id);
                 if (jobSeeker != null)
                 {
-                    TempData["JobSeekerId"] = jobSeeker.Id;
+                    HttpContext.Session.SetInt32("JobSeekerId", jobSeeker.Id);
                     return RedirectToAction("Dashboard", "JobSeeker");
                 }
 
@@ -126,7 +126,7 @@ namespace CSE443_Project.Controllers
         public IActionResult Logout()
         {
             // Clear user session
-            TempData.Clear();
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 
