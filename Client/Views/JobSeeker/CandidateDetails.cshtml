@@ -1,0 +1,315 @@
+@model CSE443_Project.Models.Candidate
+
+@{
+    ViewData["Title"] = "Candidacy Details";
+}
+
+<div class="container my-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a asp-action="Candidates">My Candidacies</a></li>
+                    <li class="breadcrumb-item active">Candidacy Details</li>
+                </ol>
+            </nav>
+            <h1 class="h3 mb-0">Candidacy Details</h1>
+            <p class="text-muted">Track your progress for this position</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a asp-action="Candidates" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Candidacies
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <!-- Job Information Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light p-3">
+                    <h5 class="card-title mb-0">Job Information</h5>
+                </div>
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        @if (!string.IsNullOrEmpty(Model.Job?.Employer?.Logo))
+                        {
+                            <img src="@Model.Job.Employer.Logo" alt="@Model.Job.Employer.CompanyName"
+                                class="rounded-circle me-3" style="width: 48px; height: 48px;">
+                        }
+                        else
+                        {
+                            <div class="company-placeholder rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                style="width: 48px; height: 48px;">
+                                <i class="fas fa-building text-secondary"></i>
+                            </div>
+                        }
+                        <div>
+                            <h5 class="mb-1">@Model.Job?.JobTitle</h5>
+                            <p class="text-muted mb-0">@Model.Job?.Employer?.CompanyName</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            <span
+                                class="badge bg-@(Model.Job?.JobType == "Full-time" ? "success" : 
+                                                                                                                                                                                                                    Model.Job?.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                                    Model.Job?.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                                    Model.Job?.JobType == "Internship" ? "secondary" : "primary")">
+                                @Model.Job?.JobType
+                            </span>
+
+                            @if (Model.Job != null && Model.Job.IsRemote)
+                            {
+                                <span class="badge bg-light text-dark">Remote</span>
+                            }
+                        </div>
+
+                        <p class="mb-1">
+                            <i class="fas fa-map-marker-alt text-muted me-1"></i> @Model.Job?.Location
+                        </p>
+
+                        <p class="mb-1">
+                            <i class="fas fa-money-bill-wave text-muted me-1"></i>
+                            @if (Model.Job != null && Model.Job.SalaryMin > 0 && Model.Job.SalaryMax > 0)
+                            {
+                                <span>$@Model.Job.SalaryMin.ToString("N0") - $@Model.Job.SalaryMax.ToString("N0")</span>
+                            }
+                            else
+                            {
+                                <span>Competitive</span>
+                            }
+                        </p>
+                    </div>
+
+                    <a asp-controller="Job" asp-action="Details" asp-route-id="@Model.JobId"
+                        class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-external-link-alt me-1"></i> View Job
+                    </a>
+                </div>
+            </div>
+
+            <!-- Application Information Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light p-3">
+                    <h5 class="card-title mb-0">Application Information</h5>
+                </div>
+                <div class="card-body p-3">
+                    <p class="mb-2">
+                        <span class="text-muted">Applied on:</span><br>
+                        <strong>@Model.Application?.ApplicationDate.ToString("MMMM dd, yyyy")</strong>
+                    </p>
+
+                    <p class="mb-2">
+                        <span class="text-muted">Shortlisted on:</span><br>
+                        <strong>@Model.ShortlistedDate.ToString("MMMM dd, yyyy")</strong>
+                    </p>
+
+                    @if (Model.InterviewDate.HasValue)
+                    {
+                        <p class="mb-2">
+                            <span class="text-muted">Interview date:</span><br>
+                            <strong>@Model.InterviewDate.Value.ToString("MMMM dd, yyyy")</strong>
+                        </p>
+                    }
+
+                    <a asp-controller="Application" asp-action="Details" asp-route-id="@Model.ApplicationId"
+                        class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-file-alt me-1"></i> View Application
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <!-- Status Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light p-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Current Status</h5>
+                    <span
+                        class="badge bg-@(Model.Status == "Shortlisted" ? "info" : 
+                                                                                                                                                                      Model.Status == "Interviewed" ? "primary" : 
+                                                                                                                                                                      Model.Status == "Hired" ? "success" : 
+                                                                                                                                                                      "danger") px-3 py-2">@Model.Status</span>
+                </div>
+                <div class="card-body p-3">
+                    <div class="progress-timeline">
+                        <div class="timeline-item d-flex mb-3">
+                            <div class="timeline-icon bg-info rounded-circle d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px; min-width: 32px;">
+                                <i class="fas fa-list-check text-white"></i>
+                            </div>
+                            <div class="timeline-content ms-3">
+                                <h6 class="mb-1">Shortlisted</h6>
+                                <p class="mb-0 text-muted">@Model.ShortlistedDate.ToString("MMMM dd, yyyy")</p>
+                                <p class="mb-0">Your application was selected by the employer for further consideration.
+                                </p>
+                            </div>
+                        </div>
+
+                        @if (Model.Status == "Interviewed" || Model.Status == "Hired" || Model.Status == "Rejected")
+                        {
+                            <div class="timeline-connector"
+                                style="width: 2px; background-color: #dee2e6; height: 30px; margin-left: 16px;"></div>
+
+                            <div class="timeline-item d-flex mb-3">
+                                <div class="timeline-icon bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px; min-width: 32px;">
+                                    <i class="fas fa-comments text-white"></i>
+                                </div>
+                                <div class="timeline-content ms-3">
+                                    <h6 class="mb-1">Interviewed</h6>
+                                    @if (Model.InterviewDate.HasValue)
+                                    {
+                                        <p class="mb-0 text-muted">@Model.InterviewDate.Value.ToString("MMMM dd, yyyy")</p>
+                                    }
+                                    <p class="mb-0">You were interviewed for this position.</p>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.Status == "Hired" || Model.Status == "Rejected")
+                        {
+                            <div class="timeline-connector"
+                                style="width: 2px; background-color: #dee2e6; height: 30px; margin-left: 16px;"></div>
+
+                            <div class="timeline-item d-flex">
+                                <div class="timeline-icon bg-@(Model.Status == "Hired" ? "success" : "danger") rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px; min-width: 32px;">
+                                    <i class="fas fa-@(Model.Status == "Hired" ? "check" : "times") text-white"></i>
+                                </div>
+                                <div class="timeline-content ms-3">
+                                    <h6 class="mb-1">@Model.Status</h6>
+                                    <p class="mb-0">
+                                        @if (Model.Status == "Hired")
+                                        {
+                                            <span>Congratulations! You've been selected for this position.</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Unfortunately, the employer has decided to pursue other candidates.</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interview Information Card -->
+            @if (Model.InterviewDate.HasValue || !string.IsNullOrEmpty(Model.InterviewNotes))
+            {
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-light p-3">
+                        <h5 class="card-title mb-0">Interview Information</h5>
+                    </div>
+                    <div class="card-body p-3">
+                        @if (Model.InterviewDate.HasValue)
+                        {
+                            <div class="alert alert-info">
+                                <div class="d-flex">
+                                    <i class="fas fa-calendar-check text-primary me-3 mt-1" style="font-size: 24px;"></i>
+                                    <div>
+                                        <h6 class="mb-1">Interview Scheduled</h6>
+                                        <p class="mb-0">@Model.InterviewDate.Value.ToString("dddd, MMMM dd, yyyy")</p>
+                                        <small class="text-muted">Please be prepared and on time for your interview.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.InterviewNotes))
+                        {
+                            <div class="mt-3">
+                                <h6 class="mb-2">Employer Notes</h6>
+                                <div class="p-3 bg-light rounded">
+                                    <p class="mb-0">@Model.InterviewNotes</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- What's Next Card -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light p-3">
+                    <h5 class="card-title mb-0">What's Next?</h5>
+                </div>
+                <div class="card-body p-3">
+                    @if (Model.Status == "Shortlisted")
+                    {
+                        <p>You've been shortlisted for this position. The employer is currently reviewing candidates and may
+                            contact you for an interview. Here's what you can do:</p>
+                        <ul>
+                            <li>Prepare for a potential interview by researching the company</li>
+                            <li>Review your skills and experience relevant to this position</li>
+                            <li>Keep an eye on your email and phone for interview invitations</li>
+                        </ul>
+                    }
+                    else if (Model.Status == "Interviewed")
+                    {
+                        <p>You've completed the interview stage. The employer is evaluating all candidates. Here's what you
+                            can do:</p>
+                        <ul>
+                            <li>Send a thank-you note if you haven't already</li>
+                            <li>Be patient as the employer makes their decision</li>
+                            <li>Continue applying to other positions while you wait</li>
+                        </ul>
+                    }
+                    else if (Model.Status == "Hired")
+                    {
+                        <p>Congratulations! You've been selected for this position. The employer may contact you with next
+                            steps, which could include:</p>
+                        <ul>
+                            <li>Formal offer letter</li>
+                            <li>Background checks</li>
+                            <li>Onboarding information</li>
+                            <li>Start date details</li>
+                        </ul>
+                    }
+                    else if (Model.Status == "Rejected")
+                    {
+                        <p>Unfortunately, the employer has decided to pursue other candidates. Don't be discouraged - this
+                            is a normal part of the job search process. Here's what you can do:</p>
+                        <ul>
+                            <li>Continue applying to other positions that match your skills</li>
+                            <li>Consider asking for feedback to improve future applications</li>
+                            <li>Review and update your resume and skills</li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log("Candidate details page loaded");
+
+            // Test notification function
+            setTimeout(function () {
+                if (window.addNotification) {
+                    console.log("Testing notification system...");
+                    window.addNotification(
+                        "Thông báo kiểm tra",
+                        "Đây là thông báo kiểm tra để xác nhận hệ thống thông báo hoạt động.",
+                        "application",
+                        window.location.href
+                    );
+                } else {
+                    console.error("addNotification function not available");
+                }
+            }, 2000);
+        });
+    </script>
+
+    <!-- Add SignalR references and initialization -->
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/signalr/jobseeker.js"></script>
+    <input type="hidden" id="current-jobseeker-id" value="@ViewBag.JobSeekerId" />
+}

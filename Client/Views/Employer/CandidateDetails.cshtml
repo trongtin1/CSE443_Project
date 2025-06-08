@@ -96,9 +96,9 @@
                     <h5 class="card-title mb-0">Candidate Status</h5>
                     <span
                         class="badge bg-@(Model.Status == "Shortlisted" ? "info" : 
-                                                                                                                                              Model.Status == "Interviewed" ? "primary" : 
-                                                                                                                                              Model.Status == "Hired" ? "success" : 
-                                                                                                                                              "danger") px-3 py-2">@Model.Status</span>
+                                                                                                                                                                                                                                                                                                                                              Model.Status == "Interviewed" ? "primary" : 
+                                                                                                                                                                                                                                                                                                                                              Model.Status == "Hired" ? "success" : 
+                                                                                                                                                                                                                                                                                                                                              "danger") px-3 py-2">@Model.Status</span>
                 </div>
                 <div class="card-body p-3">
                     <form asp-action="UpdateCandidateStatus" method="post">
@@ -261,6 +261,33 @@
         $(document).ready(function () {
             // Add any JavaScript for the candidate details page
             console.log("Candidate details page loaded");
+
+            // Add event listener to form submission
+            $("form[asp-action='UpdateCandidateStatus']").on("submit", function () {
+                console.log("Form submitted - status update");
+
+                // Get the selected status and candidate ID
+                const status = $("select[name='status']").val();
+                const candidateId = $("input[name='id']").val();
+                const applicationId = @Model.ApplicationId;
+                const jobSeekerId = @Model.JobSeekerId;
+
+                console.log(`Status: ${status}, Candidate ID: ${candidateId}, Application ID: ${applicationId}, JobSeeker ID: ${jobSeekerId}`);
+
+                // Show a local notification that the status is being updated
+                if (window.addNotification) {
+                    window.addNotification(
+                        "Cập nhật trạng thái",
+                        `Đang cập nhật trạng thái ứng viên thành "${status}"...`,
+                        "application"
+                    );
+                }
+            });
         });
     </script>
+
+    <!-- Add SignalR references -->
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/signalr/employer.js"></script>
+    <input type="hidden" id="current-employer-id" value="@ViewContext.HttpContext.Session.GetInt32("EmployerId")" />
 }

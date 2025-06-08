@@ -91,6 +91,26 @@ namespace CSE443_Project.Hubs
             }
         }
 
+        // Phương thức chung để tham gia vào một nhóm bất kỳ
+        public async Task JoinGroup(string groupName)
+        {
+            if (!string.IsNullOrEmpty(groupName))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+                Console.WriteLine($"Connection {Context.ConnectionId} đã tham gia nhóm {groupName}");
+            }
+        }
+
+        // Phương thức chung để rời khỏi một nhóm bất kỳ
+        public async Task LeaveGroup(string groupName)
+        {
+            if (!string.IsNullOrEmpty(groupName))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+                Console.WriteLine($"Connection {Context.ConnectionId} đã rời nhóm {groupName}");
+            }
+        }
+
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine($"Kết nối mới: {Context.ConnectionId}");

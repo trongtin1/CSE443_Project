@@ -308,7 +308,7 @@
             // Only show notification if user is a jobseeker (not an employer) and the notification is for them
             if (currentJobSeekerId && userId === currentJobSeekerId && !isEmployer) {
                 console.log("This notification is for the current jobseeker user, showing it");
-                addNotification('Thông báo đơn ứng tuyển', message, 'application');
+                @* addNotification('Thông báo đơn ứng tuyển', message, 'application'); *@
             }
         });
 

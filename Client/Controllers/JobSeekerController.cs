@@ -632,6 +632,35 @@ namespace CSE443_Project.Controllers
             return View(candidates);
         }
 
+        // GET: /JobSeeker/CandidateDetails/5
+        public async Task<IActionResult> CandidateDetails(int id)
+        {
+            // Ensure the user is a job seeker
+            if (HttpContext.Session.GetInt32("JobSeekerId") == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            var jobSeekerId = HttpContext.Session.GetInt32("JobSeekerId").Value;
+            var candidate = await _candidateService.GetCandidateByIdAsync(id);
+
+            if (candidate == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure the candidate belongs to this job seeker
+            if (candidate.JobSeekerId != jobSeekerId)
+            {
+                return Forbid();
+            }
+
+            // Add JobSeekerId to ViewBag for SignalR connection
+            ViewBag.JobSeekerId = jobSeekerId;
+
+            return View(candidate);
+        }
+
         // GET: /JobSeeker/DownloadCV/5
         public async Task<IActionResult> DownloadCV(int id)
         {

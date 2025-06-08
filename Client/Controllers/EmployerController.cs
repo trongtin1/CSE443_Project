@@ -16,19 +16,22 @@ namespace CSE443_Project.Controllers
         private readonly IJobService _jobService;
         private readonly IApplicationService _applicationService;
         private readonly ICandidateService _candidateService;
+        private readonly INotificationService _notificationService;
 
         public EmployerController(
             IEmployerService employerService,
             IUserService userService,
             IJobService jobService,
             IApplicationService applicationService,
-            ICandidateService candidateService)
+            ICandidateService candidateService,
+            INotificationService notificationService)
         {
             _employerService = employerService;
             _userService = userService;
             _jobService = jobService;
             _applicationService = applicationService;
             _candidateService = candidateService;
+            _notificationService = notificationService;
         }        // GET: /Employer/Dashboard
         public async Task<IActionResult> Dashboard()
         {
@@ -403,7 +406,34 @@ namespace CSE443_Project.Controllers
                 return Forbid();
             }
 
+            // Store previous status to check if it changed
+            var previousStatus = candidate.Status;
+
+            // Update candidate status
             await _candidateService.UpdateCandidateStatusAsync(id, status, interviewNotes, interviewDate);
+
+            // Get updated candidate to ensure we have the latest data
+            candidate = await _candidateService.GetCandidateByIdAsync(id);
+
+            // Send notification if status changed
+            if (previousStatus != status)
+            {
+                try
+                {
+                    // Send notification to job seeker
+                    await _notificationService.NotifyJobApplicationStatusChangedAsync(
+                        candidate.JobSeekerId.ToString(),
+                        candidate.ApplicationId,
+                        status);
+
+                    Console.WriteLine($"Notification sent to job seeker {candidate.JobSeekerId} about status change to {status}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending notification: {ex.Message}");
+                    // Continue execution even if notification fails
+                }
+            }
 
             return RedirectToAction(nameof(CandidateDetails), new { id });
         }

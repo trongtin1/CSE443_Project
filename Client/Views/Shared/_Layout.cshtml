@@ -73,6 +73,7 @@
                                         <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Dashboard">Dashboard</a></li>
                                         <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Profile">Profile</a></li>
                                         <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Applications">My Applications</a></li>
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Candidates">My Candidacies</a></li>
                                         <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="SavedJobs">Saved Jobs</a></li>
                                         <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="CVs">My CVs</a></li>
                                     }
@@ -159,6 +160,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @if (Context.Session.GetInt32("EmployerId") != null)
+    {
+        <script src="~/js/signalr/employer.js"></script>
+    }
+    @if (Context.Session.GetInt32("JobSeekerId") != null)
+    {
+        <script src="~/js/signalr/jobseeker.js"></script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
