@@ -1,4 +1,5 @@
 using CSE443_Project.Data;
+using CSE443_Project.Hubs;
 using CSE443_Project.Services.Implementations;
 using CSE443_Project.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,9 @@ namespace CSE443_Project
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Add SignalR
+            builder.Services.AddSignalR();
 
             // Add session support
             builder.Services.AddDistributedMemoryCache();
@@ -39,6 +43,7 @@ namespace CSE443_Project
             builder.Services.AddScoped<ISaveJobService, SaveJobService>();
             builder.Services.AddScoped<ICandidateService, CandidateService>();
             builder.Services.AddScoped<IJobCategoryService, JobCategoryService>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
 
             var app = builder.Build();
 
@@ -75,6 +80,10 @@ namespace CSE443_Project
             app.UseSession();
 
             app.UseAuthorization();
+
+            // Configure SignalR endpoints
+            app.MapHub<NotificationHub>("/notificationHub");
+            app.MapHub<JobHub>("/jobHub");
 
             // app.MapControllerRoute(
             //     name: "default",

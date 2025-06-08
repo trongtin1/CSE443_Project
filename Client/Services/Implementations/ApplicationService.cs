@@ -88,12 +88,27 @@ namespace CSE443_Project.Services.Implementations
         {
             // Ensure we don't set the ID explicitly
             application.Id = 0;
-            application.ApplicationDate = DateTime.Now;
-            application.Status = "Pending";
 
+            // Make sure required fields are set
+            if (application.ApplicationDate == default)
+                application.ApplicationDate = DateTime.Now;
+
+            if (string.IsNullOrEmpty(application.Status))
+                application.Status = "Pending";
+
+            // Simply add the application with its navigation properties already set
             _context.Applications.Add(application);
-            await _context.SaveChangesAsync();
-            return application;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return application;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating application: {ex.Message}");
+                throw;
+            }
         }
 
         public async Task<Application> UpdateApplicationAsync(Application application)

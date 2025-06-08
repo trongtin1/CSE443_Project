@@ -1,0 +1,320 @@
+<!-- Notification container -->
+<div id="notification-container"></div>
+
+<!-- Notification badge -->
+<div id="notification-badge" class="notification-badge"
+    style="position: absolute; top: 9px; right: 10px; z-index: 1000;">
+    <span class="notification-count">0</span>
+</div>
+
+<!-- Notification panel -->
+<div id="notification-panel" class="notification-panel">
+    <div class="notification-header">
+        <h5>Thông báo</h5>
+        <button id="close-notification-panel" class="close-btn">&times;</button>
+    </div>
+    <div class="notification-list">
+        <!-- Notifications will be added here dynamically -->
+        <div class="no-notifications">Không có thông báo mới</div>
+    </div>
+    <div class="notification-footer">
+        <button id="mark-all-read" class="btn btn-sm btn-outline-primary">Mark all as read</button>
+        <button id="clear-all" class="btn btn-sm btn-outline-danger">Clear all</button>
+    </div>
+</div>
+
+<!-- SignalR scripts -->
+<script src="~/lib/signalr/signalr.min.js"></script>
+<script src="~/js/signalr/notification.js"></script>
+<script src="~/js/signalr/job.js"></script>
+@if (Context.Session.GetInt32("EmployerId") != null)
+{
+    <script src="~/js/signalr/employer.js"></script>
+}
+
+<!-- Notification styles -->
+<link rel="stylesheet" href="~/css/notification.css" />
+
+<!-- Notification management script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const notificationBadge = document.getElementById('notification-badge');
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationCount = document.querySelector('.notification-count');
+        const notificationList = document.querySelector('.notification-list');
+        const noNotifications = document.querySelector('.no-notifications');
+        const closeBtn = document.getElementById('close-notification-panel');
+        const markAllReadBtn = document.getElementById('mark-all-read');
+        const clearAllBtn = document.getElementById('clear-all');
+
+        let notifications = [];
+        let unreadCount = 0;
+
+        // Load notifications from localStorage
+        function loadNotifications() {
+            const savedNotifications = localStorage.getItem('notifications');
+            if (savedNotifications) {
+                notifications = JSON.parse(savedNotifications);
+                updateNotificationBadge();
+                renderNotifications();
+            }
+        }
+
+        // Save notifications to localStorage
+        function saveNotifications() {
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        // Add a new notification
+        function addNotification(title, message, type, link = null) {
+            const notification = {
+                id: Date.now(),
+                title,
+                message,
+                type,
+                link,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+
+            notifications.unshift(notification);
+
+            // Limit to 50 notifications
+            if (notifications.length > 50) {
+                notifications = notifications.slice(0, 50);
+            }
+
+            saveNotifications();
+            updateNotificationBadge();
+            renderNotifications();
+        }
+
+        // Update notification badge
+        function updateNotificationBadge() {
+            unreadCount = notifications.filter(n => !n.read).length;
+
+            if (unreadCount > 0) {
+                notificationCount.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                notificationBadge.classList.add('active');
+            } else {
+                notificationCount.textContent = '0';
+                notificationBadge.classList.remove('active');
+            }
+        }
+
+        // Render notifications in the panel
+        function renderNotifications() {
+            // Clear all existing notification items first
+            const existingNotifications = notificationList.querySelectorAll('.notification-item');
+            existingNotifications.forEach(item => {
+                if (!item.classList.contains('no-notifications')) {
+                    item.remove();
+                }
+            });
+
+            if (notifications.length === 0) {
+                noNotifications.style.display = 'block';
+            } else {
+                noNotifications.style.display = 'none';
+
+                // Add notifications
+                notifications.forEach(notification => {
+                    const notificationItem = document.createElement('div');
+                    notificationItem.className = `notification-item ${notification.read ? 'read' : 'unread'}`;
+                    notificationItem.dataset.id = notification.id;
+
+                    const notificationContent = document.createElement('div');
+                    notificationContent.className = 'notification-content';
+
+                    const title = document.createElement('div');
+                    title.className = 'notification-title';
+                    title.textContent = notification.title;
+
+                    const message = document.createElement('div');
+                    message.className = 'notification-message';
+                    message.textContent = notification.message;
+
+                    const time = document.createElement('div');
+                    time.className = 'notification-time';
+                    time.textContent = formatTime(notification.timestamp);
+
+                    notificationContent.appendChild(title);
+                    notificationContent.appendChild(message);
+                    notificationContent.appendChild(time);
+
+                    notificationItem.appendChild(notificationContent);
+
+                    if (notification.link) {
+                        notificationItem.addEventListener('click', () => {
+                            markAsRead(notification.id);
+                            window.location.href = notification.link;
+                        });
+                    } else {
+                        notificationItem.addEventListener('click', () => {
+                            markAsRead(notification.id);
+                        });
+                    }
+
+                    notificationList.insertBefore(notificationItem, noNotifications);
+                });
+            }
+        }
+
+        // Format timestamp
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffSecs / 60);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffSecs < 60) {
+                return 'Vừa xong';
+            } else if (diffMins < 60) {
+                return `${diffMins} phút trước`;
+            } else if (diffHours < 24) {
+                return `${diffHours} giờ trước`;
+            } else if (diffDays < 7) {
+                return `${diffDays} ngày trước`;
+            } else {
+                return date.toLocaleDateString('vi-VN');
+            }
+        }
+
+        // Mark notification as read
+        function markAsRead(id) {
+            const notification = notifications.find(n => n.id == id);
+            if (notification && !notification.read) {
+                notification.read = true;
+                saveNotifications();
+                updateNotificationBadge();
+                renderNotifications();
+            }
+        }
+
+        // Mark all notifications as read
+        function markAllAsRead() {
+            notifications.forEach(notification => {
+                notification.read = true;
+            });
+            saveNotifications();
+            updateNotificationBadge();
+            renderNotifications();
+        }
+
+        // Clear all notifications
+        function clearAllNotifications() {
+            notifications = [];
+            saveNotifications();
+            updateNotificationBadge();
+
+            // Force clear all notification items from DOM
+            const existingNotifications = notificationList.querySelectorAll('.notification-item');
+            existingNotifications.forEach(item => {
+                if (!item.classList.contains('no-notifications')) {
+                    item.remove();
+                }
+            });
+
+            // Show "no notifications" message
+            noNotifications.style.display = 'block';
+        }
+
+        // Toggle notification panel
+        notificationBadge.addEventListener('click', () => {
+            notificationPanel.classList.toggle('active');
+        });
+
+        // Close notification panel
+        closeBtn.addEventListener('click', () => {
+            notificationPanel.classList.remove('active');
+        });
+
+        // Mark all as read
+        markAllReadBtn.addEventListener('click', markAllAsRead);
+
+        // Clear all notifications
+        clearAllBtn.addEventListener('click', clearAllNotifications);
+
+        // Close panel when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!notificationPanel.contains(event.target) && !notificationBadge.contains(event.target)) {
+                notificationPanel.classList.remove('active');
+            }
+        });
+
+        // Load notifications on page load
+        loadNotifications();
+
+        // Override the showNotification function from notification.js
+        window.showNotification = function (user, message) {
+            addNotification(user, message, 'general');
+        };
+
+        window.showPrivateNotification = function (message) {
+            addNotification('Thông báo riêng', message, 'private');
+        };
+
+        window.showGroupNotification = function (message) {
+            addNotification('Thông báo nhóm', message, 'group');
+        };
+
+        window.showNewJobNotification = function (jobId, jobTitle, company) {
+            addNotification(
+                'Công việc mới',
+                `${jobTitle} tại ${company}`,
+                'job',
+                `/Job/Details/${jobId}`
+            );
+        };
+
+        window.showNewApplicationNotification = function (jobId, applicantName) {
+            addNotification(
+                'Đơn ứng tuyển mới',
+                `${applicantName} đã ứng tuyển vào công việc của bạn`,
+                'employer',
+                `/Employer/Applications`
+            );
+        };
+
+        window.showNewJobInCategoryNotification = function (category, jobId, jobTitle) {
+            addNotification(
+                `Công việc mới trong ${category}`,
+                jobTitle,
+                'category',
+                `/Job/Details/${jobId}`
+            );
+        };
+
+        // Expose addNotification globally for use in other scripts
+        window.addNotification = addNotification;
+
+        // Listen for JobSeekerNotification events
+        const notificationConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationHub")
+            .withAutomaticReconnect()
+            .build();
+
+        notificationConnection.on("JobSeekerNotification", (userId, message) => {
+            console.log(`Received JobSeekerNotification for user ${userId}: ${message}`);
+
+            // Check if this notification is for the current user
+            const currentJobSeekerId = document.getElementById('current-jobseeker-id')?.value || localStorage.getItem('jobSeekerId');
+            // Check if current user is an employer
+            const isEmployer = @(Context.Session.GetInt32("EmployerId") != null ? "true" : "false");
+
+            // Only show notification if user is a jobseeker (not an employer) and the notification is for them
+            if (currentJobSeekerId && userId === currentJobSeekerId && !isEmployer) {
+                console.log("This notification is for the current jobseeker user, showing it");
+                addNotification('Thông báo đơn ứng tuyển', message, 'application');
+            }
+        });
+
+        // Start the connection
+        notificationConnection.start()
+            .then(() => console.log("Notification hub connection established for JobSeekerNotification"))
+            .catch(err => console.error("Error establishing notification connection: " + err));
+    });
+</script>

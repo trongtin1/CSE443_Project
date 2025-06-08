@@ -14,19 +14,22 @@ namespace CSE443_Project.Controllers
         private readonly IJobSeekerService _jobSeekerService;
         private readonly ICVService _cvService;
         private readonly ICandidateService _candidateService;
+        private readonly INotificationService _notificationService;
 
         public ApplicationController(
             IApplicationService applicationService,
             IJobService jobService,
             IJobSeekerService jobSeekerService,
             ICVService cvService,
-            ICandidateService candidateService)
+            ICandidateService candidateService,
+            INotificationService notificationService)
         {
             _applicationService = applicationService;
             _jobService = jobService;
             _jobSeekerService = jobSeekerService;
             _cvService = cvService;
             _candidateService = candidateService;
+            _notificationService = notificationService;
         }
 
         // Helper method to extract job ID from URL if route binding fails
@@ -165,8 +168,12 @@ namespace CSE443_Project.Controllers
             var cvs = await _cvService.GetCVsByJobSeekerIdAsync(jobSeekerId);
             Console.WriteLine($"CV Count: {cvs.Count()}");
 
+            // Get job seeker information for notification
+            var jobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
+
             ViewBag.CVs = cvs;
             ViewBag.Job = job;
+            ViewBag.JobSeeker = jobSeeker;
 
             // Initialize a new application
             var application = new Application
@@ -186,6 +193,18 @@ namespace CSE443_Project.Controllers
             Console.WriteLine("=== APPLICATION SUBMIT DEBUG ===");
             Console.WriteLine($"POST Apply - Job ID: {id}, Application: {application?.CoverLetter?.Length ?? 0} chars, NoCVsAvailable: {NoCVsAvailable}");
             Console.WriteLine($"Application JobId from model: {application?.JobId}");
+            Console.WriteLine($"Application JobSeekerId from model: {application?.JobSeekerId}");
+            Console.WriteLine($"Application CVId from model: {application?.CVId}");
+            Console.WriteLine($"Model State Valid: {ModelState.IsValid}");
+
+            // Log validation errors
+            foreach (var state in ModelState)
+            {
+                if (state.Value.Errors.Count > 0)
+                {
+                    Console.WriteLine($"Validation errors for {state.Key}: {string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage))}");
+                }
+            }
 
             // Try to extract ID from URL if route binding failed
             if (id <= 0)
@@ -201,36 +220,9 @@ namespace CSE443_Project.Controllers
                 return RedirectToAction("Index", "Job");
             }
 
-            // Ensure we have a valid JobId
-            if (application != null)
-            {
-                // Always set JobId from route parameter first as it's most reliable
-                application.JobId = id;
-                Console.WriteLine($"Set JobId from route: {id}");
-
-                // Double-check with form data if available
-                var jobIdString = Request.Form["JobId"].FirstOrDefault();
-                if (!string.IsNullOrEmpty(jobIdString) && int.TryParse(jobIdString, out int jobId) && jobId > 0)
-                {
-                    // Log if there's a mismatch
-                    if (jobId != id)
-                    {
-                        Console.WriteLine($"Warning: JobId mismatch. Route: {id}, Form: {jobId}");
-                    }
-                }
-            }
-
-            // Log all form data for debugging
-            Console.WriteLine("Form data:");
-            foreach (var key in Request.Form.Keys)
-            {
-                Console.WriteLine($"  {key} = {Request.Form[key]}");
-            }
-
             // Ensure the user is a job seeker
             if (HttpContext.Session.GetInt32("JobSeekerId") == null)
             {
-                Console.WriteLine("No JobSeekerId in session");
                 TempData["ErrorMessage"] = "You must be logged in as a job seeker to apply for jobs.";
                 return RedirectToAction("Login", "User");
             }
@@ -238,81 +230,46 @@ namespace CSE443_Project.Controllers
             var jobSeekerId = HttpContext.Session.GetInt32("JobSeekerId").Value;
             Console.WriteLine($"JobSeeker ID: {jobSeekerId}");
 
-            // Verify the job seeker exists
-            var jobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
-            if (jobSeeker == null)
-            {
-                Console.WriteLine("Job seeker not found in database");
-                TempData["ErrorMessage"] = "Your profile information is incomplete. Please update your profile before applying.";
-                return RedirectToAction("Profile", "JobSeeker");
-            }
-
             // Check if the job seeker has already applied to this job
             if (await _applicationService.HasJobSeekerAppliedToJobAsync(jobSeekerId, id))
             {
-                Console.WriteLine("Job seeker already applied");
                 TempData["ErrorMessage"] = "You have already applied for this job.";
                 return RedirectToAction("Details", "Job", new { id });
             }
 
-            // Verify the job exists before proceeding
-            var jobExists = await _jobService.GetJobByIdAsync(id);
-            if (jobExists == null)
+            var job = await _jobService.GetJobByIdAsync(id);
+            if (job == null)
             {
-                // Try to get job again in case of temporary database connection issue
-                jobExists = await _jobService.GetJobByIdAsync(id);
-                if (jobExists == null)
-                {
-                    Console.WriteLine($"Job with ID {id} not found in database");
-                    TempData["ErrorMessage"] = "The job you're trying to apply for doesn't exist or has been removed.";
-                    return RedirectToAction("Index", "Job");
-                }
+                return NotFound();
             }
 
-            // Make sure we have the correct JobId
+            // Ensure the application is valid
             application.JobId = id;
             application.JobSeekerId = jobSeekerId;
-            application.ApplicationDate = DateTime.Now;
             application.Status = "Pending";
+            application.ApplicationDate = DateTime.Now;
 
-            // Don't set ID as it's an identity column
-            application.Id = 0;
-
-            // Parse CVId from form if it's not set
-            if (application.CVId <= 0 || application.CVId == null)
+            // If the user didn't select a CV and didn't check the "No CVs available" option
+            if (application.CVId == 0 && NoCVsAvailable != true)
             {
-                var cvIdString = Request.Form["CVId"].FirstOrDefault();
-                if (!string.IsNullOrEmpty(cvIdString) && int.TryParse(cvIdString, out int cvId))
+                ModelState.AddModelError("CVId", "Please select a CV or check 'I don't have a CV'.");
+            }
+            else if (NoCVsAvailable == true)
+            {
+                application.CVId = null;
+                application.CV = null;
+            }
+            else if (application.CVId > 0)
+            {
+                // If a CV is selected, load it to set the navigation property
+                var cv = await _cvService.GetCVByIdAsync(application.CVId.Value);
+                if (cv == null)
                 {
-                    application.CVId = cvId;
-                    Console.WriteLine($"Parsed CVId from form: {cvId}");
+                    ModelState.AddModelError("CVId", "The selected CV could not be found.");
                 }
-            }
-
-            // Check if CV is required but not provided
-            if (NoCVsAvailable != true && (application.CVId <= 0 || application.CVId == null))
-            {
-                Console.WriteLine("CV required but not provided");
-                ModelState.AddModelError("CVId", "Please select a CV or create one first.");
-            }
-
-            if (string.IsNullOrWhiteSpace(application.CoverLetter))
-            {
-                Console.WriteLine("Cover letter is empty");
-                ModelState.AddModelError("CoverLetter", "Cover letter is required.");
-            }
-
-            // Remove validation for navigation properties
-            ModelState.Remove("Job");
-            ModelState.Remove("JobSeeker");
-            ModelState.Remove("CV");
-
-            Console.WriteLine($"ModelState valid: {ModelState.IsValid}");
-            if (!ModelState.IsValid)
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                else
                 {
-                    Console.WriteLine($"Validation error: {error.ErrorMessage}");
+                    application.CV = cv;
                 }
             }
 
@@ -320,120 +277,163 @@ namespace CSE443_Project.Controllers
             {
                 try
                 {
-                    Console.WriteLine("Creating application in database");
-                    Console.WriteLine($"Application data: JobId={application.JobId}, JobSeekerId={application.JobSeekerId}, CVId={application.CVId}, CoverLetter={application.CoverLetter?.Substring(0, Math.Min(20, application.CoverLetter?.Length ?? 0))}...");
+                    // Set the navigation properties to avoid validation errors
+                    var jobSeeker = await _jobSeekerService.GetJobSeekerByIdAsync(jobSeekerId);
+                    if (jobSeeker == null)
+                    {
+                        ModelState.AddModelError("", "Job seeker information not found.");
+                        var userCVs = await _cvService.GetCVsByJobSeekerIdAsync(jobSeekerId);
+                        ViewBag.CVs = userCVs;
+                        ViewBag.Job = job;
+                        return View(application);
+                    }
 
-                    var createdApplication = await _applicationService.CreateApplicationAsync(application);
+                    // Create a new application object with all required properties
+                    var newApplication = new Application
+                    {
+                        JobId = id,
+                        JobSeekerId = jobSeekerId,
+                        CVId = application.CVId,
+                        CoverLetter = application.CoverLetter,
+                        Status = "Pending",
+                        ApplicationDate = DateTime.Now,
+                        Job = job,
+                        JobSeeker = jobSeeker
+                    };
+
+                    // If a CV is selected, set it
+                    if (application.CVId.HasValue && application.CVId.Value > 0)
+                    {
+                        var cv = await _cvService.GetCVByIdAsync(application.CVId.Value);
+                        if (cv != null)
+                        {
+                            newApplication.CV = cv;
+                        }
+                    }
+
+                    var createdApplication = await _applicationService.CreateApplicationAsync(newApplication);
                     Console.WriteLine($"Application created with ID: {createdApplication.Id}");
+
+                    // Get job seeker name for notification
+                    string applicantName = jobSeeker?.User.Username ?? "A job seeker";
+
+                    // Send notification to employer about the new application
+                    await _notificationService.NotifyNewJobApplicationAsync(job.EmployerId.ToString(), job.Id, applicantName);
 
                     TempData["SuccessMessage"] = "Your application has been submitted successfully!";
                     return RedirectToAction("Details", "Job", new { id });
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception
-                    Console.WriteLine($"Error submitting application: {ex.Message}");
-                    if (ex.InnerException != null)
-                    {
-                        Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-
-                        // Check for specific database errors
-                        if (ex.InnerException.Message.Contains("FK_Applications_Jobs_JobId"))
-                        {
-                            // Try to update the job reference and save again
-                            try
-                            {
-                                Console.WriteLine("Attempting to fix job reference and retry...");
-                                var currentJob = await _jobService.GetJobByIdAsync(id);
-                                if (currentJob != null)
-                                {
-                                    // Job exists, try to save application again
-                                    application.JobId = currentJob.Id;
-                                    var createdApplication = await _applicationService.CreateApplicationAsync(application);
-                                    Console.WriteLine($"Application created with ID: {createdApplication.Id} after retry");
-                                    TempData["SuccessMessage"] = "Your application has been submitted successfully!";
-                                    return RedirectToAction("Details", "Job", new { id });
-                                }
-                                else
-                                {
-                                    TempData["ErrorMessage"] = "The job you're trying to apply for no longer exists.";
-                                    ModelState.AddModelError("", "The job you're trying to apply for no longer exists.");
-                                    return RedirectToAction("Index", "Job");
-                                }
-                            }
-                            catch (Exception retryEx)
-                            {
-                                Console.WriteLine($"Retry failed: {retryEx.Message}");
-                                TempData["ErrorMessage"] = "The job you're trying to apply for no longer exists.";
-                                ModelState.AddModelError("", "The job you're trying to apply for no longer exists.");
-                                return RedirectToAction("Index", "Job");
-                            }
-                        }
-                        else if (ex.InnerException.Message.Contains("FK_Applications_JobSeekers_JobSeekerId"))
-                        {
-                            TempData["ErrorMessage"] = "There was an issue with your profile. Please update your profile before applying.";
-                            ModelState.AddModelError("", "There was an issue with your profile. Please update your profile before applying.");
-                            return RedirectToAction("Profile", "JobSeeker");
-                        }
-                    }
-
-                    // Set a more user-friendly error message for general errors
-                    TempData["ErrorMessage"] = "There was an error submitting your application. Please try again.";
-                    ModelState.AddModelError("", "There was an error submitting your application. Please try again.");
+                    Console.WriteLine($"Error creating application: {ex.Message}");
+                    ModelState.AddModelError("", "An error occurred while submitting your application. Please try again.");
                 }
             }
+            else
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                Console.WriteLine($"Validation errors: {string.Join(", ", errors)}");
+            }
 
-            // If we got this far, something failed; redisplay form
-            var job = await _jobService.GetJobByIdAsync(id);
+            // If we got here, something went wrong
             var cvs = await _cvService.GetCVsByJobSeekerIdAsync(jobSeekerId);
             ViewBag.CVs = cvs;
             ViewBag.Job = job;
-
             return View(application);
         }
 
-        // POST: /Application/UpdateStatus/5
+        // POST: /Application/UpdateStatus
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int id, string status, string notes)
         {
+            Console.WriteLine($"UpdateStatus called with id={id}, status={status}");
+
             // Ensure the user is an employer
             if (HttpContext.Session.GetInt32("EmployerId") == null)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "You must be logged in as an employer." });
+                }
                 return RedirectToAction("Login", "User");
             }
 
-            var employerId = HttpContext.Session.GetInt32("EmployerId").Value;
             var application = await _applicationService.GetApplicationByIdAsync(id);
             if (application == null)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Application not found." });
+                }
                 return NotFound();
             }
 
-            // Ensure the application belongs to a job posted by this employer
+            // Ensure the employer owns the job
+            var employerId = HttpContext.Session.GetInt32("EmployerId").Value;
             if (application.Job.EmployerId != employerId)
             {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "You don't have permission to update this application." });
+                }
                 return Forbid();
             }
 
-            await _applicationService.UpdateApplicationStatusAsync(id, status, notes);
-
-            // If the status is set to "Shortlisted", create a candidate entry
-            if (status == "Shortlisted")
+            try
             {
-                var candidate = new Candidate
+                // Update the application status
+                var previousStatus = application.Status;
+                application.Status = status;
+                application.ReviewDate = DateTime.Now;
+
+                // Add notes if provided
+                if (!string.IsNullOrEmpty(notes))
                 {
-                    ApplicationId = application.Id,
-                    JobId = application.JobId,
-                    JobSeekerId = application.JobSeekerId,
-                    Status = "Shortlisted",
-                    ShortlistedDate = DateTime.Now
-                };
+                    application.Notes = notes;
+                }
 
-                await _candidateService.CreateCandidateAsync(candidate);
+                await _applicationService.UpdateApplicationAsync(application);
+
+                // Send notification to job seeker about the status change
+                if (previousStatus != status)
+                {
+                    await _notificationService.NotifyJobApplicationStatusChangedAsync(
+                        application.JobSeekerId.ToString(),
+                        application.Id,
+                        status);
+
+                    Console.WriteLine($"Notification sent to job seeker {application.JobSeekerId} about status change to {status}");
+                }
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Application status updated successfully.",
+                        status = status,
+                        jobSeekerId = application.JobSeekerId,
+                        applicationId = application.Id,
+                        jobTitle = application.Job?.JobTitle ?? "Unknown Job"
+                    });
+                }
+
+                TempData["SuccessMessage"] = "Application status updated successfully.";
+                return RedirectToAction("Details", new { id });
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating application status: {ex.Message}");
 
-            return RedirectToAction(nameof(Details), new { id });
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = $"Error updating status: {ex.Message}" });
+                }
+
+                TempData["ErrorMessage"] = $"Error updating application status: {ex.Message}";
+                return RedirectToAction("Details", new { id });
+            }
         }
 
         // GET: /Application/ByJob/5

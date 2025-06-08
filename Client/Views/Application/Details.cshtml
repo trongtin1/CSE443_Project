@@ -2,9 +2,12 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
+                        @if (Context.Session.GetInt32("EmployerId") != null)
+                        {
                         <a asp-controller="Employer" asp-action="Applications" class="btn btn-outline-secondary me-2">
                             <i class="fas fa-arrow-left me-1"></i> Back to Applications
                         </a>
+                        }
                         <h1 class="h3 mb-0">Application Details</h1>
                         <div class="dropdown">
                             <button class="btn btn-@(
@@ -24,6 +27,9 @@
                                     Model.Status == "Offered" ? "check-circle" :
                                     Model.Status == "Rejected" ? "times-circle" : "exchange-alt") me-1"></i> @Model.Status
                             </button>
+
+                            @if (Context.Session.GetInt32("EmployerId") != null)
+                            {
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm"
                                 aria-labelledby="statusDropdown">
                                 <li class="dropdown-header">Update Status</li>
@@ -44,29 +50,29 @@
                                                     status == "Offered" ? "success" :
                                                     status == "Rejected" ? "danger" : "secondary";
                                     <li>
-                                        <form asp-controller="Application" asp-action="UpdateStatus"
-                                            asp-route-id="@Model.Id" method="post" class="status-update-form">
-                                            <input type="hidden" name="status" value="@status" />
-                                            <button type="submit"
-                                                class="dropdown-item d-flex align-items-center py-2 @(Model.Status == status ? "active" : "")">
-                                                <span class="status-icon me-2 text-@statusColor">
-                                                    <i class="fas fa-@statusIcon"></i>
+                                        <button type="button" 
+                                            class="dropdown-item d-flex align-items-center py-2 update-status-btn @(Model.Status == status ? "active" : "")"
+                                            data-status="@status" 
+                                            data-application-id="@Model.Id"
+                                            data-job-seeker-id="@Model.JobSeekerId">
+                                            <span class="status-icon me-2 text-@statusColor">
+                                                <i class="fas fa-@statusIcon"></i>
+                                            </span>
+                                            <span>@status</span>
+                                            @if (Model.Status == status)
+                                            {
+                                                <span class="ms-auto">
+                                                    <i class="fas fa-check text-success"></i>
                                                 </span>
-                                                <span>@status</span>
-                                                @if (Model.Status == status)
-                                                {
-                                                    <span class="ms-auto">
-                                                        <i class="fas fa-check text-success"></i>
-                                                    </span>
-                                                }
-                                            </button>
-                                        </form>
+                                            }
+                                        </button>
                                     </li>
                                 }
                             </ul>
+                            }
                         </div>
                     </div>
-
+                    
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <div class="card mb-3">
@@ -239,7 +245,15 @@
                                 </div>
                             </div>
                         </div>
-                    </div><!-- Removed toast notification container -->
+                    </div>
+
+                    <!-- Hidden form for status updates -->
+                    <form id="statusUpdateForm" method="post" action="@Url.Action("UpdateStatus", "Application")" style="display: none;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="status" id="statusInput" />
+                        <input type="hidden" name="notes" id="notesInput" />
+                    </form>
 
                 </div>
             </div>
@@ -250,31 +264,84 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Improve status update experience
-            $(".status-update-form").on("submit", function(e) {
-                var $button = $(this).find("button");
+            // Status update with real-time notification
+            $(".update-status-btn").on("click", function() {
+                var $button = $(this);
+                var status = $button.data("status");
+                var applicationId = $button.data("application-id");
+                var jobSeekerId = $button.data("job-seeker-id");
                 var $icon = $button.find(".status-icon i");
                 var originalIcon = $icon.attr("class");
-                var newStatus = $(this).find("input[name='status']").val();
                 
                 // Show loading state
                 $button.prop("disabled", true);
                 $icon.attr("class", "fas fa-spinner fa-spin");
                 
-                // Store form data for potential toast notification
-                sessionStorage.setItem('lastStatusUpdate', newStatus);
+                // Set form values
+                $("#statusInput").val(status);
                 
-                // Restore if there's an error
-                $(this).on("error", function() {
-                    $button.prop("disabled", false);
-                    $icon.attr("class", originalIcon);
+                // Submit the form via AJAX
+                $.ajax({
+                    url: '@Url.Action("UpdateStatus", "Application")',
+                    type: 'POST',
+                    data: {
+                        id: applicationId,
+                        status: status,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Update UI
+                            updateStatusUI(status);
+                            
+                        } else {
+                            // Show error message
+                            showNotification("Lỗi", "Không thể cập nhật trạng thái: " + (response.message || "Lỗi không xác định"));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showNotification("Lỗi", "Không thể cập nhật trạng thái: " + error);
+                    },
+                    complete: function() {
+                        // Restore button state
+                        $button.prop("disabled", false);
+                        $icon.attr("class", originalIcon);
+                    }
                 });
             });
-              // Simple status update notification
-            if (sessionStorage.getItem('lastStatusUpdate')) {
-                var status = sessionStorage.getItem('lastStatusUpdate');
-                alert('Status updated to ' + status + ' successfully');
-                sessionStorage.removeItem('lastStatusUpdate');
+            
+            // Update UI after status change
+            function updateStatusUI(status) {
+                // Update dropdown button
+                var statusIcon = status === "Pending" ? "clock" :
+                                status === "Shortlisted" ? "list-check" :
+                                status === "Interviewed" ? "comments" :
+                                status === "Offered" ? "check-circle" :
+                                status === "Rejected" ? "times-circle" : "exchange-alt";
+                                
+                var statusColor = status === "Pending" ? "warning" :
+                                status === "Shortlisted" ? "info" :
+                                status === "Interviewed" ? "primary" :
+                                status === "Offered" ? "success" :
+                                status === "Rejected" ? "danger" : "secondary";
+                
+                $("#statusDropdown")
+                    .removeClass("btn-warning btn-info btn-primary btn-success btn-danger btn-secondary")
+                    .addClass("btn-" + statusColor)
+                    .html('<i class="fas fa-' + statusIcon + ' me-1"></i> ' + status);
+                
+                // Update dropdown items
+                $(".update-status-btn").removeClass("active").each(function() {
+                    var $btn = $(this);
+                    if ($btn.data("status") === status) {
+                        $btn.addClass("active");
+                        if (!$btn.find(".ms-auto").length) {
+                            $btn.append('<span class="ms-auto"><i class="fas fa-check text-success"></i></span>');
+                        }
+                    } else {
+                        $btn.find(".ms-auto").remove();
+                    }
+                });
             }
             
             // Notes editing functionality
@@ -312,7 +379,8 @@
                         id: applicationId,
                         notes: notes,
                         __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                    },                    success: function(response) {
+                    },                    
+                    success: function(response) {
                         if (response.success) {
                             // Update the display with new notes
                             if (notes.trim()) {
@@ -326,13 +394,12 @@
                             $('#notesDisplay').removeClass('d-none');
                             
                             // Show success message
-                            alert('Notes updated successfully!');
                         } else {
-                            alert('Error updating notes: ' + (response.message || 'Unknown error'));
+                            showNotification("Lỗi", "Không thể cập nhật ghi chú: " + (response.message || "Lỗi không xác định"));
                         }
                     },
                     error: function(xhr, status, error) {
-                        alert('Error updating notes: ' + error);
+                        showNotification("Lỗi", "Không thể cập nhật ghi chú: " + error);
                     },
                     complete: function() {
                         // Restore button state
@@ -341,6 +408,15 @@
                     }
                 });
             });
+            
+            // Helper function to show notifications
+            function showNotification(title, message) {
+                if (window.addNotification) {
+                    window.addNotification(title, message, 'application');
+                } else {
+                    alert(title + ": " + message);
+                }
+            }
         });
     </script>
     

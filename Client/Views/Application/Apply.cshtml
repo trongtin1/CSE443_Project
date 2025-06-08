@@ -17,6 +17,9 @@
 }
 
 <div class="container my-4">
+    <!-- Notification container -->
+    <div id="notification-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm mb-4">
@@ -48,9 +51,9 @@
                         <div class="mt-2">
                             <span
                                 class="badge bg-@(job?.JobType == "Full-time" ? "success" : 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Part-time" ? "info" : 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Contract" ? "warning" : 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Internship" ? "secondary" : "primary")">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Part-time" ? "info" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Contract" ? "warning" : 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    job?.JobType == "Internship" ? "secondary" : "primary")">
                                 @(job?.JobType ?? "Job")
                             </span>
                             <span class="ms-2">
@@ -76,6 +79,19 @@
                         <input type="hidden" name="OriginalJobId" value="@job.Id" />
                         <!-- Don't set ID explicitly -->
                         <input type="hidden" name="Id" value="0" />
+                        <!-- Add JobSeekerId field -->
+                        <input type="hidden" name="JobSeekerId" value="@jobSeekerId" />
+                        <!-- Add EmployerId for notification -->
+                        <input type="hidden" id="employerId" value="@job.EmployerId" />
+                        <!-- Add JobSeeker name for notification -->
+                        @if (ViewBag.JobSeeker != null)
+                        {
+                            <input type="hidden" id="jobSeekerName" value="@ViewBag.JobSeeker.User.Username" />
+                        }
+                        else
+                        {
+                            <input type="hidden" id="jobSeekerName" value="Ứng viên mới" />
+                        }
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">Select CV</label>
@@ -149,9 +165,28 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- Include SignalR scripts -->
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/signalr/job.js"></script>
+
     <script>
         $(document).ready(function () {
             console.log("Form ready");
+
+            // Kết nối đến SignalR hub
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/jobHub")
+                .withAutomaticReconnect()
+                .build();
+
+            // Khởi động kết nối
+            connection.start()
+                .then(() => {
+                    console.log("SignalR connected for application notifications");
+                })
+                .catch(err => {
+                    console.error("SignalR connection error: " + err);
+                });
 
             // Direct submit button click handler for debugging
             $('#submitButton').on('click', function () {
@@ -189,6 +224,44 @@
                 // Add form data to log
                 var formData = $(this).serialize();
                 console.log("Form data: " + formData);
+
+                // Gửi thông báo đến employer
+                try {
+                    var employerId = $('#employerId').val();
+                    var jobId = $('input[name="JobId"]').val();
+                    var jobTitle = $('h5.mb-0').text();
+                    var jobSeekerName = $('#jobSeekerName').val() || "Ứng viên mới";
+
+                    console.log(`Sending notification to employer ${employerId} for job ${jobId}`);
+
+                    // Gửi thông báo qua SignalR
+                    if (connection && connection.state === "Connected") {
+                        connection.invoke("NewJobApplication", employerId, jobId, jobSeekerName)
+                            .then(() => {
+                                console.log("Application notification sent to employer");
+                            })
+                            .catch(err => {
+                                console.error("Error sending application notification: " + err);
+                            });
+                    } else {
+                        console.warn("SignalR not connected, notification may not be sent. Connection state: " + connection.state);
+
+                        // Thử kết nối lại
+                        connection.start()
+                            .then(() => {
+                                console.log("Reconnected, trying to send notification again");
+                                return connection.invoke("NewJobApplication", employerId, jobId, jobSeekerName);
+                            })
+                            .then(() => {
+                                console.log("Application notification sent after reconnection");
+                            })
+                            .catch(err => {
+                                console.error("Error reconnecting or sending notification: " + err);
+                            });
+                    }
+                } catch (err) {
+                    console.error("Error preparing notification: " + err);
+                }
 
                 console.log("Form validation passed, submitting...");
                 return true;

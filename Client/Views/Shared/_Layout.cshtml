@@ -10,6 +10,24 @@
 </head>
 
 <body>
+    @if (Context.Session.GetInt32("JobSeekerId") != null)
+    {
+        <input type="hidden" id="current-jobseeker-id" value="@Context.Session.GetInt32("JobSeekerId")" />
+        <script>
+            // Lưu JobSeeker ID vào localStorage để sử dụng sau này
+            localStorage.setItem('jobSeekerId', '@Context.Session.GetInt32("JobSeekerId")');
+        </script>
+    }
+    
+    @if (Context.Session.GetInt32("EmployerId") != null)
+    {
+        <input type="hidden" id="current-employer-id" value="@Context.Session.GetInt32("EmployerId")" />
+        <script>
+            // Lưu Employer ID vào localStorage để sử dụng sau này
+            localStorage.setItem('employerId', '@Context.Session.GetInt32("EmployerId")');
+        </script>
+    }
+    
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
@@ -39,6 +57,10 @@
                         </li>
                     </ul>
                     <div class="d-flex">
+                        @if (Context.Session.GetInt32("JobSeekerId") != null || Context.Session.GetInt32("EmployerId") != null)
+                        {
+                            <partial name="_NotificationsPartial" />
+                        }
                         @if (Context.Session.GetInt32("UserId") != null)
                         {
                             <div class="dropdown">
@@ -94,11 +116,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
+      
         <main role="main">
             @RenderBody()
         </main>
     </div>
-
+    
     <footer class="bg-dark text-light py-4 mt-5">
         <div class="container">
             <div class="row">
@@ -130,6 +153,8 @@
             </div>
         </div>
     </footer>
+    
+
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

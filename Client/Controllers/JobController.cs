@@ -15,19 +15,22 @@ namespace CSE443_Project.Controllers
         private readonly IEmployerService _employerService;
         private readonly ISaveJobService _saveJobService;
         private readonly IApplicationService _applicationService;
+        private readonly INotificationService _notificationService;
 
         public JobController(
             IJobService jobService,
             IJobCategoryService categoryService,
             IEmployerService employerService,
             ISaveJobService saveJobService,
-            IApplicationService applicationService)
+            IApplicationService applicationService,
+            INotificationService notificationService)
         {
             _jobService = jobService;
             _categoryService = categoryService;
             _employerService = employerService;
             _saveJobService = saveJobService;
             _applicationService = applicationService;
+            _notificationService = notificationService;
         }
 
         // GET: /Job
@@ -133,6 +136,23 @@ namespace CSE443_Project.Controllers
                     {
                         var createdJob = await _jobService.CreateJobAsync(job);
                         Console.WriteLine($"Job created with ID: {createdJob.Id}");
+
+                        // Get employer name for notification
+                        var employer = await _employerService.GetEmployerByIdAsync(employerId.Value);
+                        string companyName = employer?.CompanyName ?? "Unknown Company";
+
+                        // Send real-time notification about the new job
+                        await _notificationService.NotifyNewJobPostedAsync(createdJob.Id, createdJob.JobTitle, companyName);
+
+                        // Also send notification to users interested in this job category
+                        if (createdJob.CategoryId != null)
+                        {
+                            var category = await _categoryService.GetJobCategoryByIdAsync(createdJob.CategoryId);
+                            if (category != null)
+                            {
+                                await _notificationService.NotifyNewJobInCategoryAsync(category.Name, createdJob.Id, createdJob.JobTitle);
+                            }
+                        }
 
                         TempData["SuccessMessage"] = "Job posted successfully!";
                         return RedirectToAction(nameof(Details), new { id = createdJob.Id });
