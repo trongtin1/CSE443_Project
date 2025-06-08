@@ -53,8 +53,10 @@ namespace CSE443_Project.Controllers
             }
 
             ViewBag.ApplicationCount = await _applicationService.GetApplicationCountByJobSeekerIdAsync(jobSeekerId);
-            ViewBag.SavedJobCount = await _saveJobService.GetSaveJobsByJobSeekerIdAsync(jobSeekerId);
-            ViewBag.CVCount = await _cvService.GetCVsByJobSeekerIdAsync(jobSeekerId);
+            var savedJobs = await _saveJobService.GetSaveJobsByJobSeekerIdAsync(jobSeekerId);
+            ViewBag.SavedJobCount = savedJobs.Count();
+            var cvs = await _cvService.GetCVsByJobSeekerIdAsync(jobSeekerId);
+            ViewBag.CVCount = cvs.Count();
             ViewBag.ShortlistedCount = (await _candidateService.GetCandidatesByJobSeekerIdAsync(jobSeekerId)).Count();
 
             return View(jobSeeker);

@@ -23,7 +23,11 @@ namespace CSE443_Project.Services.Implementations
                 .Include(js => js.User)
                 .Include(js => js.CVs)
                 .Include(js => js.Applications)
+                    .ThenInclude(a => a.Job)
+                        .ThenInclude(j => j.Employer)
                 .Include(js => js.SavedJobs)
+                    .ThenInclude(sj => sj.Job)
+                        .ThenInclude(j => j.Employer)
                 .FirstOrDefaultAsync(js => js.Id == id);
         }
         public async Task<JobSeeker> GetJobSeekerByUserIdAsync(int userId)
@@ -32,7 +36,11 @@ namespace CSE443_Project.Services.Implementations
                 .Include(js => js.User)
                 .Include(js => js.CVs)
                 .Include(js => js.Applications)
+                    .ThenInclude(a => a.Job)
+                        .ThenInclude(j => j.Employer)
                 .Include(js => js.SavedJobs)
+                    .ThenInclude(sj => sj.Job)
+                        .ThenInclude(j => j.Employer)
                 .FirstOrDefaultAsync(js => js.UserId == userId);
         }
 

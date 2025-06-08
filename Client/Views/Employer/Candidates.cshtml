@@ -102,10 +102,7 @@
                                         }
                                     </td>
                                     <td>
-                                        <span class="badge bg-@(candidate.Status == "Shortlisted" ? "info" : 
-                                                                                                                                                          candidate.Status == "Interviewed" ? "primary" : 
-                                                                                                                                                          candidate.Status == "Hired" ? "success" : 
-                                                                                                                                                          "danger")">
+                                        <span class="badge bg-@(candidate.Status == "Shortlisted" ? "info" : candidate.Status == "Interviewed" ? "primary" : candidate.Status == "Hired" ? "success" : "danger")">
                                     @candidate.Status
                                 </span>
                             </td>

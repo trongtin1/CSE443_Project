@@ -395,6 +395,76 @@ namespace CSE443_Project.Controllers
 
                 await _applicationService.UpdateApplicationAsync(application);
 
+                // Handle candidate record management based on status changes
+                if (status == "Shortlisted")
+                {
+                    // Check if a candidate record already exists for this application
+                    var existingCandidates = await _candidateService.GetCandidatesByApplicationIdAsync(application.Id);
+                    var candidate = existingCandidates.FirstOrDefault();
+
+                    if (candidate != null)
+                    {
+                        // Update existing candidate to shortlisted status
+                        candidate.Status = "Shortlisted";
+                        await _candidateService.UpdateCandidateAsync(candidate);
+                        Console.WriteLine($"Updated candidate record for application {application.Id} to Shortlisted status");
+                    }
+                    else
+                    {
+                        // Create a new candidate record
+                        var newCandidate = new Candidate
+                        {
+                            ApplicationId = application.Id,
+                            JobId = application.JobId,
+                            JobSeekerId = application.JobSeekerId,
+                            Status = "Shortlisted",
+                            ShortlistedDate = DateTime.Now
+                        };
+
+                        await _candidateService.CreateCandidateAsync(newCandidate);
+                        Console.WriteLine($"Created new candidate record for application {application.Id}");
+                    }
+                }
+                else if (previousStatus == "Shortlisted" || (await _candidateService.GetCandidatesByApplicationIdAsync(application.Id)).Any())
+                {
+                    // If application was previously shortlisted or has a candidate record
+                    var existingCandidates = await _candidateService.GetCandidatesByApplicationIdAsync(application.Id);
+                    var candidate = existingCandidates.FirstOrDefault();
+
+                    if (candidate != null)
+                    {
+                        // Map application status to candidate status
+                        switch (status)
+                        {
+                            case "Interviewed":
+                                candidate.Status = "Interviewed";
+                                // Update interview date if not already set
+                                if (!candidate.InterviewDate.HasValue)
+                                {
+                                    candidate.InterviewDate = DateTime.Now;
+                                }
+                                break;
+                            case "Offered":
+                            case "Accepted":
+                                candidate.Status = "Hired";
+                                break;
+                            case "Rejected":
+                                candidate.Status = "Rejected";
+                                break;
+                            case "Pending":
+                                // If returning to pending, don't change candidate status
+                                // This preserves the candidate record but doesn't update its status
+                                break;
+                            default:
+                                // For any other status, keep the existing candidate status
+                                break;
+                        }
+
+                        await _candidateService.UpdateCandidateAsync(candidate);
+                        Console.WriteLine($"Updated candidate record for application {application.Id} to status {candidate.Status}");
+                    }
+                }
+
                 // Send notification to job seeker about the status change
                 if (previousStatus != status)
                 {
