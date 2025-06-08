@@ -25,6 +25,18 @@ function startJobConnection() {
             );
         });
       }
+
+      // Join as JobSeeker if applicable
+      const jobSeekerId = getJobSeekerId();
+      if (jobSeekerId) {
+        console.log(`Joining as JobSeeker: ${jobSeekerId}`);
+        jobConnection
+          .invoke("JoinAsJobSeeker", jobSeekerId)
+          .then(() =>
+            console.log(`Successfully joined as JobSeeker ${jobSeekerId}`)
+          )
+          .catch((err) => console.error(`Error joining as JobSeeker: ${err}`));
+      }
     })
     .catch((err) => {
       console.error("Error while establishing job connection: " + err);
@@ -50,12 +62,31 @@ function getUserPreferredCategories() {
   return [];
 }
 
+// Helper function to get JobSeeker ID from session
+function getJobSeekerId() {
+  // Try to get JobSeeker ID from page data
+  const jobSeekerIdElement = document.getElementById("current-jobseeker-id");
+  if (jobSeekerIdElement) {
+    return jobSeekerIdElement.value;
+  }
+
+  // Try to get from localStorage if available
+  if (localStorage.getItem("jobSeekerId")) {
+    return localStorage.getItem("jobSeekerId");
+  }
+
+  return null;
+}
+
 // Register handlers for job-related events
 jobConnection.on("ReceiveNewJob", (jobId, jobTitle, company) => {
   showNewJobNotification(jobId, jobTitle, company);
 });
 
 jobConnection.on("ApplicationStatusChanged", (applicationId, status) => {
+  console.log(
+    `Received application status change: Application #${applicationId} changed to ${status}`
+  );
   showApplicationStatusNotification(applicationId, status);
 });
 
@@ -78,7 +109,7 @@ function showNewJobNotification(jobId, jobTitle, company) {
         </div>
     `;
 
-  showNotification(notificationElement);
+  showNotificationElement(notificationElement);
 }
 
 function showApplicationStatusNotification(applicationId, status) {
@@ -91,20 +122,22 @@ function showApplicationStatusNotification(applicationId, status) {
         </div>
     `;
 
-  showNotification(notificationElement);
+  showNotificationElement(notificationElement);
 }
 
 function showNewApplicationNotification(jobId, applicantName) {
+  // Tạo thông báo dạng popup
   const notificationElement = document.createElement("div");
   notificationElement.className = "notification employer-notification";
   notificationElement.innerHTML = `
         <div class="notification-content">
-            <strong>New Application:</strong> ${applicantName} applied to your job
-            <a href="/Employer/JobApplications/${jobId}" class="notification-link">View Applications</a>
+            <strong>Đơn ứng tuyển mới:</strong> ${applicantName} đã ứng tuyển vào công việc của bạn
+            <a href="/Employer/Applications" class="notification-link">Xem đơn ứng tuyển</a>
         </div>
     `;
 
-  showNotification(notificationElement);
+  // Hiển thị popup thông báo với phần tử HTML
+  showNotificationElement(notificationElement);
 }
 
 function showNewJobInCategoryNotification(category, jobId, jobTitle) {
@@ -117,11 +150,11 @@ function showNewJobInCategoryNotification(category, jobId, jobTitle) {
         </div>
     `;
 
-  showNotification(notificationElement);
+  showNotificationElement(notificationElement);
 }
 
-// Generic function to show notification
-function showNotification(notificationElement) {
+// Generic function to show notification element
+function showNotificationElement(notificationElement) {
   const notificationContainer = document.getElementById(
     "notification-container"
   );
@@ -135,6 +168,25 @@ function showNotification(notificationElement) {
         notificationContainer.removeChild(notificationElement);
       }, 500);
     }, 5000);
+  }
+}
+
+// Đổi tên hàm showNotification cũ thành showNotification mới
+// để đảm bảo tương thích với mã hiện tại
+function showNotification(content) {
+  if (typeof content === "string") {
+    // Nếu là chuỗi, tạo phần tử thông báo từ chuỗi
+    const notificationElement = document.createElement("div");
+    notificationElement.className = "notification";
+    notificationElement.innerHTML = `
+      <div class="notification-content">
+        ${content}
+      </div>
+    `;
+    showNotificationElement(notificationElement);
+  } else {
+    // Nếu là phần tử HTML, sử dụng hàm mới
+    showNotificationElement(content);
   }
 }
 

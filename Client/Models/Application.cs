@@ -13,8 +13,8 @@ namespace CSE443_Project.Models
         public DateTime? ReviewDate { get; set; }
 
         // Navigation properties
-        public Job Job { get; set; } = null!;
-        public JobSeeker JobSeeker { get; set; } = null!;
+        public Job? Job { get; set; }
+        public JobSeeker? JobSeeker { get; set; }
         public CV? CV { get; set; }
     }
 }
