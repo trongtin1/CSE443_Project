@@ -1,35 +1,199 @@
+@using CSE443_Project.Models
 @model IEnumerable<JobCategory>
 
 @{
     ViewData["Title"] = "Job Categories";
 }
 
-<div class="container my-4">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="h3 mb-0">Job Categories</h1>
-            <p class="text-muted">Browse jobs by category</p>
+<style>
+    .category-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        margin: -20px -15px 40px -15px;
+        border-radius: 0 0 30px 30px;
+    }
+
+    .category-card {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-radius: 20px;
+        border: none;
+        background: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .category-icon {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px auto;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+        color: white;
+        position: relative;
+    }
+
+    .category-icon::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+    }
+
+    .category-title {
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 12px;
+        font-size: 1.25rem;
+    }
+
+    .job-count {
+        display: inline-flex;
+        align-items: center;
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+
+    .job-count i {
+        margin-right: 8px;
+        color: #667eea;
+    }
+
+    .btn-view-jobs {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: white;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+
+    .btn-view-jobs:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+
+    .empty-state {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        border-radius: 20px;
+        padding: 60px 40px;
+        text-align: center;
+        margin-top: 40px;
+        border: 2px dashed #cbd5e0;
+    }
+
+    .empty-state i {
+        color: #a0aec0;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h4 {
+        color: #4a5568;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        color: #718096;
+        margin-bottom: 20px;
+    }
+
+    .empty-state .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .page-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+</style>
+
+<div class="category-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="page-title">Job Categories</h1>
+                <p class="page-subtitle">Khám phá các lĩnh vực nghề nghiệp đa dạng và tìm kiếm cơ hội phù hợp với bạn
+                </p>
+            </div>
         </div>
     </div>
+</div>
 
+<div class="container">
     <div class="row g-4">
         @foreach (var category in Model)
         {
-            <div class="col-md-4 col-lg-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body text-center p-4">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card category-card h-100 shadow-sm">
+                    <div class="card-body text-center p-4 d-flex flex-column">
                         <div class="category-icon mb-3">
-                            <i class="fas fa-briefcase fa-3x text-primary"></i>
+                            <i class="fas @category.Icon fa-2x"></i>
                         </div>
-                        <h5 class="card-title">@category.Name</h5>
-                        <p class="text-muted mb-3">
-                            @ViewData[$"JobCount_{category.Id}"] Jobs Available
-                        </p>
-                        <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@category.Id"
-                            class="btn btn-outline-primary">
-                            View Jobs
-                        </a>
-
+                        <h5 class="category-title">@category.Name</h5>
+                        <div class="job-count">
+                            <i class="fas fa-briefcase"></i>
+                            @ViewData[$"JobCount_{category.Id}"] việc làm
+                        </div>
+                        <div class="mt-auto">
+                            <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@category.Id"
+                                class="btn btn-view-jobs">
+                                Xem việc làm
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -38,11 +202,13 @@
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info mt-4">
-            <i class="fas fa-info-circle me-2"></i> No job categories found.
+        <div class="empty-state">
+            <i class="fas fa-briefcase fa-4x"></i>
+            <h4>Chưa có danh mục công việc</h4>
+            <p>Hiện tại chưa có danh mục công việc nào được tạo.</p>
             @if (Context.Session.GetInt32("EmployerId") != null)
             {
-                <a asp-action="Create" class="alert-link">Create a new category</a>
+                <a asp-action="Create" class="btn">Tạo danh mục mới</a>
             }
         </div>
     }

@@ -31,33 +31,100 @@ namespace CSE443_Project.Controllers
             _saveJobService = saveJobService;
             _applicationService = applicationService;
             _notificationService = notificationService;
-        }
-
-        // GET: /Job
-        public async Task<IActionResult> Index(string searchTerm = null)
+        }        // GET: /Job
+        public async Task<IActionResult> Index(string searchTerm = null, int page = 1, int pageSize = 6)
         {
-            var jobs = string.IsNullOrEmpty(searchTerm)
+            var allJobs = string.IsNullOrEmpty(searchTerm)
                 ? await _jobService.GetActiveJobsAsync()
                 : await _jobService.SearchJobsAsync(searchTerm);
 
+            var totalJobs = allJobs.Count();
+            var jobs = allJobs.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
             ViewBag.SearchTerm = searchTerm;
             ViewBag.Categories = await _categoryService.GetAllJobCategoriesAsync();
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalJobs = totalJobs;
+            ViewBag.HasMoreJobs = totalJobs > page * pageSize;
 
             return View(jobs);
         }
 
-        // GET: /Job/Filter
-        public async Task<IActionResult> Filter(string location, string jobType, decimal? minSalary, decimal? maxSalary, bool? isRemote, int? categoryId)
+        // AJAX endpoint for loading more jobs
+        [HttpGet]
+        public async Task<IActionResult> LoadMoreJobs(string searchTerm = null, int page = 1, int pageSize = 6,
+            string location = null, string jobType = null, decimal? minSalary = null, decimal? maxSalary = null,
+            bool? isRemote = null, int? categoryId = null)
         {
-            var jobs = await _jobService.FilterJobsAsync(location, jobType, minSalary, maxSalary, isRemote, categoryId);
+            IEnumerable<Job> allJobs;
 
-            ViewBag.Location = location;
-            ViewBag.JobType = jobType;
-            ViewBag.MinSalary = minSalary;
-            ViewBag.MaxSalary = maxSalary;
+            // Apply filters if provided
+            if (!string.IsNullOrEmpty(location) || !string.IsNullOrEmpty(jobType) || minSalary.HasValue ||
+                maxSalary.HasValue || isRemote.HasValue || categoryId.HasValue)
+            {
+                allJobs = await _jobService.FilterJobsAsync(location, jobType, minSalary, maxSalary, isRemote, categoryId);
+            }
+            else if (!string.IsNullOrEmpty(searchTerm))
+            {
+                allJobs = await _jobService.SearchJobsAsync(searchTerm);
+            }
+            else
+            {
+                allJobs = await _jobService.GetActiveJobsAsync();
+            }
+
+            var totalJobs = allJobs.Count();
+            var jobs = allJobs.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            var response = new
+            {
+                jobs = jobs.Select(job => new
+                {
+                    id = job.Id,
+                    jobTitle = job.JobTitle,
+                    jobDescription = job.JobDescription,
+                    location = job.Location,
+                    jobType = job.JobType,
+                    isRemote = job.IsRemote,
+                    salaryMin = job.SalaryMin,
+                    salaryMax = job.SalaryMax,
+                    createdAt = job.CreatedAt,
+                    employer = new
+                    {
+                        companyName = job.Employer?.CompanyName,
+                        logo = job.Employer?.Logo
+                    },
+                    category = new
+                    {
+                        name = job.Category?.Name
+                    }
+                }),
+                hasMoreJobs = totalJobs > page * pageSize,
+                totalJobs = totalJobs,
+                currentPage = page
+            };
+
+            return Json(response);
+        }        // GET: /Job/Filter
+        public async Task<IActionResult> Filter(string location, string jobType, decimal? minSalary, decimal? maxSalary, bool? isRemote, int? categoryId, int page = 1, int pageSize = 6)
+        {
+            var allJobs = await _jobService.FilterJobsAsync(location, jobType, minSalary, maxSalary, isRemote, categoryId);
+
+            var totalJobs = allJobs.Count();
+            var jobs = allJobs.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            ViewBag.Location = location ?? "";
+            ViewBag.JobType = jobType ?? "";
+            ViewBag.MinSalary = minSalary ?? 0;
+            ViewBag.MaxSalary = maxSalary ?? 0;
             ViewBag.IsRemote = isRemote;
             ViewBag.CategoryId = categoryId;
             ViewBag.Categories = await _categoryService.GetAllJobCategoriesAsync();
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalJobs = totalJobs;
+            ViewBag.HasMoreJobs = totalJobs > page * pageSize;
 
             return View("Index", jobs);
         }

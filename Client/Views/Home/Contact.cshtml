@@ -2,57 +2,189 @@
     ViewData["Title"] = "Contact Us";
 }
 
+<style>
+    .hero-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.1;
+    }
+
+    .contact-card {
+        transition: all 0.3s ease;
+        border: none !important;
+        background: white;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-bottom: 1.5rem;
+    }
+
+    .floating-animation {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .section-title {
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+</style>
+
 <!-- Hero Section -->
-<section class="bg-primary text-white py-5 rounded">
+<section class="hero-gradient text-white py-5 position-relative">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center min-vh-50">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Contact Us</h1>
-                <p class="lead mb-4">Have questions or feedback? We'd love to hear from you!</p>
+                <div class="hero-content">
+                    <h1 class="display-3 fw-bold mb-4 position-relative">
+                        Get In Touch
+                        <span class="d-block display-6 text-white-50">We're Here to Help</span>
+                    </h1>
+                    <p class="lead mb-4 fs-5">Have questions about our platform? Need support? We'd love to connect with
+                        you and help you succeed in your career journey.</p>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock me-2"></i>
+                            <small>24/7 Support Available</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <small>Secure & Private</small>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-6 d-none d-lg-block">
-                <img src="~/images/contact-hero.png" alt="Contact Us" class="img-fluid" />
+                <div class="text-center floating-animation">
+                    <i class="fas fa-comments display-1 text-white opacity-75"></i>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Contact Information Section -->
-<section class="my-5">
+<section class="py-5 bg-light">
     <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title h1 mb-3">How to Reach Us</h2>
+            <p class="text-muted fs-5 mb-0">Choose the best way to connect with our team</p>
+        </div>
+
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4 text-center">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-flex mb-3">
-                            <i class="fas fa-map-marker-alt text-primary fa-2x"></i>
+                <div class="card contact-card shadow-sm h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-map-marker-alt text-white fa-2x"></i>
                         </div>
-                        <h4>Our Location</h4>
-                        <p class="mb-0">123 Job Street, Suite 101<br>San Francisco, CA 94105<br>United States</p>
+                        <h4 class="fw-bold mb-3">Visit Our Office</h4>
+                        <p class="text-muted mb-3">Come say hello at our headquarters</p>
+                        <address class="mb-0 fw-medium">
+                            123 Innovation Drive, Suite 500<br>
+                            San Francisco, CA 94105<br>
+                            United States
+                        </address>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Mon-Fri: 9AM-6PM PST
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4 text-center">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-flex mb-3">
-                            <i class="fas fa-envelope text-primary fa-2x"></i>
+                <div class="card contact-card shadow-sm h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-envelope text-white fa-2x"></i>
                         </div>
-                        <h4>Email Us</h4>
-                        <p class="mb-2">General Inquiries:<br><a href="mailto:info@jobplatform.com" class="text-decoration-none">info@jobplatform.com</a></p>
-                        <p class="mb-0">Support:<br><a href="mailto:support@jobplatform.com" class="text-decoration-none">support@jobplatform.com</a></p>
+                        <h4 class="fw-bold mb-3">Email Support</h4>
+                        <p class="text-muted mb-3">Send us a message anytime</p>
+                        <div class="mb-3">
+                            <div class="mb-2">
+                                <strong class="d-block text-primary">General Inquiries</strong>
+                                <a href="mailto:hello@jobplatform.com"
+                                    class="text-decoration-none fw-medium">hello@jobplatform.com</a>
+                            </div>
+                            <div>
+                                <strong class="d-block text-primary">Technical Support</strong>
+                                <a href="mailto:support@jobplatform.com"
+                                    class="text-decoration-none fw-medium">support@jobplatform.com</a>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-reply me-1"></i>
+                                Response within 2 hours
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4 text-center">
-                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-flex mb-3">
-                            <i class="fas fa-phone-alt text-primary fa-2x"></i>
+                <div class="card contact-card shadow-sm h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-phone-alt text-white fa-2x"></i>
                         </div>
-                        <h4>Call Us</h4>
-                        <p class="mb-2">Toll-Free:<br><a href="tel:+18001234567" class="text-decoration-none">+1 (800) 123-4567</a></p>
-                        <p class="mb-0">Direct:<br><a href="tel:+14151234567" class="text-decoration-none">+1 (415) 123-4567</a></p>
+                        <h4 class="fw-bold mb-3">Call Us Direct</h4>
+                        <p class="text-muted mb-3">Speak with our team immediately</p>
+                        <div class="mb-3">
+                            <div class="mb-2">
+                                <strong class="d-block text-primary">Toll-Free</strong>
+                                <a href="tel:+18001234567" class="text-decoration-none fw-medium fs-5">+1 (800)
+                                    123-4567</a>
+                            </div>
+                            <div>
+                                <strong class="d-block text-primary">International</strong>
+                                <a href="tel:+14151234567" class="text-decoration-none fw-medium">+1 (415) 123-4567</a>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-headset me-1"></i>
+                                24/7 Emergency Support
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,83 +193,150 @@
 </section>
 
 <!-- Contact Form Section -->
-<section class="my-5 py-5 bg-light rounded">
+<section class="py-5">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <h2 class="text-center mb-4">Send Us a Message</h2>
-                <p class="text-center text-muted mb-5">Fill out the form below and we'll get back to you as soon as possible.</p>
-                
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4 p-md-5">
-                        <form id="contactForm" asp-action="SubmitContact" asp-controller="Home" method="post">
-                            <div class="row g-3">
+            <div class="col-lg-10 col-xl-8 mx-auto">
+                <div class="text-center mb-5">
+                    <h2 class="section-title h1 mb-3">Send Us a Message</h2>
+                    <p class="text-muted fs-5 mb-0">We'd love to hear from you. Send us a message and we'll respond as
+                        soon as possible.</p>
+                </div>
+
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        <form id="contactForm" asp-action="SubmitContact" asp-controller="Home" method="post"
+                            class="needs-validation" novalidate>
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
-                                        <label for="name">Your Name</label>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control form-control-lg" id="name" name="name"
+                                            placeholder="Your Name" required>
+                                        <label for="name"><i class="fas fa-user me-2"></i>Full Name</label>
+                                        <div class="invalid-feedback">Please provide your name.</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
-                                        <label for="email">Your Email</label>
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control form-control-lg" id="email" name="email"
+                                            placeholder="Your Email" required>
+                                        <label for="email"><i class="fas fa-envelope me-2"></i>Email Address</label>
+                                        <div class="invalid-feedback">Please provide a valid email address.</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number">
-                                        <label for="phone">Phone Number (Optional)</label>
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control form-control-lg" id="phone" name="phone"
+                                            placeholder="Phone Number">
+                                        <label for="phone"><i class="fas fa-phone me-2"></i>Phone Number
+                                            (Optional)</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" id="subject" name="subject" required>
-                                            <option value="" selected disabled>Select a subject</option>
+                                    <div class="form-floating">
+                                        <select class="form-select form-select-lg" id="subject" name="subject" required>
+                                            <option value="" selected disabled>Choose a topic...</option>
                                             <option value="General Inquiry">General Inquiry</option>
                                             <option value="Technical Support">Technical Support</option>
                                             <option value="Job Posting">Job Posting</option>
                                             <option value="Partnership">Partnership</option>
+                                            <option value="Billing">Billing & Payment</option>
                                             <option value="Other">Other</option>
                                         </select>
-                                        <label for="subject">Subject</label>
+                                        <label for="subject"><i class="fas fa-tag me-2"></i>Subject</label>
+                                        <div class="invalid-feedback">Please select a subject.</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-floating mb-3">
-                                        <textarea class="form-control" id="message" name="message" placeholder="Your Message" style="height: 150px" required></textarea>
-                                        <label for="message">Your Message</label>
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="message" name="message"
+                                            placeholder="Your Message" style="height: 150px" required></textarea>
+                                        <label for="message"><i class="fas fa-comment me-2"></i>Your Message</label>
+                                        <div class="invalid-feedback">Please provide your message.</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" id="agreeTerms" name="agreeTerms" required>
-                                        <label class="form-check-label" for="agreeTerms">
-                                            I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                                    <div class="form-check d-flex align-items-start">
+                                        <input class="form-check-input mt-1 me-3" type="checkbox" id="agreeTerms"
+                                            name="agreeTerms" required>
+                                        <label class="form-check-label text-muted" for="agreeTerms">
+                                            I agree to the <a href="#" class="text-decoration-none fw-medium">Terms of
+                                                Service</a> and <a href="#"
+                                                class="text-decoration-none fw-medium">Privacy Policy</a>
                                         </label>
+                                        <div class="invalid-feedback">You must agree to our terms and conditions.</div>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100">Send Message</button>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                <!-- Quick Contact Options -->
+
             </div>
         </div>
     </div>
 </section>
 
 <!-- Map Section -->
-<section class="my-5">
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="card border-0 shadow-sm">
+        <div class="text-center mb-5">
+            <h2 class="section-title h1 mb-3">Find Us Here</h2>
+            <p class="text-muted fs-5 mb-0">Located in the heart of San Francisco's tech district</p>
+        </div>
+
+        <div class="card border-0 shadow-lg overflow-hidden">
             <div class="card-body p-0">
-                <div class="ratio ratio-21x9">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0976132097383!2d-122.39568492392922!3d37.78894871202424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085806285ddb1a3%3A0x7b0f91520cc5c109!2sSan%20Francisco%2C%20CA%2094105!5e0!3m2!1sen!2sus!4v1650000000000!5m2!1sen!2sus" 
-                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="row g-0">
+                    <div class="col-lg-8">
+                        <div class="ratio ratio-16x9">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0976132097383!2d-122.39568492392922!3d37.78894871202424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085806285ddb1a3%3A0x7b0f91520cc5c109!2sSan%20Francisco%2C%20CA%2094105!5e0!3m2!1sen!2sus!4v1650000000000!5m2!1sen!2sus"
+                                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="p-4 p-lg-5 h-100 d-flex flex-column justify-content-center bg-gradient">
+                            <h3 class="mb-4">Office Details</h3>
+                            <div class="mb-4">
+                                <div class="d-flex align-items-start mb-3">
+                                    <i class="fas fa-map-marker-alt text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <strong class="d-block">Address</strong>
+                                        <span class="text-muted">123 Innovation Drive, Suite 500<br>San Francisco, CA
+                                            94105</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start mb-3">
+                                    <i class="fas fa-clock text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <strong class="d-block">Business Hours</strong>
+                                        <span class="text-muted">Monday - Friday: 9:00 AM - 6:00 PM<br>Weekend: By
+                                            appointment</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-car text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <strong class="d-block">Parking</strong>
+                                        <span class="text-muted">Validated parking available<br>Public transit
+                                            accessible</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="https://maps.google.com" target="_blank" class="btn btn-outline-primary">
+                                <i class="fas fa-directions me-2"></i>Get Directions
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -145,64 +344,138 @@
 </section>
 
 <!-- FAQ Section -->
-<section class="my-5 py-5 bg-light rounded">
+<section class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5">Frequently Asked Questions</h2>
-        
+        <div class="text-center mb-5">
+            <h2 class="section-title h1 mb-3">Frequently Asked Questions</h2>
+            <p class="text-muted fs-5 mb-0">Quick answers to common questions about our platform</p>
+        </div>
+
         <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="accordion" id="contactFAQ">
-                    <div class="accordion-item border-0 mb-3 shadow-sm">
+            <div class="col-lg-10 col-xl-8 mx-auto">
+                <div class="accordion accordion-flush" id="contactFAQ">
+                    <div class="accordion-item border rounded mb-3 shadow-sm">
                         <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <button class="accordion-button fw-medium" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <i class="fas fa-clock text-primary me-3"></i>
                                 How quickly will I receive a response?
                             </button>
                         </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#contactFAQ">
-                            <div class="accordion-body">
-                                We aim to respond to all inquiries within 24-48 business hours. For urgent matters, we recommend calling our support line directly.
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#contactFAQ">
+                            <div class="accordion-body py-4">
+                                We pride ourselves on quick response times. Most inquiries receive a response within
+                                <strong>2-4 hours during business hours</strong>. For urgent technical issues, we offer
+                                24/7 phone support. Email responses typically come within 24 hours, and we always
+                                acknowledge receipt of your message immediately.
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="accordion-item border-0 mb-3 shadow-sm">
+
+                    <div class="accordion-item border rounded mb-3 shadow-sm">
                         <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="fas fa-tools text-primary me-3"></i>
                                 I'm having technical issues with the platform. What should I do?
                             </button>
                         </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#contactFAQ">
-                            <div class="accordion-body">
-                                For technical support, please use the contact form and select "Technical Support" as the subject. Include details about the issue you're experiencing, including your browser type and version, and any error messages you've received.
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                            data-bs-parent="#contactFAQ">
+                            <div class="accordion-body py-4">
+                                For technical support, please use our contact form and select <strong>"Technical
+                                    Support"</strong> as the subject. Include detailed information about:
+                                <ul class="mt-2 mb-0">
+                                    <li>The specific issue you're experiencing</li>
+                                    <li>Your browser type and version</li>
+                                    <li>Any error messages you've received</li>
+                                    <li>Steps you've already tried</li>
+                                </ul>
+                                Our technical team will prioritize your request and provide step-by-step assistance.
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="accordion-item border-0 mb-3 shadow-sm">
+
+                    <div class="accordion-item border rounded mb-3 shadow-sm">
                         <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <i class="fas fa-handshake text-primary me-3"></i>
                                 How can I advertise my company on your platform?
                             </button>
                         </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#contactFAQ">
-                            <div class="accordion-body">
-                                For advertising opportunities and partnerships, please contact our business development team at partnerships@jobplatform.com or use the contact form and select "Partnership" as the subject.
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                            data-bs-parent="#contactFAQ">
+                            <div class="accordion-body py-4">
+                                We offer several advertising and partnership opportunities! Contact our business
+                                development team at <a href="mailto:partnerships@jobplatform.com"
+                                    class="text-decoration-none fw-medium">partnerships@jobplatform.com</a> or use the
+                                contact form and select <strong>"Partnership"</strong> as the subject. We'll discuss:
+                                <ul class="mt-2 mb-0">
+                                    <li>Premium job posting packages</li>
+                                    <li>Featured employer profiles</li>
+                                    <li>Sponsored content opportunities</li>
+                                    <li>Custom partnership solutions</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="accordion-item border-0 shadow-sm">
+
+                    <div class="accordion-item border rounded mb-3 shadow-sm">
                         <h2 class="accordion-header" id="headingFour">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <i class="fas fa-calendar-alt text-primary me-3"></i>
                                 Do you offer customer support on weekends?
                             </button>
                         </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#contactFAQ">
-                            <div class="accordion-body">
-                                Our customer support team is available Monday through Friday, 9 AM to 6 PM EST. While we do monitor urgent inquiries on weekends, full support services resume on the next business day.
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                            data-bs-parent="#contactFAQ">
+                            <div class="accordion-body py-4">
+                                Our <strong>standard support hours</strong> are Monday through Friday, 9:00 AM to 6:00
+                                PM PST. However, we understand that career opportunities don't follow a 9-to-5 schedule:
+                                <ul class="mt-2 mb-0">
+                                    <li><strong>Emergency support:</strong> Available 24/7 via phone</li>
+                                    <li><strong>Email support:</strong> Monitored on weekends for urgent issues</li>
+                                    <li><strong>Platform monitoring:</strong> Continuous uptime monitoring</li>
+                                    <li><strong>Full support:</strong> Resumes first thing Monday morning</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
+
+                    <div class="accordion-item border rounded shadow-sm">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button collapsed fw-medium" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                <i class="fas fa-shield-alt text-primary me-3"></i>
+                                How do you protect my personal information?
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                            data-bs-parent="#contactFAQ">
+                            <div class="accordion-body py-4">
+                                Your privacy and security are our top priorities. We employ industry-standard security
+                                measures including:
+                                <ul class="mt-2 mb-0">
+                                    <li>SSL encryption for all data transmission</li>
+                                    <li>Regular security audits and updates</li>
+                                    <li>GDPR and CCPA compliance</li>
+                                    <li>Secure data storage and backup systems</li>
+                                </ul>
+                                For detailed information, please review our <a href="#"
+                                    class="text-decoration-none fw-medium">Privacy Policy</a>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <p class="text-muted mb-3">Still have questions?</p>
+                    <a href="#contactForm" class="btn btn-primary btn-lg">
+                        <i class="fas fa-envelope me-2"></i>Contact Our Team
+                    </a>
                 </div>
             </div>
         </div>
@@ -211,21 +484,127 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // Form validation
-            $('#contactForm').submit(function(event) {
-                var form = $(this);
-                if (form[0].checkValidity() === false) {
+        $(document).ready(function () {
+            // Enhanced form validation with better UX
+            const form = document.getElementById('contactForm');
+
+            // Bootstrap validation
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
+
+                    // Focus on first invalid field
+                    const firstInvalidField = form.querySelector(':invalid');
+                    if (firstInvalidField) {
+                        firstInvalidField.focus();
+                        firstInvalidField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    // Show loading state
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+                    submitBtn.disabled = true;
+
+                    // Re-enable after a delay (you might want to handle this in your controller instead)
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 3000);
                 }
-                form.addClass('was-validated');
+
+                form.classList.add('was-validated');
+            }, false);
+
+            // Real-time validation feedback
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    if (this.checkValidity()) {
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                    } else {
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    if (this.classList.contains('is-invalid') && this.checkValidity()) {
+                        this.classList.add('is-valid');
+                        this.classList.remove('is-invalid');
+                    }
+                });
             });
-            
-            // Success message handling
-            if (TempData && TempData["SuccessMessage"]) {
-                toastr.success(TempData["SuccessMessage"]);
+
+            // Smooth scrolling for anchor links
+            $('a[href^="#"]').on('click', function (event) {
+                const target = $(this.getAttribute('href'));
+                if (target.length) {
+                    event.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 80
+                    }, 800);
+                }
+            });
+
+            // Success message handling with enhanced styling
+            if (typeof TempData !== 'undefined' && TempData["SuccessMessage"]) {
+                // Create a custom success notification
+                const successAlert = $(`
+                                            <div class="alert alert-success alert-dismissible fade show position-fixed" 
+                                                 style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                ${TempData["SuccessMessage"]}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            </div>
+                                        `);
+
+                $('body').append(successAlert);
+
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    successAlert.alert('close');
+                }, 5000);
+            }
+
+            // Add floating animation to contact cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = `${Math.random() * 0.5}s`;
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe contact cards
+            document.querySelectorAll('.contact-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+
+        // Live chat functionality (placeholder)
+        function openLiveChat() {
+            // Implement your live chat integration here
+            alert('Live chat feature will be available soon!');
+        }
+
+        // Add event listener for live chat button
+        document.addEventListener('DOMContentLoaded', function () {
+            const liveChatBtn = document.querySelector('button:contains("Live Chat")');
+            if (liveChatBtn) {
+                liveChatBtn.addEventListener('click', openLiveChat);
             }
         });
     </script>
-} 
+
+    <!-- Add Animate.css for enhanced animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+}

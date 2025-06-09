@@ -92,5 +92,9 @@ namespace CSE443_Project.Services.Implementations
                 j.IsActive &&
                 j.Deadline >= DateTime.Now);
         }
+        public async Task<int> GetAllEmployersCountAsync()
+        {
+            return await _context.Employers.CountAsync();
+        }
     }
 }

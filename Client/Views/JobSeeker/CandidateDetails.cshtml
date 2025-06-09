@@ -292,19 +292,7 @@
             console.log("Candidate details page loaded");
 
             // Test notification function
-            setTimeout(function () {
-                if (window.addNotification) {
-                    console.log("Testing notification system...");
-                    window.addNotification(
-                        "Thông báo kiểm tra",
-                        "Đây là thông báo kiểm tra để xác nhận hệ thống thông báo hoạt động.",
-                        "application",
-                        window.location.href
-                    );
-                } else {
-                    console.error("addNotification function not available");
-                }
-            }, 2000);
+          
         });
     </script>
 

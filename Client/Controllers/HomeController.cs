@@ -48,6 +48,12 @@ public class HomeController : Controller
         var employers = await _employerService.GetAllEmployersAsync();
         ViewBag.FeaturedEmployers = employers.Take(4).ToList();
 
+        // Get statistics
+        ViewBag.ActiveJobs = await _jobService.GetActiveJobCountAsync();
+        ViewBag.Companies = await _employerService.GetAllEmployersCountAsync();
+        ViewBag.SuccessfulHires = await _jobService.GetSuccessfulHiresCountAsync();
+        ViewBag.JobSeekers = await _jobService.GetJobSeekersCountAsync();
+
         return View();
     }
 

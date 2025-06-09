@@ -18,7 +18,9 @@ namespace CSE443_Project.Services.Interfaces
         Task<Job> UpdateJobAsync(Job job);
         Task<bool> DeleteJobAsync(int id);
         Task<bool> DeactivateJobAsync(int id);
-        Task<int> GetTotalJobCountAsync();
+
         Task<int> GetActiveJobCountAsync();
+        Task<int> GetSuccessfulHiresCountAsync();
+        Task<int> GetJobSeekersCountAsync();
     }
 }

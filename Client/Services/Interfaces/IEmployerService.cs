@@ -15,5 +15,6 @@ namespace CSE443_Project.Services.Interfaces
         Task<bool> DeleteEmployerAsync(int id);
         Task<int> GetJobCountByEmployerIdAsync(int employerId);
         Task<int> GetActiveJobCountByEmployerIdAsync(int employerId);
+        Task<int> GetAllEmployersCountAsync();
     }
 }

@@ -4,250 +4,819 @@
     ViewData["Title"] = "Jobs";
 }
 
-<div class="container">
-    <div class="row">
-        <!-- Sidebar with filters -->
-        <div class="col-lg-3 mb-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Filter Jobs</h5>
+@section Styles {
+    <link rel="stylesheet" href="~/css/job-listing.css" />
+}
 
-                    <form asp-action="Filter" method="get">
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" name="location" class="form-control" value="@ViewBag.Location">
-                        </div>
+<!-- Hero Section -->
+<div class="bg-gradient-primary py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold text-white mb-3">Find Your Dream Job</h1>
+                <p class="lead text-white-50 mb-4">Discover thousands of opportunities from top companies worldwide</p>
+            </div>            <div class="col-lg-4 text-end">
+                <div class="badge bg-white text-primary fs-5 px-3 py-2">
+                    <i class="fas fa-briefcase me-2"></i>@(ViewBag.TotalJobs ?? Model.Count()) Jobs Available
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Job Type</label>
-                            <select name="jobType" class="form-select">
-                                <option value="">All Types</option>
-                                @if (ViewBag.JobType == "Full-time")
-                                {
-                                    <option value="Full-time" selected>Full-time</option>
-                                }
-                                else
-                                {
-                                    <option value="Full-time">Full-time</option>
-                                }
-
-                                @if (ViewBag.JobType == "Part-time")
-                                {
-                                    <option value="Part-time" selected>Part-time</option>
-                                }
-                                else
-                                {
-                                    <option value="Part-time">Part-time</option>
-                                }
-
-                                @if (ViewBag.JobType == "Contract")
-                                {
-                                    <option value="Contract" selected>Contract</option>
-                                }
-                                else
-                                {
-                                    <option value="Contract">Contract</option>
-                                }
-
-                                @if (ViewBag.JobType == "Internship")
-                                {
-                                    <option value="Internship" selected>Internship</option>
-                                }
-                                else
-                                {
-                                    <option value="Internship">Internship</option>
-                                }
-
-                                @if (ViewBag.JobType == "Temporary")
-                                {
-                                    <option value="Temporary" selected>Temporary</option>
-                                }
-                                else
-                                {
-                                    <option value="Temporary">Temporary</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Salary Range</label>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <input type="number" name="minSalary" class="form-control" placeholder="Min"
-                                        value="@ViewBag.MinSalary">
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" name="maxSalary" class="form-control" placeholder="Max"
-                                        value="@ViewBag.MaxSalary">
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <!-- Enhanced Sidebar with filters -->
+        <div class="col-lg-3">
+            <div class="position-sticky" style="top: 2rem;">
+                <div class="card border-0 shadow-lg rounded-3">
+                    <div class="card-header bg-primary text-white border-0 rounded-top-3">
+                        <h5 class="card-title mb-0 d-flex align-items-center">
+                            <i class="fas fa-filter me-2"></i>Filter Jobs
+                        </h5>
+                    </div>
+                    <div class="card-body p-4":                        <form asp-action="Filter" method="get" class="needs-validation" novalidate>
+                            <!-- Search Section -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">
+                                    <i class="fas fa-search me-2 text-primary"></i>Search Keywords
+                                </label>
+                                <div class="input-group">
+                                    <input type="text" name="searchTerm" class="form-control form-control-lg border-0 shadow-sm" 
+                                           placeholder="Job title, company, or keywords..." value="@ViewBag.SearchTerm">
+                                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                                        <i class="fas fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
 
+                            <hr class="my-4">
 
-                        <div class="mb-3">
-                            <label class="form-label">Category</label>
-                            <select name="categoryId" class="form-select">
-                                <option value="">All Categories</option>
-                                @foreach (var category in ViewBag.Categories)
-                                {
-                                    @if (ViewBag.CategoryId == category.Id)
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">
+                                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>Location
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0">
+                                        <i class="fas fa-location-dot text-muted"></i>
+                                    </span>
+                                    <input type="text" name="location" class="form-control border-0 shadow-sm" 
+                                           placeholder="City, state, or remote" value="@ViewBag.Location">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">
+                                    <i class="fas fa-briefcase me-2 text-primary"></i>Job Type
+                                </label>
+                                <select name="jobType" class="form-select form-select-lg border-0 shadow-sm">
+                                    <option value="">All Job Types</option>                                    @if (ViewBag.JobType == "Full-time")
                                     {
-                                        <option value="@category.Id" selected>@category.Name</option>
+                                        <option value="Full-time" selected>
+                                            <i class="fas fa-clock"></i> Full-time
+                                        </option>
                                     }
                                     else
                                     {
-                                        <option value="@category.Id">@category.Name</option>
+                                        <option value="Full-time">Full-time</option>
                                     }
-                                }
-                            </select>
-                        </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        </div>
-                    </form>
+                                    @if (ViewBag.JobType == "Part-time")
+                                    {
+                                        <option value="Part-time" selected>Part-time</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Part-time">Part-time</option>
+                                    }
+
+                                    @if (ViewBag.JobType == "Contract")
+                                    {
+                                        <option value="Contract" selected>Contract</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Contract">Contract</option>
+                                    }
+
+                                    @if (ViewBag.JobType == "Internship")
+                                    {
+                                        <option value="Internship" selected>Internship</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Internship">Internship</option>
+                                    }
+
+                                    @if (ViewBag.JobType == "Temporary")
+                                    {
+                                        <option value="Temporary" selected>Temporary</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Temporary">Temporary</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">
+                                    <i class="fas fa-dollar-sign me-2 text-primary"></i>Salary Range
+                                </label>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-0">$</span>
+                                            <input type="number" name="minSalary" class="form-control border-0 shadow-sm" 
+                                                   placeholder="Min" value="@ViewBag.MinSalary">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-0">$</span>
+                                            <input type="number" name="maxSalary" class="form-control border-0 shadow-sm" 
+                                                   placeholder="Max" value="@ViewBag.MaxSalary">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">
+                                    <i class="fas fa-tags me-2 text-primary"></i>Category
+                                </label>
+                                <select name="categoryId" class="form-select form-select-lg border-0 shadow-sm">
+                                    <option value="">All Categories</option>                                    @foreach (var category in ViewBag.Categories)
+                                    {
+                                        @if (ViewBag.CategoryId == category.Id)
+                                        {
+                                            <option value="@category.Id" selected>@category.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 fw-semibold">
+                                    <i class="fas fa-search me-2"></i>Apply Filters
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                                    <i class="fas fa-times me-2"></i>Clear All
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main content with job listings -->
+        <!-- Enhanced Main content with job listings -->
         <div class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0">
-                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
-                    {
-                        <span>Search Results for "@ViewBag.SearchTerm"</span>
-                    }
-                    else if (ViewBag.CategoryName != null)
-                    {
-                        <span>Jobs in @ViewBag.CategoryName</span>
-                    }
-                    else if (ViewBag.EmployerName != null)
-                    {
-                        <span>Jobs at @ViewBag.EmployerName</span>
-                    }
-                    else
-                    {
-                        <span>All Jobs</span>
-                    }
-                </h1>
-
-                <div class="d-flex align-items-center">
-                    <span class="me-2">@Model.Count() jobs found</span>
+            <!-- Page Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 p-4 bg-white rounded-3 shadow-sm">
+                <div class="mb-3 mb-md-0">
+                    <h1 class="h2 fw-bold text-dark mb-2">
+                        @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                        {
+                            <span><i class="fas fa-search text-primary me-2"></i>Search Results for "@ViewBag.SearchTerm"</span>
+                        }
+                        else if (ViewBag.CategoryName != null)
+                        {
+                            <span><i class="fas fa-tag text-primary me-2"></i>Jobs in @ViewBag.CategoryName</span>
+                        }
+                        else if (ViewBag.EmployerName != null)
+                        {
+                            <span><i class="fas fa-building text-primary me-2"></i>Jobs at @ViewBag.EmployerName</span>
+                        }
+                        else
+                        {
+                            <span><i class="fas fa-briefcase text-primary me-2"></i>All Jobs</span>
+                        }
+                    </h1>
+                    <p class="text-muted mb-0">Discover your next career opportunity</p>
+                </div>                <div class="d-flex align-items-center gap-3">
+                    <div class="badge bg-primary-subtle text-primary fs-6 px-3 py-2">
+                        <i class="fas fa-list-check me-1"></i>
+                        Showing @Model.Count() of @(ViewBag.TotalJobs ?? Model.Count()) results
+                    </div>
                     <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Sort by
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-sort me-2"></i>Sort by
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                            <li><a class="dropdown-item" href="#">Newest</a></li>
-                            <li><a class="dropdown-item" href="#">Salary: High to Low</a></li>
-                            <li><a class="dropdown-item" href="#">Salary: Low to High</a></li>
+                        <ul class="dropdown-menu shadow-lg border-0" aria-labelledby="sortDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-clock me-2"></i>Newest First</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-arrow-up me-2"></i>Salary: High to Low</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-arrow-down me-2"></i>Salary: Low to High</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-star me-2"></i>Most Relevant</a></li>
                         </ul>
                     </div>
                 </div>
-            </div>
-
-            <!-- Search form -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body">
-                    <form asp-action="Index" method="get" class="d-flex">
-                        <input type="text" name="searchTerm" class="form-control me-2"
-                            placeholder="Search jobs by title, company, or keywords" value="@ViewBag.SearchTerm">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Job listings -->
+            </div>            <!-- Enhanced Job listings -->
             @if (Model.Any())
             {
                 <div class="job-list">
                     @foreach (var job in Model)
                     {
-                        <div class="card border-0 shadow-sm mb-3">
+                        <div class="card border-0 shadow-sm mb-4 hover-lift position-relative overflow-hidden">
+                            <!-- Featured Job Ribbon -->
+                            @if (DateTime.Now.Subtract(job.CreatedAt).Days <= 3)
+                            {
+                                <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1 
+                                           small fw-semibold" style="transform: rotate(45deg); transform-origin: top right; margin-top: 15px; margin-right: -30px;">
+                                    NEW
+                                </div>
+                            }
+                            
                             <div class="card-body p-4">
-                                <div class="row">
+                                <div class="row g-4">
                                     <div class="col-md-8">
-                                        <div class="d-flex align-items-center mb-2"></div>
-
-                                        <div>
-                                            <h5 class="card-title mb-1">
-                                                <a asp-action="Details" asp-route-id="@job.Id"
-                                                    class="text-decoration-none text-dark">@job.JobTitle
-                                                    (@job.Category.Name)</a>
-                                            </h5>
-                                            <div class="d-flex align-items-center">
-                                                <img src="@job.Employer.Logo" alt="@job.Employer.CompanyName"
-                                                    class="rounded-circle me-2" style="width: 30px; height: 30px;">
-                                                <span class="text-muted mb-0">@job.Employer.CompanyName</span>
+                                        <div class="d-flex align-items-start">
+                                            <!-- Company Logo -->
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="rounded-3 overflow-hidden shadow-sm" style="width: 60px; height: 60px;">                                                    <img src="@(string.IsNullOrEmpty(job.Employer?.Logo) ? "/images/default-company.png" : job.Employer.Logo)" 
+                                                         alt="@(job.Employer?.CompanyName ?? "Company")" class="w-100 h-100 object-fit-cover">
+                                                </div>
                                             </div>
-
+                                            
+                                            <div class="flex-grow-1">
+                                                <!-- Job Title -->
+                                                <h5 class="card-title mb-2 fw-bold">
+                                                    <a asp-action="Details" asp-route-id="@job.Id"
+                                                       class="text-decoration-none text-dark stretched-link job-title-link">
+                                                        @job.JobTitle
+                                                    </a>
+                                                </h5>
+                                                  <!-- Company Info -->
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <span class="text-primary fw-semibold me-3">@(job.Employer?.CompanyName ?? "Company")</span>
+                                                    <span class="text-muted">
+                                                        <i class="fas fa-building me-1"></i>@(job.Category?.Name ?? "General")
+                                                    </span>
+                                                </div>
+                                                
+                                                <!-- Job Description -->
+                                                <p class="card-text text-muted mb-3 line-clamp-2">
+                                                    @(job.JobDescription != null && job.JobDescription.Length > 150 ?
+                                                      job.JobDescription.Substring(0, 150) + "..." : job.JobDescription)
+                                                </p>
+                                                
+                                                <!-- Job Details -->
+                                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                                    <span class="badge bg-@(job.JobType == "Full-time" ? "success" : 
+                                                                          job.JobType == "Part-time" ? "info" : 
+                                                                          job.JobType == "Contract" ? "warning" : 
+                                                                          job.JobType == "Internship" ? "secondary" : "primary") px-3 py-2">
+                                                        <i class="fas fa-briefcase me-1"></i>@job.JobType
+                                                    </span>
+                                                    
+                                                    @if (job.IsRemote)
+                                                    {
+                                                        <span class="badge bg-light text-dark border px-3 py-2">
+                                                            <i class="fas fa-home me-1"></i>Remote
+                                                        </span>
+                                                    }
+                                                    
+                                                    <span class="badge bg-light text-dark border px-3 py-2">
+                                                        <i class="fas fa-map-marker-alt me-1"></i>@(job.Location ?? "Not specified")
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="mb-2">
-                                        <span
-                                            class="badge bg-@(job.JobType == "Full-time" ? "success" : 
-                                                                                                                                                                                                                                                   job.JobType == "Part-time" ? "info" : 
-                                                                                                                                                                                                                                                   job.JobType == "Contract" ? "warning" : 
-                                                                                                                                                                                                                                                   job.JobType == "Internship" ? "secondary" : "primary")">
-                                    @job.JobType
-                                </span>
-
-                                @if (job.IsRemote)
-                                        {
-                                            <span class="badge bg-light text-dark ms-1">Remote</span>
-                                        }
-
-                                    <span class="ms-2">
-                                        <i class="fas fa-map-marker-alt text-muted me-1"></i> @job.Location
-                                    </span>
-                                </div>
-
-                                <p class="card-text text-muted mb-0">
-                                    @(job.JobDescription != null && job.JobDescription.Length > 150 ?
-                                                                    job.JobDescription.Substring(0, 150) + "..." : job.JobDescription)
-                                                                                                                                  </p>
-                                                                                                                              </div>
-
-                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                                <div class="mb-2">
-                                    <span class="fw-bold text-primary">
-                                        @(job.SalaryMin > 0 && job.SalaryMax > 0 ?
-                                                                            $"${job.SalaryMin:N0} - ${job.SalaryMax:N0}" :
-                                                                            "Competitive")
-                                </span>
-                            </div>
-
-                                    <div class="mb-3">
-                                        <small class="text-muted">
-                                            <i class="fas fa-clock me-1"></i> @((DateTime.Now - job.CreatedAt).Days) days ago
-                                        </small>
+                                    
+                                    <div class="col-md-4">
+                                        <div class="text-md-end h-100 d-flex flex-column justify-content-between">
+                                            <!-- Salary -->
+                                            <div class="mb-3">
+                                                <div class="fw-bold text-success fs-5 mb-1">
+                                                    @if (job.SalaryMin > 0 && job.SalaryMax > 0)
+                                                    {
+                                                        <i class="fas fa-dollar-sign me-1"></i>@($"{job.SalaryMin:N0} - ${job.SalaryMax:N0}")
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-handshake me-1"></i><span>Competitive</span>
+                                                    }
+                                                </div>
+                                                <small class="text-muted">Annual salary</small>
+                                            </div>
+                                            
+                                            <!-- Posted Date -->
+                                            <div class="mb-3">
+                                                <small class="text-muted d-flex align-items-center justify-content-md-end">
+                                                    <i class="fas fa-clock me-2"></i>
+                                                    @{
+                                                        var daysAgo = (DateTime.Now - job.CreatedAt).Days;
+                                                        if (daysAgo == 0)
+                                                        {
+                                                            <span class="text-success fw-semibold">Posted today</span>
+                                                        }
+                                                        else if (daysAgo == 1)
+                                                        {
+                                                            <span>Posted yesterday</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Posted @daysAgo days ago</span>
+                                                        }
+                                                    }
+                                                </small>
+                                            </div>
+                                            
+                                            <!-- Action Buttons -->
+                                            <div class="d-flex gap-2 justify-content-md-end">
+                                                <button class="btn btn-outline-primary position-relative" style="z-index: 10;" 
+                                                        onclick="event.preventDefault(); event.stopPropagation(); saveJob(@job.Id)">
+                                                    <i class="fas fa-heart"></i>
+                                                </button>
+                                                <a asp-action="Details" asp-route-id="@job.Id" 
+                                                   class="btn btn-primary px-4 position-relative" style="z-index: 10;">
+                                                    <i class="fas fa-eye me-2"></i>View Details
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <a asp-action="Details" asp-route-id="@job.Id" class="btn btn-outline-primary">View
-                                        Details</a>
                                 </div>
                             </div>
                         </div>
-
-                                }
+                    }
                 </div>
-            }
-            else
+                  <!-- Load More Jobs Button -->
+                @if (ViewBag.HasMoreJobs == true)
+                {
+                    <div class="text-center mt-5" id="loadMoreContainer">
+                        <button class="btn btn-outline-primary btn-lg px-5" id="loadMoreBtn" onclick="loadMoreJobs()">
+                            <i class="fas fa-plus me-2"></i>Load More Jobs
+                            <span class="spinner-border spinner-border-sm ms-2 d-none" id="loadingSpinner"></span>
+                        </button>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                Showing <span id="currentJobCount">@Model.Count()</span> of 
+                                <span id="totalJobCount">@(ViewBag.TotalJobs ?? Model.Count())</span> jobs
+                            </small>
+                        </div>
+                    </div>
+                }
+                else if (Model.Any())
+                {
+                    <div class="text-center mt-5">
+                        <div class="alert alert-info border-0">
+                            <i class="fas fa-check-circle me-2"></i>
+                            You've viewed all available jobs! Check back later for new opportunities.
+                        </div>
+                    </div>
+                }
+            }            else
             {
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i> No jobs found matching your criteria. Try adjusting your filters
-                    or search terms.
+                <!-- Enhanced Empty State -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 120px; height: 120px;">
+                            <i class="fas fa-search text-muted" style="font-size: 3rem;"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-muted mb-3">No Jobs Found</h3>
+                    <p class="text-muted mb-4 fs-5">
+                        We couldn't find any jobs matching your criteria.<br>
+                        Try adjusting your filters or search terms to discover more opportunities.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <button class="btn btn-primary" onclick="clearFilters()">
+                            <i class="fas fa-times me-2"></i>Clear All Filters
+                        </button>
+                        <a href="/Job" class="btn btn-outline-primary">
+                            <i class="fas fa-list me-2"></i>View All Jobs
+                        </a>
+                    </div>
                 </div>
             }
         </div>
     </div>
 </div>
 
+<!-- Custom Styles -->
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .hover-lift {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.15) !important;
+    }
+    
+    .job-title-link:hover {
+        color: #667eea !important;
+    }
+    
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .btn-primary:hover {
+        background-color: #5a6fd8;
+        border-color: #5a6fd8;
+    }
+    
+    .text-primary {
+        color: #667eea !important;
+    }
+    
+    .bg-primary {
+        background-color: #667eea !important;
+    }
+    
+    .bg-primary-subtle {
+        background-color: rgba(102, 126, 234, 0.1) !important;
+    }    .position-sticky {
+        position: sticky !important;
+    }
+</style>
+</style>
+
 @section Scripts {
     <script>
-        // Add any JavaScript needed for the job listing page
+        // Pagination and lazy loading variables
+        let currentPage = @(ViewBag.CurrentPage ?? 1);
+        let isLoading = false;
+        let hasMoreJobs = @(ViewBag.HasMoreJobs?.ToString().ToLower() ?? "false");
+
+        // Enhanced JavaScript for the job listing page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Add loading animation to form submit buttons
+            const formButtons = document.querySelectorAll('button[type="submit"]');
+            formButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.id !== 'loadMoreBtn') { // Don't apply to load more button
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+                        this.disabled = true;
+                        
+                        // Re-enable after form submission
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                        }, 3000);
+                    }
+                });
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add entrance animations to job cards
+            animateJobCards();
+        });
+
+        // Load more jobs function
+        function loadMoreJobs() {
+            if (isLoading || !hasMoreJobs) return;
+
+            isLoading = true;
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Show loading state
+            loadMoreBtn.disabled = true;
+            loadingSpinner.classList.remove('d-none');
+            loadMoreBtn.querySelector('i').classList.add('d-none');
+
+            // Get current filter values
+            const searchTerm = '@ViewBag.SearchTerm' || '';
+            const location = '@ViewBag.Location' || '';
+            const jobType = '@ViewBag.JobType' || '';
+            const minSalary = '@ViewBag.MinSalary' || '';
+            const maxSalary = '@ViewBag.MaxSalary' || '';
+            const categoryId = '@ViewBag.CategoryId' || '';
+
+            // Prepare query parameters
+            const params = new URLSearchParams({
+                page: currentPage + 1,
+                pageSize: 6
+            });
+
+            if (searchTerm) params.append('searchTerm', searchTerm);
+            if (location) params.append('location', location);
+            if (jobType) params.append('jobType', jobType);
+            if (minSalary && minSalary !== '0') params.append('minSalary', minSalary);
+            if (maxSalary && maxSalary !== '0') params.append('maxSalary', maxSalary);
+            if (categoryId) params.append('categoryId', categoryId);
+
+            // Make AJAX request
+            fetch(`/Job/LoadMoreJobs?${params.toString()}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.jobs && data.jobs.length > 0) {
+                        // Append new jobs to the list
+                        appendJobsToList(data.jobs);
+                        
+                        // Update pagination state
+                        currentPage = data.currentPage;
+                        hasMoreJobs = data.hasMoreJobs;
+                        
+                        // Update job count display
+                        updateJobCount();
+                        
+                        // Hide load more button if no more jobs
+                        if (!hasMoreJobs) {
+                            document.getElementById('loadMoreContainer').innerHTML = `
+                                <div class="alert alert-info border-0">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    You've viewed all available jobs! Check back later for new opportunities.
+                                </div>
+                            `;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading more jobs:', error);
+                    showErrorMessage('Failed to load more jobs. Please try again.');
+                })
+                .finally(() => {
+                    // Reset loading state
+                    isLoading = false;
+                    loadMoreBtn.disabled = false;
+                    loadingSpinner.classList.add('d-none');
+                    loadMoreBtn.querySelector('i').classList.remove('d-none');
+                });
+        }
+
+        // Append new jobs to the existing list
+        function appendJobsToList(jobs) {
+            const jobList = document.querySelector('.job-list');
+            
+            jobs.forEach(job => {
+                const jobCard = createJobCard(job);
+                jobList.appendChild(jobCard);
+            });
+            
+            // Animate new cards
+            animateJobCards();
+        }
+
+        // Create job card HTML
+        function createJobCard(job) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card border-0 shadow-sm mb-4 hover-lift position-relative overflow-hidden job-card-new';
+            
+            const daysAgo = Math.floor((new Date() - new Date(job.createdAt)) / (1000 * 60 * 60 * 24));
+            let postedText = '';
+            if (daysAgo === 0) {
+                postedText = '<span class="text-success fw-semibold">Posted today</span>';
+            } else if (daysAgo === 1) {
+                postedText = '<span>Posted yesterday</span>';
+            } else {
+                postedText = `<span>Posted ${daysAgo} days ago</span>`;
+            }
+
+            const salaryText = job.salaryMin > 0 && job.salaryMax > 0 
+                ? `<i class="fas fa-dollar-sign me-1"></i>$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`
+                : '<i class="fas fa-handshake me-1"></i><span>Competitive</span>';
+
+            const badgeColor = job.jobType === 'Full-time' ? 'success' : 
+                              job.jobType === 'Part-time' ? 'info' : 
+                              job.jobType === 'Contract' ? 'warning' : 
+                              job.jobType === 'Internship' ? 'secondary' : 'primary';
+
+            cardDiv.innerHTML = `
+                ${daysAgo <= 3 ? `
+                    <div class="position-absolute top-0 end-0 bg-success text-white px-3 py-1 
+                               small fw-semibold" style="transform: rotate(45deg); transform-origin: top right; margin-top: 15px; margin-right: -30px;">
+                        NEW
+                    </div>
+                ` : ''}
+                
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="rounded-3 overflow-hidden shadow-sm" style="width: 60px; height: 60px;">
+                                        <img src="${job.employer.logo || '/images/default-company.png'}" 
+                                             alt="${job.employer.companyName || 'Company'}" class="w-100 h-100 object-fit-cover">
+                                    </div>
+                                </div>
+                                
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title mb-2 fw-bold">
+                                        <a href="/Job/Details/${job.id}" class="text-decoration-none text-dark stretched-link job-title-link">
+                                            ${job.jobTitle}
+                                        </a>
+                                    </h5>
+                                    
+                                    <div class="d-flex align-items-center mb-3">
+                                        <span class="text-primary fw-semibold me-3">${job.employer.companyName || 'Company'}</span>
+                                        <span class="text-muted">
+                                            <i class="fas fa-building me-1"></i>${job.category.name || 'General'}
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="card-text text-muted mb-3 line-clamp-2">
+                                        ${job.jobDescription && job.jobDescription.length > 150 
+                                            ? job.jobDescription.substring(0, 150) + '...' 
+                                            : job.jobDescription || ''}
+                                    </p>
+                                    
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        <span class="badge bg-${badgeColor} px-3 py-2">
+                                            <i class="fas fa-briefcase me-1"></i>${job.jobType}
+                                        </span>
+                                        
+                                        ${job.isRemote ? `
+                                            <span class="badge bg-light text-dark border px-3 py-2">
+                                                <i class="fas fa-home me-1"></i>Remote
+                                            </span>
+                                        ` : ''}
+                                        
+                                        <span class="badge bg-light text-dark border px-3 py-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Not specified'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="text-md-end h-100 d-flex flex-column justify-content-between">
+                                <div class="mb-3">
+                                    <div class="fw-bold text-success fs-5 mb-1">
+                                        ${salaryText}
+                                    </div>
+                                    <small class="text-muted">Annual salary</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted d-flex align-items-center justify-content-md-end">
+                                        <i class="fas fa-clock me-2"></i>
+                                        ${postedText}
+                                    </small>
+                                </div>
+                                
+                                <div class="d-flex gap-2 justify-content-md-end">
+                                    <button class="btn btn-outline-primary position-relative" style="z-index: 10;" 
+                                            onclick="event.preventDefault(); event.stopPropagation(); saveJob(${job.id})">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <a href="/Job/Details/${job.id}" 
+                                       class="btn btn-primary px-4 position-relative" style="z-index: 10;">
+                                        <i class="fas fa-eye me-2"></i>View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return cardDiv;
+        }
+
+        // Update job count display
+        function updateJobCount() {
+            const currentJobCards = document.querySelectorAll('.job-list .card').length;
+            const currentJobCountElement = document.getElementById('currentJobCount');
+            if (currentJobCountElement) {
+                currentJobCountElement.textContent = currentJobCards;
+            }
+        }
+
+        // Animate job cards
+        function animateJobCards() {
+            const newCards = document.querySelectorAll('.job-card-new');
+            newCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('job-card-enter');
+                    card.classList.remove('job-card-new');
+                }, index * 100);
+            });
+        }
+
+        // Show error message
+        function showErrorMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+            alertDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+            loadMoreContainer.parentNode.insertBefore(alertDiv, loadMoreContainer);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Clear all filters function
+        function clearFilters() {
+            const form = document.querySelector('form[asp-action="Filter"]');
+            if (form) {
+                form.reset();
+                // Clear URL parameters and reload page
+                window.location.href = window.location.pathname;
+            }
+        }
+
+        // Save job function (placeholder)
+        function saveJob(jobId) {
+            console.log('Saving job:', jobId);
+            
+            // Show feedback to user
+            const button = event.target.closest('button');
+            const originalIcon = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-heart text-danger"></i>';
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-outline-danger');
+            
+            // You can add AJAX call here to save to backend
+            setTimeout(() => {
+                // Reset after demonstration
+                button.innerHTML = originalIcon;
+                button.classList.remove('btn-outline-danger');
+                button.classList.add('btn-outline-primary');
+            }, 2000);
+        }
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                const forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Infinite scroll (optional - for automatic loading)
+        function enableInfiniteScroll() {
+            window.addEventListener('scroll', function() {
+                if (isLoading || !hasMoreJobs) return;
+                
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const documentHeight = document.documentElement.offsetHeight;
+                
+                // Load more when user is 200px from bottom
+                if (scrollPosition >= documentHeight - 200) {
+                    loadMoreJobs();
+                }
+            });
+        }
+
+        // Uncomment the line below to enable infinite scroll
+        // enableInfiniteScroll();
     </script>
 }

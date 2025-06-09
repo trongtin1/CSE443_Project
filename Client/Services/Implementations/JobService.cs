@@ -167,15 +167,22 @@ namespace CSE443_Project.Services.Implementations
             return true;
         }
 
-        public async Task<int> GetTotalJobCountAsync()
-        {
-            return await _context.Jobs.CountAsync();
-        }
 
         public async Task<int> GetActiveJobCountAsync()
         {
             return await _context.Jobs
                 .CountAsync(j => j.IsActive && j.Deadline >= DateTime.Now);
+        }
+
+        public async Task<int> GetSuccessfulHiresCountAsync()
+        {
+            return await _context.Candidates
+                .CountAsync(j => j.Status == "Hired");
+        }
+
+        public async Task<int> GetJobSeekersCountAsync()
+        {
+            return await _context.JobSeekers.CountAsync();
         }
     }
 }
