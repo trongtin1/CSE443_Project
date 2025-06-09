@@ -10,9 +10,9 @@
             <h2 class="mb-0 fw-bold text-primary gradient-text">CV Details</h2>
         </div>
         <div class="d-flex gap-2">
-            <a href="/Admin/CVs/Download/@Model.Id" class="btn btn-outline-primary">
+            @* <a href="/Admin/CVs/Download/@Model.Id" class="btn btn-outline-primary">
                 <i class="fas fa-download me-2"></i>Download
-            </a>
+            </a> *@
             @if (!string.IsNullOrEmpty(Model.FilePath) && System.IO.Path.GetExtension(Model.FilePath).ToLower() == ".pdf")
             {
                 <a href="/Admin/CVs/Preview/@Model.Id" target="_blank" class="btn btn-outline-success">
@@ -162,7 +162,7 @@
 
             <div class="card shadow-sm glass-effect">
                 <div class="card-body p-4">
-                    <h5 class="card-title mb-4 border-bottom pb-2">Actions</h5>
+                    @* <h5 class="card-title mb-4 border-bottom pb-2">Actions</h5>
                     <div class="d-grid gap-2">
                         <a href="/Admin/CVs/Download/@Model.Id" class="btn btn-success">
                             <i class="fas fa-download me-2"></i>Download CV
@@ -170,7 +170,7 @@
                         <a href="/Admin/CVs/Delete/@Model.Id" class="btn btn-danger">
                             <i class="fas fa-trash me-2"></i>Delete CV
                         </a>
-                    </div>
+                    </div> *@
                 </div>
             </div>
         </div>
