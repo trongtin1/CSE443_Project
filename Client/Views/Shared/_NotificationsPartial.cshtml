@@ -272,8 +272,8 @@
 
         window.showNewApplicationNotification = function (jobId, applicantName) {
             addNotification(
-                'Đơn ứng tuyển mới',
-                `${applicantName} đã ứng tuyển vào công việc của bạn`,
+                'New Application',
+                `${applicantName} applied for your job`,
                 'employer',
                 `/Employer/Applications`
             );
@@ -281,7 +281,7 @@
 
         window.showNewJobInCategoryNotification = function (category, jobId, jobTitle) {
             addNotification(
-                `Công việc mới trong ${category}`,
+                `New job in ${category}`,
                 jobTitle,
                 'category',
                 `/Job/Details/${jobId}`

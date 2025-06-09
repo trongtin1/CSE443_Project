@@ -2,12 +2,13 @@
 
 // Khởi tạo kết nối SignalR cho employer
 document.addEventListener("DOMContentLoaded", function () {
-  // Kiểm tra xem có phải là employer không
+  // Kiểm tra xem có phải là employer không và chưa có kết nối
   const employerId =
     document.getElementById("current-employer-id")?.value ||
     localStorage.getItem("employerId");
 
-  if (employerId) {
+  // Only initialize if we're an employer and window.employerConnection doesn't exist
+  if (employerId && !window.employerConnection) {
     console.log(
       `Initializing employer connection for employer ID: ${employerId}`
     );
@@ -16,67 +17,36 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("employerId", employerId);
 
     // Tạo kết nối đến JobHub
-    const employerConnection = new signalR.HubConnectionBuilder()
+    window.employerConnection = new signalR.HubConnectionBuilder()
       .withUrl("/jobHub")
       .withAutomaticReconnect()
       .build();
 
     // Xử lý sự kiện nhận thông báo ứng tuyển mới
-    employerConnection.on("NewApplication", (jobId, applicantName) => {
+    window.employerConnection.on("NewApplication", (jobId, applicantName) => {
       console.log(
         `Received new application notification: ${applicantName} applied for job ${jobId}`
       );
 
-      // Hiển thị thông báo popup
-      const notificationElement = document.createElement("div");
-      notificationElement.className = "notification employer-notification";
-      notificationElement.innerHTML = `
-                <div class="notification-content">
-                    <strong>Đơn ứng tuyển mới:</strong> ${applicantName} đã ứng tuyển vào công việc của bạn
-                    <a href="/Employer/Applications" class="notification-link">Xem đơn ứng tuyển</a>
-                </div>
-            `;
-
-      // Hiển thị thông báo
-      const notificationContainer = document.getElementById(
-        "notification-container"
-      );
-      if (notificationContainer) {
-        notificationContainer.appendChild(notificationElement);
-
-        // Tự động ẩn sau 5 giây
-        setTimeout(() => {
-          notificationElement.classList.add("fade-out");
-          setTimeout(() => {
-            notificationContainer.removeChild(notificationElement);
-          }, 500);
-        }, 5000);
-      }
-
-      // Thêm vào danh sách thông báo
-      if (window.addNotification) {
-        window.addNotification(
-          "Đơn ứng tuyển mới",
-          `${applicantName} đã ứng tuyển vào công việc của bạn`,
-          "application",
-          `/Employer/Applications`
-        );
+      // Use the global notification function to show the notification
+      if (window.showNewApplicationNotification) {
+        window.showNewApplicationNotification(jobId, applicantName);
       }
     });
 
     // Xử lý sự kiện debug
-    employerConnection.on("DebugNotification", (message) => {
+    window.employerConnection.on("DebugNotification", (message) => {
       console.log(`Debug notification: ${message}`);
     });
 
     // Khởi động kết nối
-    employerConnection
+    window.employerConnection
       .start()
       .then(() => {
         console.log("Employer connection established");
 
         // Đăng ký tham gia nhóm employer
-        return employerConnection.invoke("JoinAsEmployer", employerId);
+        return window.employerConnection.invoke("JoinAsEmployer", employerId);
       })
       .then(() => {
         console.log(`Successfully joined as Employer ${employerId}`);
@@ -87,11 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Thử kết nối lại sau 5 giây
         setTimeout(() => {
           console.log("Attempting to reconnect...");
-          employerConnection
+          window.employerConnection
             .start()
             .then(() => {
               console.log("Reconnected successfully");
-              return employerConnection.invoke("JoinAsEmployer", employerId);
+              return window.employerConnection.invoke("JoinAsEmployer", employerId);
             })
             .then(() => {
               console.log(
@@ -105,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
     // Xử lý sự kiện đóng kết nối
-    employerConnection.onclose((error) => {
+    window.employerConnection.onclose((error) => {
       console.log("Employer connection closed");
       if (error) {
         console.error("Connection closed due to error: " + error);
@@ -113,11 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Thử kết nối lại sau 5 giây
       setTimeout(() => {
-        employerConnection
+        window.employerConnection
           .start()
           .then(() => {
             console.log("Reconnected after connection closed");
-            return employerConnection.invoke("JoinAsEmployer", employerId);
+            return window.employerConnection.invoke("JoinAsEmployer", employerId);
           })
           .catch((err) => {
             console.error(

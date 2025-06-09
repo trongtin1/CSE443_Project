@@ -50,14 +50,14 @@ namespace CSE443_Project.Services.Implementations
                 await _jobHubContext.Clients.Group($"jobseeker_{userId}").SendAsync("ApplicationStatusChanged", applicationId, status);
 
                 // Ghi log
-                Console.WriteLine($"Đã gửi thông báo thay đổi trạng thái đơn ứng tuyển #{applicationId} thành '{status}' đến JobSeeker #{userId}");
+                Console.WriteLine($"Sent notification to JobSeeker #{userId} about application #{applicationId} status change to '{status}'");
 
                 // Gửi thêm thông báo chung để đảm bảo
-                await _notificationHubContext.Clients.All.SendAsync("JobSeekerNotification", userId, $"Đơn ứng tuyển #{applicationId} của bạn đã được cập nhật thành {status}");
+                await _notificationHubContext.Clients.All.SendAsync("JobSeekerNotification", userId, $"Application #{applicationId} has been updated to {status}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi khi gửi thông báo đến JobSeeker: {ex.Message}");
+                Console.WriteLine($"Error sending notification to JobSeeker: {ex.Message}");
             }
         }
 
@@ -75,7 +75,7 @@ namespace CSE443_Project.Services.Implementations
 
                 // Gửi thông báo qua NotificationHub (kênh phụ)
                 await _notificationHubContext.Clients.User(employerId).SendAsync("ReceivePrivateNotification",
-                    $"Ứng viên {applicantName} đã ứng tuyển vào công việc #{jobId} của bạn");
+                    $"Candidate {applicantName} has applied for job #{jobId}");
 
                 Console.WriteLine($"Notification sent successfully to employer {employerId}");
             }
