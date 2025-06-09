@@ -22,7 +22,10 @@ namespace CSE443_Project.Areas.Admin.Controllers
         {
             try
             {
-                var users = _context.Users.ToList();
+                var users = _context.Users
+                    .OrderByDescending(u => u.IsActive)
+                    .ThenBy(u => u.Username)
+                    .ToList();
                 return View(users);
             }
             catch (Exception ex)
@@ -104,6 +107,13 @@ namespace CSE443_Project.Areas.Admin.Controllers
                 var user = _context.Users.FirstOrDefault(u => u.Id == id);
                 if (user == null) return NotFound();
 
+                // Determine user type
+                ViewBag.UserType = user.JobSeeker != null ? "JobSeeker" : (user.Employer != null ? "Employer" : "");
+
+                // Pass JobSeeker/Employer data if exists
+                ViewBag.JobSeeker = user.JobSeeker;
+                ViewBag.Employer = user.Employer;
+
                 return View(user);
             }
             catch (Exception ex)
@@ -116,17 +126,25 @@ namespace CSE443_Project.Areas.Admin.Controllers
         // POST: Admin/Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(User user)
+        public IActionResult Edit(User user, string userType, JobSeeker jobSeeker, Employer employer)
         {
             try
             {
+                // Prevent username change
+                var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+                if (existingUser == null) return NotFound();
+
+                // Check duplicate email (exclude self)
+                if (_context.Users.Any(u => u.Email == user.Email && u.Id != user.Id))
+                {
+                    ModelState.AddModelError("Email", "Email already exists.");
+                }
+
                 if (ModelState.IsValid)
                 {
-                    var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
-                    if (existingUser == null) return NotFound();
+                    // Username is not editable
+                    // existingUser.Username = user.Username;
 
-                    // Update fields
-                    existingUser.Username = user.Username;
                     existingUser.Password = user.Password;
                     existingUser.Email = user.Email;
                     existingUser.Phone = user.Phone;
@@ -134,9 +152,71 @@ namespace CSE443_Project.Areas.Admin.Controllers
                     existingUser.City = user.City;
                     existingUser.IsActive = user.IsActive;
 
+                    // Handle JobSeeker/Employer update
+                    if (userType == "JobSeeker")
+                    {
+                        // Remove Employer if exists
+                        var emp = _context.Employers.FirstOrDefault(e => e.UserId == user.Id);
+                        if (emp != null)
+                        {
+                            _context.Employers.Remove(emp);
+                        }
+
+                        var js = _context.JobSeekers.FirstOrDefault(j => j.UserId == user.Id);
+                        if (js == null)
+                        {
+                            js = new JobSeeker { UserId = user.Id };
+                            _context.JobSeekers.Add(js);
+                        }
+                        js.DateOfBirth = jobSeeker.DateOfBirth;
+                        js.Gender = jobSeeker.Gender ?? "";
+                        js.ProfilePicture = jobSeeker.ProfilePicture ?? "";
+                        js.Headline = jobSeeker.Headline ?? "";
+                        js.Summary = jobSeeker.Summary ?? "";
+                        js.Skills = jobSeeker.Skills ?? "";
+                        js.Education = jobSeeker.Education ?? "";
+                        js.WorkExperience = jobSeeker.WorkExperience ?? "";
+                    }
+                    else if (userType == "Employer")
+                    {
+                        // Remove JobSeeker if exists
+                        var js = _context.JobSeekers.FirstOrDefault(j => j.UserId == user.Id);
+                        if (js != null)
+                        {
+                            _context.JobSeekers.Remove(js);
+                        }
+
+                        var emp = _context.Employers.FirstOrDefault(e => e.UserId == user.Id);
+                        if (emp == null)
+                        {
+                            emp = new Employer { UserId = user.Id };
+                            _context.Employers.Add(emp);
+                        }
+                        emp.CompanyName = employer.CompanyName ?? "";
+                        emp.CompanyDescription = employer.CompanyDescription ?? "";
+                        emp.Industry = employer.Industry ?? "";
+                        emp.Website = employer.Website ?? "";
+                        emp.Logo = employer.Logo ?? "";
+                        emp.FoundedYear = employer.FoundedYear;
+                        emp.CompanySize = employer.CompanySize;
+                    }
+                    else
+                    {
+                        // Remove both if neither selected
+                        var js = _context.JobSeekers.FirstOrDefault(j => j.UserId == user.Id);
+                        if (js != null) _context.JobSeekers.Remove(js);
+                        var emp = _context.Employers.FirstOrDefault(e => e.UserId == user.Id);
+                        if (emp != null) _context.Employers.Remove(emp);
+                    }
+
                     _context.SaveChanges();
                     return RedirectToAction(nameof(Index));
                 }
+
+                // Repopulate ViewBag for redisplay
+                ViewBag.UserType = userType;
+                ViewBag.JobSeeker = jobSeeker;
+                ViewBag.Employer = employer;
                 return View(user);
             }
             catch (Exception ex)
@@ -175,7 +255,7 @@ namespace CSE443_Project.Areas.Admin.Controllers
                 var user = _context.Users.FirstOrDefault(u => u.Id == id);
                 if (user == null) return NotFound();
 
-                _context.Users.Remove(user);
+                user.IsActive = false;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }

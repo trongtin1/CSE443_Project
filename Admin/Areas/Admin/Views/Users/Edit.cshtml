@@ -1,4 +1,24 @@
 ﻿@model CSE443_Project.Models.User
+@using CSE443_Project.Models
+
+@{
+    var userType = ViewBag.UserType as string ?? "";
+    var jobSeeker = ViewBag.JobSeeker as JobSeeker ?? new JobSeeker();
+    var employer = ViewBag.Employer as Employer ?? new Employer();
+    
+    // Pre-calculate selected attributes
+    var isJobSeekerSelected = userType == "JobSeeker" ? "selected" : null;
+    var isEmployerSelected = userType == "Employer" ? "selected" : null;
+    var isNoneSelected = string.IsNullOrEmpty(userType) ? "selected" : null;
+    
+    var genderSelected = new Dictionary<string, string> {
+        { "", jobSeeker.Gender == null ? "selected" : null },
+        { "Male", jobSeeker.Gender == "Male" ? "selected" : null },
+        { "Female", jobSeeker.Gender == "Female" ? "selected" : null },
+        { "Other", jobSeeker.Gender == "Other" ? "selected" : null },
+        { "Prefer not to say", jobSeeker.Gender == "Prefer not to say" ? "selected" : null }
+    };
+}
 
 <div class="container-fluid py-4">
     <!-- Header Section -->
@@ -22,7 +42,7 @@
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input asp-for="Username" class="form-control" placeholder="Username" />
+                                    <input asp-for="Username" class="form-control" placeholder="Username" readonly />
                                     <label asp-for="Username">Username</label>
                                     <span asp-validation-for="Username" class="text-danger"></span>
                                 </div>
@@ -65,6 +85,111 @@
                                     <input asp-for="City" class="form-control" placeholder="City" />
                                     <label asp-for="City">City</label>
                                     <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-check mb-3 mt-2">
+                                    <input asp-for="IsActive" class="form-check-input" type="checkbox" id="isActiveCheck" />
+                                    <label class="form-check-label" for="isActiveCheck">Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">User Type</label>
+                            <select class="form-select" name="userType" id="userTypeSelect">
+                                <option value="" selected="@isNoneSelected">None</option>
+                                <option value="JobSeeker" selected="@isJobSeekerSelected">Job Seeker</option>
+                                <option value="Employer" selected="@isEmployerSelected">Employer</option>
+                            </select>
+                        </div>
+
+                        <!-- JobSeeker Fields -->
+                        <div id="jobSeekerFields" style="display:@(userType == "JobSeeker" ? "block" : "none");">
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header bg-white py-2">
+                                    <h6 class="mb-0">Job Seeker Information</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Date of Birth</label>
+                                            <input type="date" name="jobSeeker.DateOfBirth" class="form-control" 
+                                                   value="@(jobSeeker.DateOfBirth == default ? "" : jobSeeker.DateOfBirth.ToString("yyyy-MM-dd"))" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Gender</label>
+                                            <select name="jobSeeker.Gender" class="form-select">
+                                                <option value="" selected="@genderSelected[""]">Select Gender</option>
+                                                <option value="Male" selected="@genderSelected["Male"]">Male</option>
+                                                <option value="Female" selected="@genderSelected["Female"]">Female</option>
+                                                <option value="Other" selected="@genderSelected["Other"]">Other</option>
+                                                <option value="Prefer not to say" selected="@genderSelected["Prefer not to say"]">Prefer not to say</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Headline</label>
+                                        <input type="text" name="jobSeeker.Headline" class="form-control" value="@jobSeeker.Headline" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Summary</label>
+                                        <textarea name="jobSeeker.Summary" class="form-control" rows="2">@jobSeeker.Summary</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Skills</label>
+                                        <textarea name="jobSeeker.Skills" class="form-control" rows="2">@jobSeeker.Skills</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Education</label>
+                                        <textarea name="jobSeeker.Education" class="form-control" rows="2">@jobSeeker.Education</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Work Experience</label>
+                                        <textarea name="jobSeeker.WorkExperience" class="form-control" rows="2">@jobSeeker.WorkExperience</textarea>
+                                    </div>
+                                    <input type="hidden" name="jobSeeker.ProfilePicture" value="@jobSeeker.ProfilePicture" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Employer Fields -->
+                        <div id="employerFields" style="display:@(userType == "Employer" ? "block" : "none");">
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header bg-white py-2">
+                                    <h6 class="mb-0">Employer Information</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Company Name</label>
+                                        <input type="text" name="employer.CompanyName" class="form-control" value="@employer.CompanyName" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Industry</label>
+                                        <input type="text" name="employer.Industry" class="form-control" value="@employer.Industry" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Company Description</label>
+                                        <textarea name="employer.CompanyDescription" class="form-control" rows="2">@employer.CompanyDescription</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Website</label>
+                                        <input type="text" name="employer.Website" class="form-control" value="@employer.Website" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Founded Year</label>
+                                        <input type="number" name="employer.FoundedYear" class="form-control" 
+                                               value="@(employer.FoundedYear == 0 ? "" : employer.FoundedYear.ToString())" 
+                                               min="1800" max="@DateTime.Now.Year" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Company Size</label>
+                                        <input type="number" name="employer.CompanySize" class="form-control" 
+                                               value="@(employer.CompanySize == 0 ? "" : employer.CompanySize.ToString())" 
+                                               min="0" />
+                                    </div>
+                                    <input type="hidden" name="employer.Logo" value="@employer.Logo" />
                                 </div>
                             </div>
                         </div>
@@ -111,5 +236,17 @@
 </style>
 
 @section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userTypeSelect = document.getElementById('userTypeSelect');
+            const jobSeekerFields = document.getElementById('jobSeekerFields');
+            const employerFields = document.getElementById('employerFields');
+            
+            userTypeSelect.addEventListener('change', function () {
+                jobSeekerFields.style.display = this.value === 'JobSeeker' ? 'block' : 'none';
+                employerFields.style.display = this.value === 'Employer' ? 'block' : 'none';
+            });
+        });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
