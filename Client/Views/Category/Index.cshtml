@@ -166,7 +166,7 @@
         <div class="row">
             <div class="col-12 text-center">
                 <h1 class="page-title">Job Categories</h1>
-                <p class="page-subtitle">Khám phá các lĩnh vực nghề nghiệp đa dạng và tìm kiếm cơ hội phù hợp với bạn
+                <p class="page-subtitle">Explore diverse job fields and find opportunities that match your interests
                 </p>
             </div>
         </div>
@@ -186,12 +186,12 @@
                         <h5 class="category-title">@category.Name</h5>
                         <div class="job-count">
                             <i class="fas fa-briefcase"></i>
-                            @ViewData[$"JobCount_{category.Id}"] việc làm
+                            @ViewData[$"JobCount_{category.Id}"] Jobs
                         </div>
                         <div class="mt-auto">
                             <a asp-controller="Job" asp-action="ByCategory" asp-route-id="@category.Id"
                                 class="btn btn-view-jobs">
-                                Xem việc làm
+                                See Jobs
                             </a>
                         </div>
                     </div>

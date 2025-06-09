@@ -1,5 +1,10 @@
 /* Home Page Enhanced Styles */
 
+/* Navbar Customization */
+.navbar.navbar-dark.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
 /* Hero Section Enhancements */
 .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

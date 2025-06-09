@@ -17,17 +17,63 @@ namespace CSE443_Project.Data
             if (!context.Users.Any())
             {
                 context.Users.AddRange(
+                    // Thêm vào phần seed Users
                     new User
                     {
-                        Username = "admin",
-                        Password = PasswordHasher.HashPassword("admin123"),
-                        Email = "admin@jobportal.com",
-                        Phone = "1234567890",
-                        Address = "123 Admin St",
-                        City = "Admin City",
-                        CreatedAt = DateTime.Now.AddMonths(-6),
+                        Username = "company3",
+                        Password = PasswordHasher.HashPassword("company123"),
+                        Email = "hr@healthplus.com",
+                        Phone = "6789012345",
+                        Address = "321 Health Blvd",
+                        City = "Medical City",
+                        CreatedAt = DateTime.Now.AddMonths(-3),
                         IsActive = true
                     },
+                    new User
+                    {
+                        Username = "company4",
+                        Password = PasswordHasher.HashPassword("company123"),
+                        Email = "contact@engineeringfirm.com",
+                        Phone = "7890123456",
+                        Address = "654 Engineer Ave",
+                        City = "Build City",
+                        CreatedAt = DateTime.Now.AddMonths(-2),
+                        IsActive = true
+                    },
+                    new User
+                    {
+                        Username = "jobseeker3",
+                        Password = "seeker123",
+                        Email = "mike.wilson@example.com",
+                        Phone = "8901234567",
+                        Address = "303 Career St",
+                        City = "Opportunity City",
+                        CreatedAt = DateTime.Now.AddMonths(-1),
+                        IsActive = true
+                    },
+                    new User
+                    {
+                        Username = "jobseeker4",
+                        Password = "seeker123",
+                        Email = "sarah.johnson@example.com",
+                        Phone = "9012345678",
+                        Address = "404 Professional Ave",
+                        City = "Success City",
+                        CreatedAt = DateTime.Now.AddDays(-20),
+                        IsActive = true
+                    },
+                    new User
+                    {
+                        Username = "jobseeker5",
+                        Password = "seeker123",
+                        Email = "david.brown@example.com",
+                        Phone = "0123456789",
+                        Address = "505 Skills St",
+                        City = "Talent City",
+                        CreatedAt = DateTime.Now.AddDays(-15),
+                        IsActive = true
+                    },
+
                     new User
                     {
                         Username = "company1",
@@ -81,8 +127,10 @@ namespace CSE443_Project.Data
             {
                 var employer1User = context.Users.FirstOrDefault(u => u.Username == "company1");
                 var employer2User = context.Users.FirstOrDefault(u => u.Username == "company2");
-
+                var employer3User = context.Users.FirstOrDefault(u => u.Username == "company3");
+                var employer4User = context.Users.FirstOrDefault(u => u.Username == "company4");
                 context.Employers.AddRange(
+
                     new Employer
                     {
                         UserId = employer1User.Id,
@@ -104,7 +152,30 @@ namespace CSE443_Project.Data
                         Logo = "/images/logos/financeco.png",
                         FoundedYear = 2005,
                         CompanySize = 1000
+                    },
+                    new Employer
+                    {
+                        UserId = employer3User.Id,
+                        CompanyName = "HealthPlus Medical",
+                        CompanyDescription = "Leading healthcare provider offering comprehensive medical services and innovative treatments.",
+                        Industry = "Healthcare",
+                        Website = "https://www.healthplus.com",
+                        Logo = "/images/logos/healthplus.png",
+                        FoundedYear = 2008,
+                        CompanySize = 750
+                    },
+                    new Employer
+                    {
+                        UserId = employer4User.Id,
+                        CompanyName = "Engineering Solutions Ltd",
+                        CompanyDescription = "Innovative engineering firm specializing in infrastructure and construction projects.",
+                        Industry = "Engineering",
+                        Website = "https://www.engineeringsolutions.com",
+                        Logo = "/images/logos/engineering.png",
+                        FoundedYear = 2012,
+                        CompanySize = 300
                     }
+
                 );
                 context.SaveChanges();
             }
@@ -114,6 +185,9 @@ namespace CSE443_Project.Data
             {
                 var jobSeeker1User = context.Users.FirstOrDefault(u => u.Username == "jobseeker1");
                 var jobSeeker2User = context.Users.FirstOrDefault(u => u.Username == "jobseeker2");
+                var jobSeeker3User = context.Users.FirstOrDefault(u => u.Username == "jobseeker3");
+                var jobSeeker4User = context.Users.FirstOrDefault(u => u.Username == "jobseeker4");
+                var jobSeeker5User = context.Users.FirstOrDefault(u => u.Username == "jobseeker5");
 
                 context.JobSeekers.AddRange(
                     new JobSeeker
@@ -139,7 +213,44 @@ namespace CSE443_Project.Data
                         Skills = "Financial Analysis, Excel, Financial Modeling, Investment Research, Python",
                         Education = "Master of Business Administration, Finance University, 2016",
                         WorkExperience = "Financial Analyst at Investment Partners (2016-Present)"
+                    },
+                    new JobSeeker
+                    {
+                        UserId = jobSeeker3User.Id,
+                        DateOfBirth = new DateTime(1988, 3, 10),
+                        Gender = "Male",
+                        ProfilePicture = "/images/profiles/mike.jpg",
+                        Headline = "Experienced Marketing Manager",
+                        Summary = "Creative marketing professional with 7+ years of experience in digital marketing and brand management.",
+                        Skills = "Digital Marketing, SEO/SEM, Social Media, Content Marketing, Analytics",
+                        Education = "Bachelor of Marketing, Marketing University, 2010",
+                        WorkExperience = "Marketing Manager at Creative Agency (2020-Present), Marketing Specialist at Brand Co (2017-2020)"
+                    },
+                    new JobSeeker
+                    {
+                        UserId = jobSeeker4User.Id,
+                        DateOfBirth = new DateTime(1995, 11, 18),
+                        Gender = "Female",
+                        ProfilePicture = "/images/profiles/sarah.jpg",
+                        Headline = "Junior Software Engineer",
+                        Summary = "Recent computer science graduate with passion for web development and mobile applications.",
+                        Skills = "JavaScript, React, Node.js, Python, Git, MongoDB",
+                        Education = "Bachelor of Computer Science, Tech University, 2023",
+                        WorkExperience = "Intern Developer at StartupXYZ (2023), Freelance Web Developer (2022-2023)"
+                    },
+                    new JobSeeker
+                    {
+                        UserId = jobSeeker5User.Id,
+                        DateOfBirth = new DateTime(1985, 7, 25),
+                        Gender = "Male",
+                        ProfilePicture = "/images/profiles/david.jpg",
+                        Headline = "Senior Project Manager",
+                        Summary = "Experienced project manager with expertise in agile methodologies and team leadership.",
+                        Skills = "Project Management, Agile, Scrum, Team Leadership, Risk Management",
+                        Education = "Master of Project Management, Business School, 2015",
+                        WorkExperience = "Senior PM at Global Corp (2018-Present), Project Manager at Tech Solutions (2015-2018)"
                     }
+
                 );
                 context.SaveChanges();
             }
@@ -191,7 +302,10 @@ namespace CSE443_Project.Data
                 var itCategory = context.JobCategories.FirstOrDefault(c => c.Name == "Information Technology");
                 var financeCategory = context.JobCategories.FirstOrDefault(c => c.Name == "Finance");
                 var marketingCategory = context.JobCategories.FirstOrDefault(c => c.Name == "Marketing");
-
+                var healthPlus = context.Employers.FirstOrDefault(e => e.CompanyName == "HealthPlus Medical");
+                var engineeringSolutions = context.Employers.FirstOrDefault(e => e.CompanyName == "Engineering Solutions Ltd");
+                var engineeringCategory = context.JobCategories.FirstOrDefault(c => c.Name == "Engineering");
+                var healthcareCategory = context.JobCategories.FirstOrDefault(c => c.Name == "Healthcare");
                 context.Jobs.AddRange(
                     new Job
                     {
@@ -272,6 +386,66 @@ namespace CSE443_Project.Data
                         Vacancies = 1,
                         CreatedAt = DateTime.Now.AddDays(-10),
                         Deadline = DateTime.Now.AddDays(20)
+                    },
+                    new Job
+                    {
+                        EmployerId = healthPlus.Id,
+                        CategoryId = healthcareCategory.Id,
+                        JobTitle = "Registered Nurse",
+                        JobDescription = "Join our nursing team to provide compassionate patient care in a modern healthcare facility.",
+                        Requirements = "- Bachelor's degree in Nursing\n- Valid RN license\n- 2+ years of clinical experience\n- Strong communication skills",
+                        Benefits = "- Competitive salary\n- Health and dental insurance\n- Retirement plan\n- Continuing education support",
+                        JobType = "Full-time",
+                        ExperienceLevel = "Mid",
+                        Location = "Medical City",
+                        Industry = "Healthcare",
+                        SalaryMin = 60000,
+                        SalaryMax = 75000,
+                        IsRemote = false,
+                        IsActive = true,
+                        Vacancies = 3,
+                        CreatedAt = DateTime.Now.AddDays(-12),
+                        Deadline = DateTime.Now.AddDays(35)
+                    },
+                    new Job
+                    {
+                        EmployerId = engineeringSolutions.Id,
+                        CategoryId = engineeringCategory.Id,
+                        JobTitle = "Civil Engineer",
+                        JobDescription = "Design and oversee construction projects including roads, bridges, and buildings.",
+                        Requirements = "- Bachelor's degree in Civil Engineering\n- Professional Engineer license preferred\n- 3+ years of experience\n- AutoCAD proficiency",
+                        Benefits = "- Competitive salary\n- Health insurance\n- Project bonuses\n- Professional development",
+                        JobType = "Full-time",
+                        ExperienceLevel = "Mid-Senior",
+                        Location = "Build City",
+                        Industry = "Engineering",
+                        SalaryMin = 75000,
+                        SalaryMax = 95000,
+                        IsRemote = false,
+                        IsActive = true,
+                        Vacancies = 2,
+                        CreatedAt = DateTime.Now.AddDays(-8),
+                        Deadline = DateTime.Now.AddDays(40)
+                    },
+                    new Job
+                    {
+                        EmployerId = techCorp.Id,
+                        CategoryId = itCategory.Id,
+                        JobTitle = "DevOps Engineer",
+                        JobDescription = "Manage and improve our CI/CD pipelines and cloud infrastructure.",
+                        Requirements = "- 3+ years of DevOps experience\n- Experience with AWS/Azure\n- Knowledge of Docker and Kubernetes\n- Scripting skills (Python, Bash)",
+                        Benefits = "- Competitive salary\n- Remote work options\n- Learning budget\n- Stock options",
+                        JobType = "Full-time",
+                        ExperienceLevel = "Mid-Senior",
+                        Location = "Tech City",
+                        Industry = "Information Technology",
+                        SalaryMin = 80000,
+                        SalaryMax = 100000,
+                        IsRemote = true,
+                        IsActive = true,
+                        Vacancies = 1,
+                        CreatedAt = DateTime.Now.AddDays(-5),
+                        Deadline = DateTime.Now.AddDays(30)
                     }
                 );
                 context.SaveChanges();
