@@ -32,14 +32,14 @@ namespace CSE443_Project.Areas.Admin.Controllers
             {
                 // Log error
                 Console.WriteLine($"Error fetching users: {ex.Message}");
-                
+
                 // Check if error is related to missing table
                 if (ex.Message.Contains("Invalid object name") || ex.InnerException?.Message.Contains("Invalid object name") == true)
                 {
                     ViewBag.ErrorMessage = "The database schema is not properly set up. Please run migrations to create the required tables.";
                     return View(new List<User>());
                 }
-                
+
                 // Return empty list with error message for other errors
                 ViewBag.ErrorMessage = "An error occurred while fetching users. Please try again later.";
                 return View(new List<User>());
@@ -49,16 +49,27 @@ namespace CSE443_Project.Areas.Admin.Controllers
         // GET: Admin/Users/Create
         public IActionResult Create()
         {
+            // Default to no selection
+            ViewBag.UserType = null;
+            ViewBag.JobSeeker = new JobSeeker();
+            ViewBag.Employer = new Employer();
+
             return View();
         }
 
         // POST: Admin/Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(User user)
+        public IActionResult Create(User user, string userType, JobSeeker jobSeeker = null, Employer employer = null)
         {
             try
             {
+                // Validate user type selection
+                if (string.IsNullOrEmpty(userType))
+                {
+                    ModelState.AddModelError("userType", "Please select a user type.");
+                }
+
                 // Kiểm tra trùng username
                 if (_context.Users.Any(u => u.Username == user.Username))
                 {
@@ -70,11 +81,77 @@ namespace CSE443_Project.Areas.Admin.Controllers
                     ModelState.AddModelError("Email", "Email already exists.");
                 }
 
+                // Validate required fields based on userType
+                if (userType == "JobSeeker" && (jobSeeker == null || jobSeeker.DateOfBirth == default))
+                {
+                    ModelState.AddModelError("jobSeeker.DateOfBirth", "Date of Birth is required for Job Seekers.");
+                }
+                else if (userType == "Employer")
+                {
+                    if (employer == null || string.IsNullOrEmpty(employer.CompanyName))
+                    {
+                        ModelState.AddModelError("employer.CompanyName", "Company Name is required for Employers.");
+                    }
+                    if (employer == null || string.IsNullOrEmpty(employer.Industry))
+                    {
+                        ModelState.AddModelError("employer.Industry", "Industry is required for Employers.");
+                    }
+                    if (employer == null || employer.FoundedYear <= 0)
+                    {
+                        ModelState.AddModelError("employer.FoundedYear", "Founded Year is required for Employers.");
+                    }
+                    if (employer == null || employer.CompanySize <= 0)
+                    {
+                        ModelState.AddModelError("employer.CompanySize", "Company Size is required for Employers.");
+                    }
+                }
+
                 if (ModelState.IsValid)
                 {
                     user.CreatedAt = DateTime.Now;
+
+                    // Create User without navigation properties first
+                    user.JobSeeker = null;
+                    user.Employer = null;
                     _context.Users.Add(user);
                     _context.SaveChanges();
+
+                    // Create JobSeeker or Employer based on userType
+                    if (userType == "JobSeeker")
+                    {
+                        if (jobSeeker != null)
+                        {
+                            jobSeeker.UserId = user.Id;
+                            // Ensure non-nullable string properties have default values
+                            jobSeeker.Gender = jobSeeker.Gender ?? string.Empty;
+                            jobSeeker.ProfilePicture = jobSeeker.ProfilePicture ?? string.Empty;
+                            jobSeeker.Headline = jobSeeker.Headline ?? string.Empty;
+                            jobSeeker.Summary = jobSeeker.Summary ?? string.Empty;
+                            jobSeeker.Skills = jobSeeker.Skills ?? string.Empty;
+                            jobSeeker.Education = jobSeeker.Education ?? string.Empty;
+                            jobSeeker.WorkExperience = jobSeeker.WorkExperience ?? string.Empty;
+
+                            _context.JobSeekers.Add(jobSeeker);
+                            _context.SaveChanges();
+                        }
+                    }
+                    else if (userType == "Employer")
+                    {
+                        if (employer != null)
+                        {
+                            employer.UserId = user.Id;
+                            // Ensure non-nullable string properties have default values
+                            employer.CompanyName = employer.CompanyName ?? string.Empty;
+                            employer.CompanyDescription = employer.CompanyDescription ?? string.Empty;
+                            employer.Industry = employer.Industry ?? string.Empty;
+                            employer.Website = employer.Website ?? string.Empty;
+                            employer.Logo = employer.Logo ?? string.Empty;
+
+                            _context.Employers.Add(employer);
+                            _context.SaveChanges();
+                        }
+                    }
+
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -88,11 +165,29 @@ namespace CSE443_Project.Areas.Admin.Controllers
                     }
                 }
 
+                // Pass the userType back to the view to maintain the selected option
+                ViewBag.UserType = userType;
+                ViewBag.JobSeeker = jobSeeker;
+                ViewBag.Employer = employer;
+
                 return View(user);
             }
             catch (Exception ex)
             {
+                // Log the detailed exception
+                Console.WriteLine($"Error creating user: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+
                 ModelState.AddModelError("", $"Error creating user: {ex.Message}");
+
+                // Pass the userType back to the view to maintain the selected option
+                ViewBag.UserType = userType;
+                ViewBag.JobSeeker = jobSeeker;
+                ViewBag.Employer = employer;
+
                 return View(user);
             }
         }

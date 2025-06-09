@@ -37,7 +37,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                                    <input asp-for="Password" type="password" class="form-control"
+                                        placeholder="Password" />
                                     <label asp-for="Password">Password</label>
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
@@ -66,6 +67,119 @@
                                     <span asp-validation-for="City" class="text-danger"></span>
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">User Type</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="userType" id="jobSeekerType" value="JobSeeker" @(ViewBag.UserType == "JobSeeker" ? "checked" : "")>
+                                                    <label class="form-check-label" for="jobSeekerType">Job Seeker</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="userType" id="employerType" value="Employer" @(ViewBag.UserType == "Employer" ? "checked" : "")>
+                                                    <label class="form-check-label" for="employerType">Employer</label>
+                                                </div>
+                                                <div id="userTypeValidation" class="text-danger mt-1" style="display: none;">
+                                                    Please select a user type
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Job Seeker Fields -->
+                                        <div id="jobSeekerFields" @(ViewBag.UserType == "Employer" ? "style='display: none;'" : "")>
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <input type="date" class="form-control" id="DateOfBirth" name="jobSeeker.DateOfBirth" required value="@(ViewBag.JobSeeker?.DateOfBirth?.ToString("yyyy-MM-dd"))">
+                                                        <label for="DateOfBirth">Date of Birth</label>
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="jobSeeker.DateOfBirth" data-valmsg-replace="true"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <select class="form-select" id="Gender" name="jobSeeker.Gender" required>
+                                                            <option value="">Select Gender</option>
+                                                            @if (ViewBag.JobSeeker?.Gender == "Male")
+                                                            {
+                                                                <option value="Male" selected>Male</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="Male">Male</option>
+                                                            }
+                                                            
+                                                            @if (ViewBag.JobSeeker?.Gender == "Female")
+                                                            {
+                                                                <option value="Female" selected>Female</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="Female">Female</option>
+                                                            }
+                                                            
+                                                            @if (ViewBag.JobSeeker?.Gender == "Other")
+                                                            {
+                                                                <option value="Other" selected>Other</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="Other">Other</option>
+                                                            }
+                                                        </select>
+                                                        <label for="Gender">Gender</label>
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="jobSeeker.Gender" data-valmsg-replace="true"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Employer Fields -->
+                                        <div id="employerFields" @(ViewBag.UserType == "Employer" ? "" : "style='display: none;'")>
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="CompanyName" name="employer.CompanyName" required value="@ViewBag.Employer?.CompanyName">
+                                                        <label for="CompanyName">Company Name</label>
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="employer.CompanyName" data-valmsg-replace="true"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="Industry" name="employer.Industry" required value="@ViewBag.Employer?.Industry">
+                                                        <label for="Industry">Industry</label>
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="employer.Industry" data-valmsg-replace="true"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <input type="text" class="form-control" id="Website" name="employer.Website" value="@ViewBag.Employer?.Website">
+                                                        <label for="Website">Website</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="FoundedYear" name="employer.FoundedYear" required value="@ViewBag.Employer?.FoundedYear">
+                                                        <label for="FoundedYear">Founded Year</label>
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="employer.FoundedYear" data-valmsg-replace="true"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-floating">
+                                                        <input type="number" class="form-control" id="CompanySize" name="employer.CompanySize" required value="@ViewBag.Employer?.CompanySize">
+                                                        <label for="CompanySize">Company Size (Employees)</label>
+                                                        <span class="text-danger field-validation-valid" data-valmsg-for="employer.CompanySize" data-valmsg-replace="true"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 mt-4">
@@ -82,13 +196,13 @@
 </div>
 
 <style>
-    .form-floating > .form-control,
-    .form-floating > .form-select {
+    .form-floating>.form-control,
+    .form-floating>.form-select {
         height: calc(3.5rem + 2px);
         line-height: 1.25;
     }
 
-    .form-floating > label {
+    .form-floating>label {
         padding: 1rem 0.75rem;
     }
 
@@ -111,4 +225,58 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Initially hide both sections if no type is selected
+            if (!$('input[name="userType"]:checked').length) {
+                $('#jobSeekerFields').hide();
+                $('#employerFields').hide();
+            }
+            
+            // Toggle between JobSeeker and Employer fields
+            $('input[name="userType"]').change(function() {
+                // Hide validation message when a selection is made
+                $('#userTypeValidation').hide();
+                
+                if ($(this).val() === 'JobSeeker') {
+                    $('#jobSeekerFields').show();
+                    $('#employerFields').hide();
+                    
+                    // Enable validation for JobSeeker fields
+                    $('#DateOfBirth').prop('required', true);
+                    $('#Gender').prop('required', true);
+                    
+                    // Disable validation for Employer fields
+                    $('#CompanyName').prop('required', false);
+                    $('#Industry').prop('required', false);
+                    $('#FoundedYear').prop('required', false);
+                    $('#CompanySize').prop('required', false);
+                } else {
+                    $('#jobSeekerFields').hide();
+                    $('#employerFields').show();
+                    
+                    // Disable validation for JobSeeker fields
+                    $('#DateOfBirth').prop('required', false);
+                    $('#Gender').prop('required', false);
+                    
+                    // Enable validation for Employer fields
+                    $('#CompanyName').prop('required', true);
+                    $('#Industry').prop('required', true);
+                    $('#FoundedYear').prop('required', true);
+                    $('#CompanySize').prop('required', true);
+                }
+            });
+            
+            // Form validation
+            $('form').submit(function(e) {
+                // Check if a user type is selected
+                if (!$('input[name="userType"]:checked').length) {
+                    e.preventDefault();
+                    $('#userTypeValidation').show();
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
 }
