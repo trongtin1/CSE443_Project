@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Logged Out";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body class="d-flex align-items-center justify-content-center" style="min-height:100vh;">
+    <div class="text-center">
+        <h2>You have been logged out.</h2>
+        <a href="@Url.Action("Login", "Account", new { area = "Admin" })" class="btn btn-primary mt-3">Login Again</a>
+    </div>
+</body>
+</html>
