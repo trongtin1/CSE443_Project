@@ -27,9 +27,9 @@
                         <p class="text-muted mb-0">Manage all candidate applications and profiles</p>
                     </div>
                     <div>
-                        <a asp-action="Create" class="btn btn-primary btn-lg d-flex align-items-center gap-2 add-candidate-btn">
+                        @* <a asp-action="Create" class="btn btn-primary btn-lg d-flex align-items-center gap-2 add-candidate-btn">
                             <i class="fas fa-plus"></i> Add New
-                        </a>
+                        </a> *@
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -71,10 +71,10 @@
                                                         class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></a>
                                                     <form asp-action="Delete" method="post" class="d-inline">
                                                         <input type="hidden" name="id" value="@item.Id" />
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        @* <button type="submit" class="btn btn-sm btn-outline-danger"
                                                             onclick="return confirm('Are you sure?')">
                                                             <i class="fas fa-trash"></i>
-                                                        </button>
+                                                        </button> *@
                                                     </form>
                                                 </div>
                                             </td>

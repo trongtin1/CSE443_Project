@@ -9,9 +9,9 @@
             </a>
             <h2 class="mb-0 fw-bold text-primary gradient-text">CV Management</h2>
         </div>
-        <a href="/Admin/CVs/Create" class="btn btn-primary d-flex align-items-center shadow-sm hover-scale">
+        @* <a href="/Admin/CVs/Create" class="btn btn-primary d-flex align-items-center shadow-sm hover-scale">
             <i class="fas fa-upload me-2"></i>Upload New CV
-        </a>
+        </a> *@
     </div>
 
     @if (ViewBag.ErrorMessage != null)
@@ -130,9 +130,9 @@
                                             <a href="/Admin/CVs/Download/@cv.Id" class="btn btn-sm btn-outline-success action-btn" title="Download CV">
                                                 <i class="fas fa-download"></i>
                                             </a>
-                                            <a href="/Admin/CVs/Delete/@cv.Id" class="btn btn-sm btn-outline-danger action-btn" title="Delete CV">
+                                            @* <a href="/Admin/CVs/Delete/@cv.Id" class="btn btn-sm btn-outline-danger action-btn" title="Delete CV">
                                                 <i class="fas fa-trash"></i>
-                                            </a>
+                                            </a> *@
                                         </div>
                                     </td>
                                 </tr>
