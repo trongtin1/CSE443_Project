@@ -1,7 +1,7 @@
-@model IEnumerable<CSE443_Project.Models.Job>
+@model IEnumerable<CSE443_Project.Models.JobCategory>
 
 @{
-    ViewData["Title"] = "Manager Jobs";
+    ViewData["Title"] = "Job Categories";
 }
 
 <div class="container-fluid py-4">
@@ -10,11 +10,11 @@
             <a href="/Admin/Home" class="btn btn-light rounded-circle me-3 shadow-sm hover-scale">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <h2 class="mb-0 fw-bold text-primary gradient-text">Manager Jobs</h2>
+            <h2 class="mb-0 fw-bold text-primary gradient-text">Job Categories</h2>
         </div>
-        @* <a href="/Admin/Jobs/Create" class="btn btn-primary d-flex align-items-center shadow-sm hover-scale">
-            <i class="fas fa-plus me-2"></i>Add new job
-        </a> *@
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center shadow-sm hover-scale">
+            <i class="fas fa-plus me-2"></i>Create New Category
+        </a>
     </div>
 
     @if (ViewBag.ErrorMessage != null)
@@ -24,7 +24,7 @@
         </div>
     }
 
-    <!-- Jobs Table Section -->
+    <!-- Categories Table Section -->
     <div class="card shadow-sm glass-effect">
         <div class="card-body p-4">
             @if (Model != null && Model.Any())
@@ -34,63 +34,56 @@
                         <thead class="bg-light">
                             <tr>
                                 <th style="width: 50px" class="fw-semibold text-center">#</th>
-                                <th class="fw-semibold">Title</th>
-                                <th class="fw-semibold">Location</th>
-                                <th class="fw-semibold">Salary</th>
-                                <th class="fw-semibold">Job Category</th>
-                                <th class="fw-semibold">Status</th>
-                                <th class="fw-semibold text-end">Action</th>
+                                <th class="fw-semibold">Icon</th>
+                                <th class="fw-semibold">Name</th>
+                                <th class="fw-semibold">Description</th>
+                                <th class="fw-semibold">Jobs Count</th>
+                                <th class="fw-semibold text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var job in Model)
+                            @foreach (var item in Model)
                             {
                                 <tr class="hover-row">
                                     <td class="text-center">
-                                        <div class="job-thumbnail">
-                                            <i class="fas fa-briefcase"></i>
+                                        <div class="category-thumbnail">
+                                            <i class="fas fa-folder"></i>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="fw-semibold">@job.JobTitle</div>
-                                        <div class="small text-muted">@job.Category?.Name</div>
+                                        <i class="fas @item.Icon fa-2x text-primary"></i>
                                     </td>
                                     <td>
-                                        <div>@job.Location</div>
-                                        <div class="small text-muted">
-                                            @(job.IsRemote ? "Remote" : "Office")
-                                        </div>
-                                    </td>
-                                    <td>@string.Format("{0:N0} - {1:N0} VND", job.SalaryMin, job.SalaryMax)</td>
-                                    <td>@job.JobType</td>
-                                    <td>
-                                        @if (job.IsActive)
-                                        {
-                                            <span class="badge bg-success">Hiring</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">Closed</span>
-                                        }
+                                        <div class="fw-semibold">@item.Name</div>
                                     </td>
                                     <td>
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <a href="/Admin/Jobs/Details/@job.Id" class="btn btn-sm btn-outline-info action-btn"
-                                                title="Details">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="/Admin/Jobs/Edit/@job.Id" class="btn btn-sm btn-outline-primary action-btn"
-                                                title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            @* <a href="/Admin/Jobs/Delete/@job.Id"
-                                                class="btn btn-sm btn-outline-danger action-btn" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </a> *@
+                                        <div>
+                                            @(string.IsNullOrEmpty(item.Description) ? "No description" :
+                                                                                (item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." :
+                                                                                item.Description))
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill bg-info">@item.Jobs.Count jobs</span>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                        class="btn btn-sm btn-outline-info action-btn" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                        class="btn btn-sm btn-outline-primary action-btn" title="Edit Category">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @* <a asp-action="Delete" asp-route-id="@item.Id"
+                                        class="btn btn-sm btn-outline-danger action-btn" title="Delete Category">
+                                        <i class="fas fa-trash"></i>
+                                    </a> *@
                                         </div>
                                     </td>
                                 </tr>
-                            }
+                                                }
                         </tbody>
                     </table>
                 </div>
@@ -98,11 +91,11 @@
             else
             {
                 <div class="text-center py-5">
-                    <i class="fas fa-briefcase fa-4x text-muted mb-3"></i>
-                    <h4>No job found</h4>
-                    <p class="text-muted">No job has been added to the system.</p>
-                    <a href="/Admin/Jobs/Create" class="btn btn-primary mt-3">
-                        <i class="fas fa-plus me-2"></i>Add first job
+                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                    <h4>No Categories Found</h4>
+                    <p class="text-muted">There are no job categories available in the system yet.</p>
+                    <a asp-action="Create" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus me-2"></i>Create First Category
                     </a>
                 </div>
             }
@@ -126,8 +119,8 @@
         background-clip: text;
     }
 
-    /* Job thumbnail */
-    .job-thumbnail {
+    /* Category thumbnail */
+    .category-thumbnail {
         width: 40px;
         height: 40px;
         background-color: #e9ecef;

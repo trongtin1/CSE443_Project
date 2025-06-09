@@ -1,16 +1,16 @@
-@model CSE443_Project.Models.Job
+@model CSE443_Project.Models.JobCategory
 
 @{
-    ViewData["Title"] = "Delete job";
+    ViewData["Title"] = "Delete Job Category";
 }
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">
-            <a href="/Admin/Jobs/Index" class="btn btn-light rounded-circle me-3 shadow-sm hover-scale">
+            <a href="/Admin/JobCategories/Index" class="btn btn-light rounded-circle me-3 shadow-sm hover-scale">
                 <i class="fas fa-arrow-left"></i>
             </a>
-            <h2 class="mb-0 fw-bold text-primary gradient-text">Delete job</h2>
+            <h2 class="mb-0 fw-bold text-primary gradient-text">Delete Category</h2>
         </div>
     </div>
 
@@ -20,50 +20,64 @@
                 <div class="card-body p-4">
                     <div class="text-center mb-4 py-4">
                         <i class="fas fa-exclamation-triangle fa-4x text-danger mb-3"></i>
-                        <h3 class="mb-3">Confirm delete</h3>
+                        <h3 class="mb-3">Confirm Deletion</h3>
                         <p class="mb-4 lead">
-                            Are you sure you want to delete this job? This action cannot be undone.
+                            Are you sure you want to delete this category? This action cannot be undone.
                         </p>
+                        @if (Model.Jobs.Any())
+                        {
+                            <div class="alert alert-warning">
+                                <strong>Warning!</strong> This category has @Model.Jobs.Count associated jobs.
+                                Deleting this category may affect these jobs.
+                            </div>
+                        }
                     </div>
 
                     <div class="p-4 bg-light rounded mb-4">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="detail-item">
-                                    <span class="detail-label">Title</span>
-                                    <span class="detail-value">@Model.JobTitle</span>
+                                    <span class="detail-label">Name</span>
+                                    <span class="detail-value">@Model.Name</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="detail-item">
-                                    <span class="detail-label">Location</span>
-                                    <span class="detail-value">@Model.Location</span>
+                                    <span class="detail-label">Jobs Count</span>
+                                    <span class="detail-value">
+                                        <span class="badge bg-info">@Model.Jobs.Count jobs</span>
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="detail-item">
-                                    <span class="detail-label">Job Type</span>
-                                    <span class="detail-value">@Model.JobType</span>
+                                    <span class="detail-label">Icon</span>
+                                    <span class="detail-value">
+                                        <i class="fas @Model.Icon fa-2x text-primary me-2"></i>
+                                        @Model.Icon
+                                    </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="detail-item">
-                                    <span class="detail-label">Salary</span>
-                                    <span class="detail-value">@string.Format("{0:N0} - {1:N0} VND", Model.SalaryMin,
-                                                                                Model.SalaryMax)</span>
+                                    <span class="detail-label">Description</span>
+                                    <span class="detail-value">
+                                        @(string.IsNullOrEmpty(Model.Description) ? "No description" :
+                                                                                Model.Description)
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <form asp-action="DeleteConfirmed" method="post">
+                    <form asp-action="Delete" method="post">
                         <input type="hidden" asp-for="Id" />
                         <div class="d-flex justify-content-center gap-3">
-                            <a href="/Admin/Jobs/Index" class="btn btn-light btn-lg px-5">
+                            <a href="/Admin/JobCategories/Index" class="btn btn-light btn-lg px-5">
                                 <i class="fas fa-times me-2"></i>Cancel
                             </a>
                             <button type="submit" class="btn btn-danger btn-lg px-5">
-                                <i class="fas fa-trash me-2"></i>Delete
+                                <i class="fas fa-trash me-2"></i>Delete Category
                             </button>
                         </div>
                     </form>
