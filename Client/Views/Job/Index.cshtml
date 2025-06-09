@@ -35,8 +35,11 @@
                             <i class="fas fa-filter me-2"></i>Filter Jobs
                         </h5>
                     </div>
-                    <div class="card-body p-4":                        <form asp-action="Filter" method="get" class="needs-validation" novalidate>
-                            <!-- Search Section -->
+                    <div class="card-body p-4">
+                        <form asp-action="Index" method="get" class="needs-validation" novalidate>
+                       
+
+                            <hr class="my-4">
                             <div class="mb-4">
                                 <label class="form-label fw-semibold text-dark">
                                     <i class="fas fa-search me-2 text-primary"></i>Search Keywords
@@ -44,13 +47,9 @@
                                 <div class="input-group">
                                     <input type="text" name="searchTerm" class="form-control form-control-lg border-0 shadow-sm" 
                                            placeholder="Job title, company, or keywords..." value="@ViewBag.SearchTerm">
-                                    <button type="submit" class="btn btn-primary btn-lg px-4">
-                                        <i class="fas fa-search"></i>
-                                    </button>
                                 </div>
                             </div>
 
-                            <hr class="my-4">
 
                             <div class="mb-4">
                                 <label class="form-label fw-semibold text-dark">
@@ -158,6 +157,17 @@
                                         }
                                     }
                                 </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark">
+                                    <i class="fas fa-home me-2 text-primary"></i>Remote Work
+                                </label>
+                                <div class="form-check">
+                                    <input type="checkbox" name="isRemote" class="form-check-input" value="true" 
+                                           @(ViewBag.IsRemote == true ? "checked" : "")>
+                                    <label class="form-check-label">Show only remote jobs</label>
+                                </div>
                             </div>
 
                             <div class="d-grid gap-2">
@@ -456,7 +466,6 @@
         position: sticky !important;
     }
 </style>
-</style>
 
 @section Scripts {
     <script>
@@ -474,20 +483,63 @@
             });
 
             // Add loading animation to form submit buttons
-            const formButtons = document.querySelectorAll('button[type="submit"]');
-            formButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    if (this.id !== 'loadMoreBtn') { // Don't apply to load more button
-                        const originalText = this.innerHTML;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-                        this.disabled = true;
+            const filterForm = document.querySelector('form[asp-action="Index"]');
+            if (filterForm) {
+                filterForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+                    
+                    // Get form data
+                    const formData = new FormData(this);
+                    const searchParams = new URLSearchParams();
+                    
+                    // Only add parameters that have values
+                    for (let [key, value] of formData.entries()) {
+                        // Trim whitespace from text fields
+                        if (typeof value === 'string') {
+                            value = value.trim();
+                        }
                         
-                        // Re-enable after form submission
-                        setTimeout(() => {
-                            this.innerHTML = originalText;
-                            this.disabled = false;
-                        }, 3000);
+                        // Check if the value is not empty and not zero
+                        if (value && value !== '0' && value !== '0.0') {
+                            // For location and text fields, preserve spaces
+                            if (key === 'location' || key === 'searchTerm') {
+                                searchParams.append(key, value);
+                            } else if (!isNaN(value)) {
+                                // For numeric fields, only add if greater than 0
+                                const numValue = parseFloat(value);
+                                if (numValue > 0) {
+                                    searchParams.append(key, value);
+                                }
+                            } else {
+                                searchParams.append(key, value);
+                            }
+                        }
                     }
+                    
+                    // Build the URL with only non-empty parameters
+                    const url = `${window.location.pathname}?${searchParams.toString()}`;
+                    
+                    // Show loading state
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+                        submitButton.disabled = true;
+                    }
+                    
+                    // Navigate to the filtered URL
+                    window.location.href = url;
+                });
+            }
+
+            // Form validation
+            const forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
                 });
             });
 
@@ -529,6 +581,7 @@
             const minSalary = '@ViewBag.MinSalary' || '';
             const maxSalary = '@ViewBag.MaxSalary' || '';
             const categoryId = '@ViewBag.CategoryId' || '';
+            const isRemote = '@ViewBag.IsRemote'.toLowerCase() === 'true';
 
             // Prepare query parameters
             const params = new URLSearchParams({
@@ -536,12 +589,14 @@
                 pageSize: 6
             });
 
+            // Only add parameters that have values
             if (searchTerm) params.append('searchTerm', searchTerm);
             if (location) params.append('location', location);
             if (jobType) params.append('jobType', jobType);
             if (minSalary && minSalary !== '0') params.append('minSalary', minSalary);
             if (maxSalary && maxSalary !== '0') params.append('maxSalary', maxSalary);
-            if (categoryId) params.append('categoryId', categoryId);
+            if (categoryId && categoryId !== '0') params.append('categoryId', categoryId);
+            if (isRemote) params.append('isRemote', isRemote);
 
             // Make AJAX request
             fetch(`/Job/LoadMoreJobs?${params.toString()}`)
@@ -673,10 +728,6 @@
                                                 <i class="fas fa-home me-1"></i>Remote
                                             </span>
                                         ` : ''}
-                                        
-                                        <span class="badge bg-light text-dark border px-3 py-2">
-                                            <i class="fas fa-map-marker-alt me-1"></i>${job.location || 'Not specified'}
-                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -684,6 +735,7 @@
                         
                         <div class="col-md-4">
                             <div class="text-md-end h-100 d-flex flex-column justify-content-between">
+                                <!-- Salary -->
                                 <div class="mb-3">
                                     <div class="fw-bold text-success fs-5 mb-1">
                                         ${salaryText}
@@ -691,6 +743,7 @@
                                     <small class="text-muted">Annual salary</small>
                                 </div>
                                 
+                                <!-- Posted Date -->
                                 <div class="mb-3">
                                     <small class="text-muted d-flex align-items-center justify-content-md-end">
                                         <i class="fas fa-clock me-2"></i>
@@ -698,6 +751,7 @@
                                     </small>
                                 </div>
                                 
+                                <!-- Action Buttons -->
                                 <div class="d-flex gap-2 justify-content-md-end">
                                     <button class="btn btn-outline-primary position-relative" style="z-index: 10;" 
                                             onclick="event.preventDefault(); event.stopPropagation(); saveJob(${job.id})">
@@ -713,8 +767,13 @@
                     </div>
                 </div>
             `;
-            
+
             return cardDiv;
+        }
+
+        // Clear all filters function
+        function clearFilters() {
+            window.location.href = window.location.pathname;
         }
 
         // Update job count display
@@ -747,24 +806,16 @@
             `;
             
             const loadMoreContainer = document.getElementById('loadMoreContainer');
-            loadMoreContainer.parentNode.insertBefore(alertDiv, loadMoreContainer);
+            if (loadMoreContainer) {
+                loadMoreContainer.parentNode.insertBefore(alertDiv, loadMoreContainer);
+            }
             
             setTimeout(() => {
                 alertDiv.remove();
             }, 5000);
         }
 
-        // Clear all filters function
-        function clearFilters() {
-            const form = document.querySelector('form[asp-action="Filter"]');
-            if (form) {
-                form.reset();
-                // Clear URL parameters and reload page
-                window.location.href = window.location.pathname;
-            }
-        }
-
-        // Save job function (placeholder)
+        // Save job function
         function saveJob(jobId) {
             console.log('Saving job:', jobId);
             
@@ -775,48 +826,13 @@
             button.classList.remove('btn-outline-primary');
             button.classList.add('btn-outline-danger');
             
-            // You can add AJAX call here to save to backend
+            // Reset after demonstration
             setTimeout(() => {
-                // Reset after demonstration
                 button.innerHTML = originalIcon;
                 button.classList.remove('btn-outline-danger');
                 button.classList.add('btn-outline-primary');
             }, 2000);
         }
-
-        // Form validation
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                const forms = document.getElementsByClassName('needs-validation');
-                Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-
-        // Infinite scroll (optional - for automatic loading)
-        function enableInfiniteScroll() {
-            window.addEventListener('scroll', function() {
-                if (isLoading || !hasMoreJobs) return;
-                
-                const scrollPosition = window.innerHeight + window.scrollY;
-                const documentHeight = document.documentElement.offsetHeight;
-                
-                // Load more when user is 200px from bottom
-                if (scrollPosition >= documentHeight - 200) {
-                    loadMoreJobs();
-                }
-            });
-        }
-
-        // Uncomment the line below to enable infinite scroll
-        // enableInfiniteScroll();
     </script>
 }
+</rewritten_file>

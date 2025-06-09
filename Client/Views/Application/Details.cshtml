@@ -6,65 +6,86 @@
                             <i class="fas fa-arrow-left me-1"></i> Back to Applications
                         </a>
                         <h1 class="h3 mb-0">Application Details</h1>
-                        <div class="dropdown">
-                            <button class="btn btn-@(
-                                Model.Status == "Pending" ? "warning" :
-                                Model.Status == "Shortlisted" ? "info" :
-                                Model.Status == "Interviewed" ? "primary" :
-                                Model.Status == "Offered" ? "success" :
-                                Model.Status == "Rejected" ? "danger" : "secondary")" 
-                                type="button"
-                                id="statusDropdown" 
-                                data-bs-toggle="dropdown" 
-                                aria-expanded="false">
-                                <i class="fas fa-@(
-                                    Model.Status == "Pending" ? "clock" :
-                                    Model.Status == "Shortlisted" ? "list-check" :
-                                    Model.Status == "Interviewed" ? "comments" :
-                                    Model.Status == "Offered" ? "check-circle" :
-                                    Model.Status == "Rejected" ? "times-circle" : "exchange-alt") me-1"></i> @Model.Status
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm"
-                                aria-labelledby="statusDropdown">
-                                <li class="dropdown-header">Update Status</li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                @foreach (var status in new[] { "Pending", "Shortlisted", "Interviewed", "Offered", "Rejected" })
-                                {
-                                    var statusIcon = status == "Pending" ? "clock" :
-                                                    status == "Shortlisted" ? "list-check" :
-                                                    status == "Interviewed" ? "comments" :
-                                                    status == "Offered" ? "check-circle" :
-                                                    status == "Rejected" ? "times-circle" : "";
-                                    
-                                    var statusColor = status == "Pending" ? "warning" :
-                                                    status == "Shortlisted" ? "info" :
-                                                    status == "Interviewed" ? "primary" :
-                                                    status == "Offered" ? "success" :
-                                                    status == "Rejected" ? "danger" : "secondary";
+                        @if (Context.Session.GetInt32("JobSeekerId") == null)
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-@(
+                                    Model.Status == "Pending" ? "warning" :
+                                    Model.Status == "Shortlisted" ? "info" :
+                                    Model.Status == "Interviewed" ? "primary" :
+                                    Model.Status == "Offered" ? "success" :
+                                    Model.Status == "Rejected" ? "danger" : "secondary")" 
+                                    type="button"
+                                    id="statusDropdown" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                    <i class="fas fa-@(
+                                        Model.Status == "Pending" ? "clock" :
+                                        Model.Status == "Shortlisted" ? "list-check" :
+                                        Model.Status == "Interviewed" ? "comments" :
+                                        Model.Status == "Offered" ? "check-circle" :
+                                        Model.Status == "Rejected" ? "times-circle" : "exchange-alt") me-1"></i> @Model.Status
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                    aria-labelledby="statusDropdown">
+                                    <li class="dropdown-header">Update Status</li>
                                     <li>
-                                        <form asp-controller="Application" asp-action="UpdateStatus"
-                                            asp-route-id="@Model.Id" method="post" class="status-update-form">
-                                            <input type="hidden" name="status" value="@status" />
-                                            <button type="submit"
-                                                class="dropdown-item d-flex align-items-center py-2 @(Model.Status == status ? "active" : "")">
-                                                <span class="status-icon me-2 text-@statusColor">
-                                                    <i class="fas fa-@statusIcon"></i>
-                                                </span>
-                                                <span>@status</span>
-                                                @if (Model.Status == status)
-                                                {
-                                                    <span class="ms-auto">
-                                                        <i class="fas fa-check text-success"></i>
-                                                    </span>
-                                                }
-                                            </button>
-                                        </form>
+                                        <hr class="dropdown-divider">
                                     </li>
-                                }
-                            </ul>
-                        </div>
+                                    @foreach (var status in new[] { "Pending", "Shortlisted", "Interviewed", "Offered", "Rejected" })
+                                    {
+                                        var statusIcon = status == "Pending" ? "clock" :
+                                                        status == "Shortlisted" ? "list-check" :
+                                                        status == "Interviewed" ? "comments" :
+                                                        status == "Offered" ? "check-circle" :
+                                                        status == "Rejected" ? "times-circle" : "";
+                                        
+                                        var statusColor = status == "Pending" ? "warning" :
+                                                        status == "Shortlisted" ? "info" :
+                                                        status == "Interviewed" ? "primary" :
+                                                        status == "Offered" ? "success" :
+                                                        status == "Rejected" ? "danger" : "secondary";
+                                        <li>
+                                            <form asp-controller="Application" asp-action="UpdateStatus"
+                                                asp-route-id="@Model.Id" method="post" class="status-update-form">
+                                                <input type="hidden" name="status" value="@status" />
+                                                <button type="submit"
+                                                    class="dropdown-item d-flex align-items-center py-2 @(Model.Status == status ? "active" : "")">
+                                                    <span class="status-icon me-2 text-@statusColor">
+                                                        <i class="fas fa-@statusIcon"></i>
+                                                    </span>
+                                                    <span>@status</span>
+                                                    @if (Model.Status == status)
+                                                    {
+                                                        <span class="ms-auto">
+                                                            <i class="fas fa-check text-success"></i>
+                                                        </span>
+                                                    }
+                                                </button>
+                                            </form>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="status-display">
+                                <span class="btn btn-@(
+                                    Model.Status == "Pending" ? "warning" :
+                                    Model.Status == "Shortlisted" ? "info" :
+                                    Model.Status == "Interviewed" ? "primary" :
+                                    Model.Status == "Offered" ? "success" :
+                                    Model.Status == "Rejected" ? "danger" : "secondary")">
+                                    <i class="fas fa-@(
+                                        Model.Status == "Pending" ? "clock" :
+                                        Model.Status == "Shortlisted" ? "list-check" :
+                                        Model.Status == "Interviewed" ? "comments" :
+                                        Model.Status == "Offered" ? "check-circle" :
+                                        Model.Status == "Rejected" ? "times-circle" : "exchange-alt") me-1"></i> @Model.Status
+                                </span>
+                            </div>
+                        }
                     </div>
 
                     <div class="row mb-4">
@@ -226,30 +247,77 @@
         $(document).ready(function() {
             // Improve status update experience
             $(".status-update-form").on("submit", function(e) {
-                var $button = $(this).find("button");
+                e.preventDefault(); // Prevent form from submitting normally
+                
+                var $form = $(this);
+                var $button = $form.find("button");
                 var $icon = $button.find(".status-icon i");
                 var originalIcon = $icon.attr("class");
-                var newStatus = $(this).find("input[name='status']").val();
+                var newStatus = $form.find("input[name='status']").val();
                 
                 // Show loading state
                 $button.prop("disabled", true);
                 $icon.attr("class", "fas fa-spinner fa-spin");
                 
-                // Store form data for potential toast notification
-                sessionStorage.setItem('lastStatusUpdate', newStatus);
-                
-                // Restore if there's an error
-                $(this).on("error", function() {
-                    $button.prop("disabled", false);
-                    $icon.attr("class", originalIcon);
+                // Submit form via AJAX
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: 'POST',
+                    data: $form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Update the main status button
+                            var statusColor = getStatusColor(newStatus);
+                            var statusIcon = getStatusIcon(newStatus);
+                            
+                            $("#statusDropdown")
+                                .removeClass()
+                                .addClass(`btn btn-${statusColor}`)
+                                .html(`<i class="fas fa-${statusIcon} me-1"></i> ${newStatus}`);
+                            
+                            // Update dropdown items
+                            $(".status-update-form button").removeClass("active");
+                            $form.find("button").addClass("active");
+                            
+                            // Show success message
+                            alert('Status updated to ' + newStatus + ' successfully');
+                        } else {
+                            alert('Error updating status: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error updating status. Please try again.');
+                    },
+                    complete: function() {
+                        // Restore button state
+                        $button.prop("disabled", false);
+                        $icon.attr("class", originalIcon);
+                    }
                 });
             });
             
-            // Simple status update notification
-            if (sessionStorage.getItem('lastStatusUpdate')) {
-                var status = sessionStorage.getItem('lastStatusUpdate');
-                alert('Status updated to ' + status + ' successfully');
-                sessionStorage.removeItem('lastStatusUpdate');
+            // Helper function to get status color
+            function getStatusColor(status) {
+                switch(status) {
+                    case 'Pending': return 'warning';
+                    case 'Shortlisted': return 'info';
+                    case 'Interviewed': return 'primary';
+                    case 'Offered': return 'success';
+                    case 'Rejected': return 'danger';
+                    default: return 'secondary';
+                }
+            }
+            
+            // Helper function to get status icon
+            function getStatusIcon(status) {
+                switch(status) {
+                    case 'Pending': return 'clock';
+                    case 'Shortlisted': return 'list-check';
+                    case 'Interviewed': return 'comments';
+                    case 'Offered': return 'check-circle';
+                    case 'Rejected': return 'times-circle';
+                    default: return 'exchange-alt';
+                }
             }
         });
     </script>

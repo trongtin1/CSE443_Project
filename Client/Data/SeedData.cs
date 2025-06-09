@@ -43,7 +43,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "jobseeker3",
-                        Password = "seeker123",
+                        Password = PasswordHasher.HashPassword("seeker123"),
                         Email = "mike.wilson@example.com",
                         Phone = "8901234567",
                         Address = "303 Career St",
@@ -54,7 +54,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "jobseeker4",
-                        Password = "seeker123",
+                        Password = PasswordHasher.HashPassword("seeker123"),
                         Email = "sarah.johnson@example.com",
                         Phone = "9012345678",
                         Address = "404 Professional Ave",
@@ -65,7 +65,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "jobseeker5",
-                        Password = "seeker123",
+                        Password = PasswordHasher.HashPassword("seeker123"),
                         Email = "david.brown@example.com",
                         Phone = "0123456789",
                         Address = "505 Skills St",
@@ -99,7 +99,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "jobseeker1",
-                        Password = "seeker123",
+                        Password = PasswordHasher.HashPassword("seeker123"),
                         Email = "john.doe@example.com",
                         Phone = "4567890123",
                         Address = "101 Seeker St",
@@ -110,7 +110,7 @@ namespace CSE443_Project.Data
                     new User
                     {
                         Username = "jobseeker2",
-                        Password = "seeker123",
+                        Password = PasswordHasher.HashPassword("seeker123"),
                         Email = "jane.smith@example.com",
                         Phone = "5678901234",
                         Address = "202 Applicant Ave",
