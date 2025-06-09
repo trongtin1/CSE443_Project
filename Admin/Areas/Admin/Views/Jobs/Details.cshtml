@@ -1,64 +1,193 @@
 @model CSE443_Project.Models.Job
 
-<h2>Chi tiết công việc</h2>
+@{
+    ViewData["Title"] = "Job Details";
+}
 
-<table class="table">
-    <tr>
-        <th>Tiêu đề</th>
-        <td>@Model.JobTitle</td>
-    </tr>
-    <tr>
-        <th>Mô tả</th>
-        <td>@Model.JobDescription</td>
-    </tr>
-    <tr>
-        <th>Yêu cầu</th>
-        <td>@Model.Requirements</td>
-    </tr>
-    <tr>
-        <th>Quyền lợi</th>
-        <td>@Model.Benefits</td>
-    </tr>
-    <tr>
-        <th>Vị trí</th>
-        <td>@Model.Location</td>
-    </tr>
-    <tr>
-        <th>Ngành nghề</th>
-        <td>@Model.Industry</td>
-    </tr>
-    <tr>
-        <th>Kinh nghiệm</th>
-        <td>@Model.ExperienceLevel</td>
-    </tr>
-    <tr>
-        <th>Lương</th>
-        <td>@string.Format("{0:N0} - {1:N0} VND", Model.SalaryMin, Model.SalaryMax)</td>
-    </tr>
-    <tr>
-        <th>Loại công việc</th>
-        <td>@Model.JobType</td>
-    </tr>
-    <tr>
-        <th>Làm việc từ xa</th>
-        <td>@(Model.IsRemote ? "Có" : "Không")</td>
-    </tr>
-    <tr>
-        <th>Số lượng tuyển</th>
-        <td>@Model.Vacancies</td>
-    </tr>
-    <tr>
-        <th>Hạn nộp</th>
-        <td>@Model.Deadline.ToString("dd/MM/yyyy")</td>
-    </tr>
-    <tr>
-        <th>Nhà tuyển dụng</th>
-        <td>@Model.Employer?.CompanyName</td>
-    </tr>
-    <tr>
-        <th>Danh mục</th>
-        <td>@Model.Category?.Name</td>
-    </tr>
-</table>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <a href="/Admin/Jobs/Index" class="btn btn-light rounded-circle me-3 shadow-sm hover-scale">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2 class="mb-0 fw-bold text-primary gradient-text">Job Details</h2>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/Admin/Jobs/Edit/@Model.Id" class="btn btn-outline-primary">
+                <i class="fas fa-edit me-2"></i>Edit
+            </a>
+        </div>
+    </div>
 
-<a class="btn btn-secondary" href="/Admin/Jobs">Quay lại</a>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm glass-effect mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4 border-bottom pb-2">Job Information</h5>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Title</span>
+                                <span class="detail-value">@Model.JobTitle</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Job Type</span>
+                                <span class="detail-value">@Model.JobType</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Location</span>
+                                <span class="detail-value">@Model.Location</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Remote</span>
+                                <span class="detail-value">@(Model.IsRemote ? "Yes" : "No")</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Salary</span>
+                                <span class="detail-value">@string.Format("{0:N0} - {1:N0} VND", Model.SalaryMin,
+                                                                        Model.SalaryMax)</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Number of vacancies</span>
+                                <span class="detail-value">@Model.Vacancies</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Experience Level</span>
+                                <span class="detail-value">@Model.ExperienceLevel</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Deadline</span>
+                                <span class="detail-value">@Model.Deadline.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="detail-item">
+                                <span class="detail-label">Job Description</span>
+                                <span class="detail-value">@Model.JobDescription</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="detail-item">
+                                <span class="detail-label">Requirements</span>
+                                <span class="detail-value">@Model.Requirements</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="detail-item">
+                                <span class="detail-label">Benefits</span>
+                                <span class="detail-value">@Model.Benefits</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm glass-effect mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4 border-bottom pb-2">Additional Information</h5>
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value">
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success">Hiring</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Closed</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Industry</span>
+                        <span class="detail-value">@Model.Industry</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Job Category</span>
+                        <span class="detail-value">@Model.Category?.Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Employer</span>
+                        <span class="detail-value">@Model.Employer?.CompanyName</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm glass-effect">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4 border-bottom pb-2">Actions</h5>
+                    <div class="d-grid gap-2">
+                        <a href="/Admin/Jobs/Edit/@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Edit
+                        </a>
+                        @* <a href="/Admin/Jobs/Delete/@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Delete
+                        </a> *@
+                        <a href="/Admin/Jobs" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Glass Effect */
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+        background: linear-gradient(45deg, #2c3e50, #3498db);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Detail items */
+    .detail-item {
+        margin-bottom: 1rem;
+    }
+
+    .detail-label {
+        display: block;
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        display: block;
+        font-weight: 500;
+    }
+
+    /* Hover scale effect */
+    .hover-scale {
+        transition: transform 0.3s ease;
+    }
+
+    .hover-scale:hover {
+        transform: scale(1.05);
+    }
+</style>
