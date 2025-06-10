@@ -138,7 +138,7 @@ namespace CSE443_Project.Data
                         CompanyDescription = "Leading technology company specializing in software development and IT services.",
                         Industry = "Information Technology",
                         Website = "https://www.techcorp.com",
-                        Logo = "/images/logos/techcorp.png",
+                        Logo = "/images/logos/logo1.png",
                         FoundedYear = 2010,
                         CompanySize = 500
                     },
@@ -149,7 +149,7 @@ namespace CSE443_Project.Data
                         CompanyDescription = "Financial services company offering banking, investment, and insurance solutions.",
                         Industry = "Financial Services",
                         Website = "https://www.financeco.com",
-                        Logo = "/images/logos/financeco.png",
+                        Logo = "/images/logos/logo2.png",
                         FoundedYear = 2005,
                         CompanySize = 1000
                     },
@@ -160,7 +160,7 @@ namespace CSE443_Project.Data
                         CompanyDescription = "Leading healthcare provider offering comprehensive medical services and innovative treatments.",
                         Industry = "Healthcare",
                         Website = "https://www.healthplus.com",
-                        Logo = "/images/logos/healthplus.png",
+                        Logo = "/images/logos/logo3.png",
                         FoundedYear = 2008,
                         CompanySize = 750
                     },
@@ -171,7 +171,7 @@ namespace CSE443_Project.Data
                         CompanyDescription = "Innovative engineering firm specializing in infrastructure and construction projects.",
                         Industry = "Engineering",
                         Website = "https://www.engineeringsolutions.com",
-                        Logo = "/images/logos/engineering.png",
+                        Logo = "/images/logos/logo4.png",
                         FoundedYear = 2012,
                         CompanySize = 300
                     }
