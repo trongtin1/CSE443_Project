@@ -9,9 +9,9 @@
             </a>
             <h2 class="mb-0 fw-bold text-primary gradient-text">User Management</h2>
         </div>
-        @* <a class="btn btn-primary d-flex align-items-center shadow-sm hover-scale" href="/Admin/Users/Create">
+        <a class="btn btn-primary d-flex align-items-center shadow-sm hover-scale" href="/Admin/Users/Create">
             <i class="fas fa-plus me-2"></i>Add New User
-        </a> *@
+        </a>
     </div>
 
     @if (ViewBag.ErrorMessage != null)
@@ -47,50 +47,50 @@
                                             <div class="avatar-circle bg-gradient me-3">
                                                 @(string.IsNullOrEmpty(user.Username) ? "?" : user.Username.Substring(0,
                                                                                         1).ToUpper())
+                                        </div>
+                                        <span class="fw-medium">@user.Username</span>
                                     </div>
-                                    <span class="fw-medium">@user.Username</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-envelope text-muted me-2"></i>
-                                    @user.Email
-                                </div>
-                            </td>
-                            <td>
-                                @user.Phone
-                            </td>
-                            <td>
-                                @(string.IsNullOrEmpty(user.Address) ? "-" : $"{user.Address}, {user.City}")
-                            </td>
-                            <td>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-envelope text-muted me-2"></i>
+                                        @user.Email
+                                    </div>
+                                </td>
+                                <td>
+                                    @user.Phone
+                                </td>
+                                <td>
+                                    @(string.IsNullOrEmpty(user.Address) ? "-" : $"{user.Address}, {user.City}")
+                                </td>
+                                <td>
                                 @if (user.IsActive)
-                                {
-                                    <span class="badge bg-success">Active</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">Inactive</span>
-                                }
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a class="btn btn-sm btn-outline-info action-btn"
-                                        href="/Admin/Users/Details/@user.Id" title="Details">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a class="btn btn-sm btn-outline-warning action-btn"
-                                        href="/Admin/Users/Edit/@user.Id" title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    @* <a class="btn btn-sm btn-outline-danger action-btn"
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a class="btn btn-sm btn-outline-info action-btn"
+                                                href="/Admin/Users/Details/@user.Id" title="Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            @* <a class="btn btn-sm btn-outline-warning action-btn"
+                                                href="/Admin/Users/Edit/@user.Id" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a> *@
+                                            @* <a class="btn btn-sm btn-outline-danger action-btn"
                                         href="/Admin/Users/Delete/@user.Id" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </a> *@
-                                </div>
-                            </td>
-                        </tr>
-                                                }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
